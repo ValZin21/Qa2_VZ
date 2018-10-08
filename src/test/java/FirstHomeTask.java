@@ -9,24 +9,23 @@ public class FirstHomeTask {
     static Scanner valueReader = new Scanner(System.in);    // defining the Scanner
 
     @Test
-    public static void main(String[] args) {                //static String[] args needs to read the values from console
+    public static void main(String[] args) throws InputMismatchException {                //static String[] args needs to read the values from console
         Double loan;
         Double loanWithBankRates;
         Double stupidClerkCheck;
 
-       // System.out.print("Insert Clients Amount: ");
-        isDouble();
-        loan = negativeValueCheck(valueReader.nextDouble());                     // reading the loan value using the scanner and validating it;
+        System.out.print("Insert Clients Amount: ");
+        loan = inputValidation();                    //user loan read+validation
 
         System.out.print("Clerk check: ");
-        stupidClerkCheck = negativeValueCheck(valueReader.nextDouble());        // reading the clerks calculated value with bank rates and validating it;
+        stupidClerkCheck = inputValidation();        //clerks calculated value read+validation
 
-        loanWithBankRates = amountWithBankRatesCalculator(loan);
+        loanWithBankRates = amountWithBankRatesCalculator(loan);   // calculating the loan with bank rates
 
         Assertions.assertEquals(stupidClerkCheck, loanWithBankRates, "You dummy clerk! Get back to school!");  //check if the clerk is compliant to work in our bank
     }
 
-    private static Double amountWithBankRatesCalculator(Double loan){
+    private static Double amountWithBankRatesCalculator(Double loan){    //loan calculation with bank ratesmethod
         Double firstTenYearsRate = 1.1;
         Double secondTenYearsARate = 1.08;
         Double thirdTenYearsRate = 1.06;
@@ -35,33 +34,26 @@ public class FirstHomeTask {
         return result;
     }
 
-    private static Double negativeValueCheck (Double testValue){
-        do {
-            System.out.print("Clients Amount can't be negative! Try again: ");
-            testValue = valueReader.nextDouble();
-        } while (testValue < 0);
+    private static Double inputValidation () {   //  method to check for correct inputs
+        Double testValue = null;
+        boolean checker = false;
+
+        while(!checker) {
+            try {
+                testValue = valueReader.nextDouble(); // reading the input value using the scanner;
+                if (testValue < 0) {
+                    throw new IllegalArgumentException("Please enter only positive numerics!");      // check for value is not negative
+                }
+                checker = true;    // make it valid and break the loop
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter a numeric value!");
+                valueReader.nextLine();                                                // check for value is a number
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());                                    // negative exception
+                valueReader.nextLine();
+            }
+        }
         return testValue;
     }
 
-    private static Double isDouble (){   // not working
-        Double testValue;
-        boolean checker = true;
-        
-        do {
-            try {
-                System.out.print("Insert Clients Amount: ");
-                testValue = valueReader.nextDouble();
-                checker = false;
-            }
-            catch (InputMismatchException e) {
-                System.out.println(testValue + " is not a number");
-               // checker = false;
-                valueReader.next();
-            }
-//            finally {
-//                    System.out.println(testValue + " is not a number");
-//            }
-        } while (checker);
-        return testValue;
-    }
 }
