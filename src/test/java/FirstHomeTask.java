@@ -5,33 +5,30 @@ import java.util.Scanner;             //to read inputs from console using Java S
 
 public class FirstHomeTask {
 
-    private static Double firstTenYearsRate = 1.1;
-    private static Double secondTenYearsARate = 1.08;
-    private static Double thirdTenYearsRate = 1.06;
-
     @Test
-    public static void main(String[] args) {             // String[] args needs to read the values from console
-
+    public static void main(String[] args) {                //static String[] args needs to read the values from console
         Double loan;
         Double loanWithBankRates;
         Double stupidClerkCheck;
 
-        Scanner valueReader = new Scanner(System.in);    // defining the Scanner
+        Scanner valueReader = new Scanner(System.in);       // defining the Scanner
 
         System.out.print("Insert Clients Amount: ");
         loan = valueReader.nextDouble();                    // reading the loan value using the scanner;
         System.out.print("Clerk check: ");
         stupidClerkCheck = valueReader.nextDouble();        // reading the clerks calculated value with bank rates;
 
-        loanWithBankRates = amountWithBankRatesCalculator(loan, firstTenYearsRate, secondTenYearsARate, thirdTenYearsRate);
+        loanWithBankRates = amountWithBankRatesCalculator(loan);
 
-        System.out.println("Amount to pay with bank rates after 30 years: " + loanWithBankRates);
-
-        Assertions.assertEquals(stupidClerkCheck, loanWithBankRates, "You dummy clerk! Get back to school!");
+        Assertions.assertEquals(stupidClerkCheck, loanWithBankRates, "You dummy clerk! Get back to school!");  //check if the clerk is compliant to work in our bank
     }
 
-    private static Double amountWithBankRatesCalculator(Double a, Double b, Double c, Double d){
-        Double result = Precision.round(a/3*b + a/3*c + a/3*d,2);    // round of the total sum client needs to pay for 2 decimals
+    private static Double amountWithBankRatesCalculator(Double a){
+        Double firstTenYearsRate = 1.1;
+        Double secondTenYearsARate = 1.08;
+        Double thirdTenYearsRate = 1.06;
+        Double result = Precision.round(a/3*firstTenYearsRate + a/3*secondTenYearsARate + a/3*thirdTenYearsRate,2);    // round of the total sum client needs to pay for 2 decimals
+        System.out.println("Amount to pay with bank rates after 30 years: " + result);     // just to now how much moneys the Client needs to pay
         return result;
     }
 }
