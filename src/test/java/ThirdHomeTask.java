@@ -13,6 +13,8 @@ public class ThirdHomeTask {
     private final By DRESSES_BUTTON_SEARCH = By.xpath(".//ul[@class='sf-menu clearfix menu-content sf-js-enabled sf-arrows']/li/a[@title='Dresses']");
     private final By ORANGE_FILTER_SEARCH = By.xpath(".//*[@id='layered_id_attribute_group_13']");
     private final By aaa = By.xpath(".//*[text()='Dresses > Color Orange']");
+    //private final By aaa = By.xpath(".//h1/span[@class='cat-name']");
+   // private final By aaa = By.xpath(".//h1/span[@class='cat-name']");
 
     @Test
     public void ladiesStore() {
@@ -38,7 +40,10 @@ public class ThirdHomeTask {
 
         //add check if Orange filter present
 
-        Assertions.assertEquals("Dresses > Color Orange", driver., "Orange filter is not applied!");
+       // This xpath .//text()='Dresses > Color Orange' return 1. Think how to check 'if 1 then succees, if 0 - error'
+
+
+        //Assertions.assertEquals("Dresses > Color Orange", driver.findElement(aaa).getText(), "Orange filter is not applied!");
      //   Assertions.assertNotEquals(orangeFilterCheck, driver.getCurrentUrl(), "PIPEC!");
 
         //driver.close();
