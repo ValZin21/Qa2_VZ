@@ -41,8 +41,9 @@ public class Lesson5ClassWork {
         String articlePageTitle = elementDetector(driver, ARTICLE_PAGE).getText();
         Assertions.assertEquals(articleTitle, articlePageTitle, "Articles not equal");
 
-        String articlePageComment = elementDetector(driver, COMMENT_COUNT).getText();
-        Integer articlePageCommentCount = commentsCountBracketsCutterAndToNumberConverter(articlePageComment);
+//        String articlePageComment = elementDetector(driver, COMMENT_COUNT).getText();
+//        Integer articlePageCommentCount = commentsCountBracketsCutterAndToNumberConverter(articlePageComment);
+        Integer articlePageCommentCount = commentCountDetector(driver, COMMENT_COUNT);
 
         Assertions.assertEquals(commentCount, articlePageCommentCount, "Comments in article page not Equal");
 
@@ -51,8 +52,9 @@ public class Lesson5ClassWork {
         String commentPageTitle = elementDetector(driver, COMMENT_PAGE).getText();
         Assertions.assertTrue(commentPageTitle.contains(articleTitle));
 
-        String regComment = elementDetector(driver, REG_COMMENTS).getText();
-        Integer regCommentCount = commentsCountBracketsCutterAndToNumberConverter(regComment);
+//        String regComment = elementDetector(driver, REG_COMMENTS).getText();
+//        Integer regCommentCount = commentsCountBracketsCutterAndToNumberConverter(regComment);
+        Integer regCommentCount = commentCountDetector(driver, REG_COMMENTS);
 
 //        String anonComment = elementDetector(driver, ANON_COMMENTS).getText();
 //        Integer anonCommentCount = commentsCountBracketsCutterAndToNumberConverter(anonComment);
