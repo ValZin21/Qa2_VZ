@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.concurrent.TimeUnit;
@@ -27,7 +28,7 @@ public class ThirdHomeTask {
     @Test
     public void ladiesStore() {
 
-        System.setProperty("webdriver.chrome.driver","C://chromedriver_win32/chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C://chromedriver_win32/chromedriver.exe");
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get(HOME_PAGE);
@@ -47,16 +48,19 @@ public class ThirdHomeTask {
         System.out.println("Page title before: "  + driver.getTitle());
         driver.findElement(ORANGE_FILTER_SEARCH).click();
 
-
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        WebElement test = driver.findElement(ddd);
+       // Thread.sleep(10000);
        // WebDriverWait waiter = new WebDriverWait(driver, 10);
 
        // driver.navigate().to("http://automationpractice.com/index.php?id_category=8&controller=category#/color-orange");
-        driver.get("http://automationpractice.com/index.php?id_category=8&controller=category#/color-orange");
-        driver.navigate().refresh();
+       // driver.get("http://automationpractice.com/index.php?id_category=8&controller=category#/color-orange");
+       // driver.navigate().to("http://automationpractice.com/index.php?id_category=8&controller=category#/color-orange");
+        //driver.navigate().refresh();
 
+        System.out.println("Title: " + driver.getTitle());
 
-
-        String karl = driver.findElement(eee).getText();
+        String karl = driver.findElement(ddd).getText();
         System.out.println("This is filter: " + karl);
 //       // System.out.println("Page source: "  + driver.getPageSource());
 //        System.out.println("Page title: "  + driver.getTitle().c);
