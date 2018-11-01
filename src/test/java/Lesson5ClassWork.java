@@ -29,34 +29,34 @@ public class Lesson5ClassWork {
 
         List<WebElement> articles = driver.findElements(ARTICLE);
         WebElement article = articles.get(1);
-        String articleTitle = elementTextPullOuter(article, ARTICLE_TITLE);
-        String commentString = elementTextPullOuter(article, COMMENT_COUNT); //article.findElement(COMMENT_COUNT).getText();
 
+        String articleTitle = elementTextPullOuter(article, ARTICLE_TITLE);
+        //add check for case if no comments present
+        // and (?) if additional breakets with string added in the end of the article on the home page
+        String commentString = elementTextPullOuter(article, COMMENT_COUNT);
         Integer commentCount = commentsCountBracketsCutterAndToNumberConverter(commentString);
 
         article.click();
 
-
-        String articlePageTitle = driver.findElement(ARTICLE_PAGE).getText();
+        String articlePageTitle = elementDetector(driver, ARTICLE_PAGE).getText();
         Assertions.assertEquals(articleTitle, articlePageTitle, "Articles not equal");
-        String articlePageComment = driver.findElement(COMMENT_COUNT).getText();
 
+        String articlePageComment = elementDetector(driver, COMMENT_COUNT).getText();
         Integer articlePageCommentCount = commentsCountBracketsCutterAndToNumberConverter(articlePageComment);
 
         Assertions.assertEquals(commentCount, articlePageCommentCount, "Comments in article page not Equal");
 
-        driver.findElement(COMMENT_COUNT).click();
+        elementDetector(driver, COMMENT_COUNT).click();
 
-
-        String commentPageTitle = driver.findElement(COMMENT_PAGE).getText();
+        String commentPageTitle = elementDetector(driver, COMMENT_PAGE).getText();
         Assertions.assertTrue(commentPageTitle.contains(articleTitle));
-        String regComment = driver.findElement(REG_COMMENTS).getText();
 
+        String regComment = elementDetector(driver, REG_COMMENTS).getText();
         Integer regCommentCount = commentsCountBracketsCutterAndToNumberConverter(regComment);
 
-        String anonComment = driver.findElement(ANON_COMMENTS).getText();
-
-        Integer anonCommentCount = commentsCountBracketsCutterAndToNumberConverter(anonComment);
+//        String anonComment = elementDetector(driver, ANON_COMMENTS).getText();
+//        Integer anonCommentCount = commentsCountBracketsCutterAndToNumberConverter(anonComment);
+        Integer anonCommentCount = commentCountDetector(driver, ANON_COMMENTS);
 
         Integer sum = regCommentCount + anonCommentCount;
 
@@ -77,5 +77,16 @@ public class Lesson5ClassWork {
     public String elementTextPullOuter (WebElement webElement, By xPath){
         String elementString = webElement.findElement(xPath).getText();
         return elementString;
+    }
+
+    public WebElement elementDetector (WebDriver driver, By xPath){
+        WebElement detectedElement = driver.findElement(xPath);
+        return detectedElement;
+    }
+
+    public Integer commentCountDetector(WebDriver driver2, By xPath){
+        WebElement commentElement = elementDetector(driver2, xPath);
+        Integer commentCount = commentsCountBracketsCutterAndToNumberConverter(commentElement.getText());
+        return commentCount;
     }
 }
