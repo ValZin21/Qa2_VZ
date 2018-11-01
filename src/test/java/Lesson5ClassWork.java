@@ -7,6 +7,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
+
 import java.util.List;
 
 public class Lesson5ClassWork {
@@ -20,7 +23,7 @@ public class Lesson5ClassWork {
     public WebDriver driver;
 
     @Test
-    public void delfiPractice() {
+    public void delfiPractice() throws InputMismatchException {
 
         System.setProperty("webdriver.chrome.driver","C://chromedriver_win32/chromedriver.exe");
         driver = new ChromeDriver();
@@ -28,7 +31,7 @@ public class Lesson5ClassWork {
         driver.get("http://rus.delfi.lv/");
 
         List<WebElement> articles = driver.findElements(ARTICLE);
-        WebElement article = articles.get(1);
+        WebElement article = articles.get(8);
 
         String articleTitle = elementTextPullOuter(article, ARTICLE_TITLE);
         //add check for case if no comments present
@@ -41,24 +44,17 @@ public class Lesson5ClassWork {
         String articlePageTitle = elementDetector(driver, ARTICLE_PAGE).getText();
         Assertions.assertEquals(articleTitle, articlePageTitle, "Articles not equal");
 
-//        String articlePageComment = elementDetector(driver, COMMENT_COUNT).getText();
-//        Integer articlePageCommentCount = commentsCountBracketsCutterAndToNumberConverter(articlePageComment);
-        Integer articlePageCommentCount = commentCountDetector(driver, COMMENT_COUNT);
+        Integer articlePageCommentCount = commentIntegerCountDetector(driver, COMMENT_COUNT);
 
-        Assertions.assertEquals(commentCount, articlePageCommentCount, "Comments in article page not Equal");
+        Assertions.assertEquals(commentCount, articlePageCommentCount, "Comments count not equal");
 
         elementDetector(driver, COMMENT_COUNT).click();
 
         String commentPageTitle = elementDetector(driver, COMMENT_PAGE).getText();
         Assertions.assertTrue(commentPageTitle.contains(articleTitle));
 
-//        String regComment = elementDetector(driver, REG_COMMENTS).getText();
-//        Integer regCommentCount = commentsCountBracketsCutterAndToNumberConverter(regComment);
-        Integer regCommentCount = commentCountDetector(driver, REG_COMMENTS);
-
-//        String anonComment = elementDetector(driver, ANON_COMMENTS).getText();
-//        Integer anonCommentCount = commentsCountBracketsCutterAndToNumberConverter(anonComment);
-        Integer anonCommentCount = commentCountDetector(driver, ANON_COMMENTS);
+        Integer regCommentCount = commentIntegerCountDetector(driver, REG_COMMENTS);
+        Integer anonCommentCount = commentIntegerCountDetector(driver, ANON_COMMENTS);
 
         Integer sum = regCommentCount + anonCommentCount;
 
@@ -77,18 +73,77 @@ public class Lesson5ClassWork {
     }
 
     public String elementTextPullOuter (WebElement webElement, By xPath){
-        String elementString = webElement.findElement(xPath).getText();
+        String elementString = null;
+        try {
+            elementString = webElement.findElement(xPath).getText();
+        }
+        catch (org.openqa.selenium.NoSuchElementException e) {
+            e.getMessage();
+            elementString = "(0)";
+        }
+        //String elementString = webElement.findElement(xPath).getText();
         return elementString;
     }
 
+//    public String elementTextPullOuter (WebElement webElement, By xPath){
+//        String elementString = null;
+//        Boolean elementExists = driver.findElements(xPath).size() > 0;
+//        if (elementExists == true) {
+//            elementString = webElement.findElement(xPath).getText();
+//        }
+//        else {
+//            elementString = "0";
+//        }
+//        // String elementString = webElement.findElement(xPath).getText();
+//        return elementString;
+//    }
+
+    //    boolean present;
+//try {
+//        driver.findElement(By.id("logoutLink"));
+//        present = true;
+//        } catch (NoSuchElementException e) {
+//        present = false;
+//        }
+
     public WebElement elementDetector (WebDriver driver, By xPath){
-        WebElement detectedElement = driver.findElement(xPath);
+        boolean isFull;
+        WebElement detectedElement = null;
+        try {
+            detectedElement = driver.findElement(xPath);
+            isFull = true;
+        }
+        catch (org.openqa.selenium.NoSuchElementException e) {
+            e.getMessage();
+            isFull = false;
+            detectedElement.sendKeys("(0)");
+        }
+
+
+       // WebElement detectedElement = driver.findElement(xPath);
         return detectedElement;
     }
 
-    public Integer commentCountDetector(WebDriver driver2, By xPath){
+//    public WebElement elementDetector (WebDriver driver, By xPath){
+//
+//        WebElement detectedElement = null;
+//        boolean elementExists = driver.findElements(xPath).size() > 0;
+//        if (elementExists == true) {
+//            detectedElement = driver.findElement(xPath);
+//        }
+//        else {
+//            detectedElement.sendKeys("0");
+//        }
+//
+//        // WebElement detectedElement = driver.findElement(xPath);
+//        return detectedElement;
+//    }
+
+    public Integer commentIntegerCountDetector(WebDriver driver2, By xPath){
         WebElement commentElement = elementDetector(driver2, xPath);
         Integer commentCount = commentsCountBracketsCutterAndToNumberConverter(commentElement.getText());
         return commentCount;
     }
 }
+
+
