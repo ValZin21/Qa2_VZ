@@ -48,17 +48,20 @@ public class Lesson5ClassWork {
 
         Assertions.assertEquals(commentCount, articlePageCommentCount, "Comments count not equal");
 
-        elementDetector(driver, COMMENT_COUNT).click();
+        boolean g = xPathChecker(COMMENT_COUNT);
+        if (g) {
+            elementDetector(driver, COMMENT_COUNT).click();
 
-        String commentPageTitle = elementDetector(driver, COMMENT_PAGE).getText();
-        Assertions.assertTrue(commentPageTitle.contains(articleTitle));
+            String commentPageTitle = elementDetector(driver, COMMENT_PAGE).getText();
+            Assertions.assertTrue(commentPageTitle.contains(articleTitle));
 
-        Integer regCommentCount = commentIntegerCountDetector(driver, REG_COMMENTS);
-        Integer anonCommentCount = commentIntegerCountDetector(driver, ANON_COMMENTS);
+            Integer regCommentCount = commentIntegerCountDetector(driver, REG_COMMENTS);
+            Integer anonCommentCount = commentIntegerCountDetector(driver, ANON_COMMENTS);
 
-        Integer sum = regCommentCount + anonCommentCount;
+            Integer sum = regCommentCount + anonCommentCount;
 
-        Assertions.assertEquals(commentCount, sum, "Comments not equal");
+            Assertions.assertEquals(commentCount, sum, "Comments not equal");
+        }
     }
 
     @AfterEach
@@ -71,6 +74,14 @@ public class Lesson5ClassWork {
         Integer commentsCountNumber = Integer.valueOf(textString);
         return commentsCountNumber;
     }
+
+//    public String elementTextPullOuter (WebElement webElement, By xPath, boolean ifExists){
+//        String elementString = null;
+//        if (ifExists) {
+//            elementString = webElement.findElement(xPath).getText();
+//        }
+//        return elementString;
+//    }
 
     public String elementTextPullOuter (WebElement webElement, By xPath){
         String elementString = null;
@@ -106,21 +117,30 @@ public class Lesson5ClassWork {
 //        present = false;
 //        }
 
+//    public WebElement elementDetector (WebDriver driver, By xPath, boolean ifExists){
+//        WebElement detectedElement = null;
+//        if (ifExists) {
+//            detectedElement = driver.findElement(xPath);
+//        }
+//        return detectedElement;
+//    }
+
     public WebElement elementDetector (WebDriver driver, By xPath){
-        boolean isFull;
+      //  boolean isFull;
         WebElement detectedElement = null;
         try {
             detectedElement = driver.findElement(xPath);
-            isFull = true;
+       //     isFull = true;
         }
         catch (org.openqa.selenium.NoSuchElementException e) {
-            e.getMessage();
-            isFull = false;
-            detectedElement.sendKeys("(0)");
+            e.getMessage(); //workin if catch an exception!!!!
+      //      isFull = false;
+            System.out.println("ASDFGHJKL");
+            //detectedElement.sendKeys("(0)");
         }
 
 
-       // WebElement detectedElement = driver.findElement(xPath);
+        // WebElement detectedElement = driver.findElement(xPath);
         return detectedElement;
     }
 
@@ -143,6 +163,20 @@ public class Lesson5ClassWork {
         WebElement commentElement = elementDetector(driver2, xPath);
         Integer commentCount = commentsCountBracketsCutterAndToNumberConverter(commentElement.getText());
         return commentCount;
+    }
+
+    public boolean xPathChecker (By xPath) {
+        boolean ifExists;
+        WebElement detectedElement = null;
+        try {
+            detectedElement = driver.findElement(xPath);
+            ifExists = true;
+        }
+        catch (org.openqa.selenium.NoSuchElementException e) {
+            e.getMessage();
+            ifExists = false;
+        }
+        return ifExists;
     }
 }
 
