@@ -16,7 +16,8 @@ public class Lesson5ClassWork {
     private final By ARTICLE = By.xpath(".//h3[@class = 'top2012-title']");
     private final By ARTICLE_TITLE = By.xpath(".//a[@class = 'top2012-title']");
     private final By COMMENT_COUNT = By.xpath(".//a[@class = 'comment-count']");
-    private final By ARTICLE_PAGE = By.xpath(".//span[@itemprop = 'headline name']");
+    private final By ARTICLE_PAGE = By.xpath(".//h1/a[@class= 'article-title-link']");
+//    private final By ARTICLE_PAGE = By.xpath(".//span[@itemprop = 'headline name']");
     private final By COMMENT_PAGE = By.xpath(".//a[@class = 'comment-main-title-link']");
     private final By REG_COMMENTS = By.xpath(".//a[contains(@class,'comment-thread-switcher-list-a-reg')]/span");
     private final By ANON_COMMENTS = By.xpath(".//a[contains(@class,'comment-thread-switcher-list-a-anon')]/span");
@@ -31,7 +32,7 @@ public class Lesson5ClassWork {
         driver.get("http://rus.delfi.lv/");
 
         List<WebElement> articles = driver.findElements(ARTICLE);
-        WebElement article = articles.get(8);
+        WebElement article = articles.get(6);
 
         String articleTitle = elementTextPullOuter(article, ARTICLE_TITLE);
         //add check for case if no comments present
@@ -41,7 +42,7 @@ public class Lesson5ClassWork {
 
         article.click();
 
-        String articlePageTitle = elementDetector(driver, ARTICLE_PAGE).getText();
+        String articlePageTitle = elementDetector(driver, ARTICLE_PAGE);
         Assertions.assertEquals(articleTitle, articlePageTitle, "Articles not equal");
 
         Integer articlePageCommentCount = commentIntegerCountDetector(driver, COMMENT_COUNT);
@@ -50,9 +51,10 @@ public class Lesson5ClassWork {
 
         boolean g = xPathChecker(COMMENT_COUNT);
         if (g) {
-            elementDetector(driver, COMMENT_COUNT).click();
+            //elementDetector(driver, COMMENT_COUNT).click();
+            driver.findElement(COMMENT_COUNT).click();
 
-            String commentPageTitle = elementDetector(driver, COMMENT_PAGE).getText();
+            String commentPageTitle = elementDetector(driver, COMMENT_PAGE);
             Assertions.assertTrue(commentPageTitle.contains(articleTitle));
 
             Integer regCommentCount = commentIntegerCountDetector(driver, REG_COMMENTS);
@@ -87,9 +89,11 @@ public class Lesson5ClassWork {
         String elementString = null;
         try {
             elementString = webElement.findElement(xPath).getText();
+            System.out.println("Molodec1");
         }
         catch (org.openqa.selenium.NoSuchElementException e) {
             e.getMessage();
+            System.out.println("Indus!1");
             elementString = "(0)";
         }
         //String elementString = webElement.findElement(xPath).getText();
@@ -125,17 +129,19 @@ public class Lesson5ClassWork {
 //        return detectedElement;
 //    }
 
-    public WebElement elementDetector (WebDriver driver, By xPath){
+    public String elementDetector (WebDriver driver, By xPath){
       //  boolean isFull;
-        WebElement detectedElement = null;
+        String detectedElement = null;
         try {
-            detectedElement = driver.findElement(xPath);
+            detectedElement = driver.findElement(xPath).getText();
+            System.out.println("Molodec2");
        //     isFull = true;
         }
         catch (org.openqa.selenium.NoSuchElementException e) {
             e.getMessage(); //workin if catch an exception!!!!
       //      isFull = false;
-            System.out.println("ASDFGHJKL");
+            System.out.println("TurboIndus");
+            detectedElement = "(0)";
             //detectedElement.sendKeys("(0)");
         }
 
@@ -160,8 +166,8 @@ public class Lesson5ClassWork {
 //    }
 
     public Integer commentIntegerCountDetector(WebDriver driver2, By xPath){
-        WebElement commentElement = elementDetector(driver2, xPath);
-        Integer commentCount = commentsCountBracketsCutterAndToNumberConverter(commentElement.getText());
+        String commentElement = elementDetector(driver2, xPath);
+        Integer commentCount = commentsCountBracketsCutterAndToNumberConverter(commentElement);
         return commentCount;
     }
 
