@@ -16,7 +16,7 @@ public class Lesson5ClassWork {
     private final By ARTICLE = By.xpath(".//h3[@class = 'top2012-title']");
     private final By ARTICLE_TITLE = By.xpath(".//a[@class = 'top2012-title']");
     private final By COMMENT_COUNT = By.xpath(".//a[@class = 'comment-count']");
-    private final By ARTICLE_PAGE = By.xpath(".//h1/a[@class= 'article-title-link']");
+    private final By ARTICLE_PAGE = By.xpath(".//h1/a[@class= 'article-title-link']"); //for special pages like  WOMAN 
 //    private final By ARTICLE_PAGE = By.xpath(".//span[@itemprop = 'headline name']");
     private final By COMMENT_PAGE = By.xpath(".//a[@class = 'comment-main-title-link']");
     private final By REG_COMMENTS = By.xpath(".//a[contains(@class,'comment-thread-switcher-list-a-reg')]/span");
@@ -42,7 +42,7 @@ public class Lesson5ClassWork {
 
         article.click();
 
-        String articlePageTitle = elementDetector(driver, ARTICLE_PAGE);
+        String articlePageTitle = elementDetector(driver, ARTICLE_PAGE).getText();
         Assertions.assertEquals(articleTitle, articlePageTitle, "Articles not equal");
 
         Integer articlePageCommentCount = commentIntegerCountDetector(driver, COMMENT_COUNT);
@@ -51,10 +51,10 @@ public class Lesson5ClassWork {
 
         boolean g = xPathChecker(COMMENT_COUNT);
         if (g) {
-            //elementDetector(driver, COMMENT_COUNT).click();
-            driver.findElement(COMMENT_COUNT).click();
+            elementDetector(driver, COMMENT_COUNT).click();
+            //driver.findElement(COMMENT_COUNT).click();
 
-            String commentPageTitle = elementDetector(driver, COMMENT_PAGE);
+            String commentPageTitle = elementDetector(driver, COMMENT_PAGE).getText();
             Assertions.assertTrue(commentPageTitle.contains(articleTitle));
 
             Integer regCommentCount = commentIntegerCountDetector(driver, REG_COMMENTS);
@@ -129,11 +129,11 @@ public class Lesson5ClassWork {
 //        return detectedElement;
 //    }
 
-    public String elementDetector (WebDriver driver, By xPath){
+    public WebElement elementDetector (WebDriver driver, By xPath){
       //  boolean isFull;
-        String detectedElement = null;
+        WebElement detectedElement = null;
         try {
-            detectedElement = driver.findElement(xPath).getText();
+            detectedElement = driver.findElement(xPath);
             System.out.println("Molodec2");
        //     isFull = true;
         }
@@ -141,8 +141,11 @@ public class Lesson5ClassWork {
             e.getMessage(); //workin if catch an exception!!!!
       //      isFull = false;
             System.out.println("TurboIndus");
-            detectedElement = "(0)";
-            //detectedElement.sendKeys("(0)");
+            //detectedElement = "(0)";
+//            detectedElement = driver.findElement(By.xpath("(.//*[@itemprop='name'])[1]"));
+            detectedElement = driver.findElement(By.xpath("(.//*[@itemprop='title'])[1]")); //for special pages like  WOMAN
+            detectedElement.sendKeys("(0)");
+            System.out.println(detectedElement.getText());
         }
 
 
@@ -166,8 +169,8 @@ public class Lesson5ClassWork {
 //    }
 
     public Integer commentIntegerCountDetector(WebDriver driver2, By xPath){
-        String commentElement = elementDetector(driver2, xPath);
-        Integer commentCount = commentsCountBracketsCutterAndToNumberConverter(commentElement);
+        WebElement commentElement = elementDetector(driver2, xPath);
+        Integer commentCount = commentsCountBracketsCutterAndToNumberConverter(commentElement.getText());
         return commentCount;
     }
 
