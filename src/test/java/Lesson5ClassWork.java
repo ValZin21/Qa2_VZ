@@ -2,6 +2,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -17,13 +18,14 @@ public class Lesson5ClassWork {
 //    private final By ARTICLE_PAGE = By.xpath(".//h1/a[@class= 'article-title-link']"); //for special pages like  WOMAN
     private final By ARTICLE_PAGE_WITH_COMMENTS = By.xpath(".//span[@itemprop = 'headline name']");
     private final By ARTICLE_PAGE_WITHOUT_COMMENTS = By.xpath(".//h1[@itemprop = 'name']");
+    private final By ARTICLE_PAGE_COMMENT_COUNT = By.xpath(".//div[@class='article-title']/a");
     private final By COMMENT_PAGE = By.xpath(".//a[@class = 'comment-main-title-link']");
     private final By REG_COMMENTS = By.xpath(".//a[contains(@class,'comment-thread-switcher-list-a-reg')]/span");
     private final By ANON_COMMENTS = By.xpath(".//a[contains(@class,'comment-thread-switcher-list-a-anon')]/span");
     public WebDriver driver;
 
     @Test
-    public void delfiPractice() throws InputMismatchException {
+    public void delfiPractice() throws NoSuchElementException {
 
         System.setProperty("webdriver.chrome.driver","C://chromedriver_win32/chromedriver.exe");
         driver = new ChromeDriver();
@@ -31,7 +33,7 @@ public class Lesson5ClassWork {
         driver.get("http://rus.delfi.lv/");
 
         List<WebElement> articles = driver.findElements(ARTICLE);
-        WebElement article = articles.get(1);
+        WebElement article = articles.get(3);
 
         String articleTitle = elementTextPullOuter(article, ARTICLE_TITLE);
         String commentString = elementTextPullOuter(article, COMMENT_COUNT);
@@ -40,7 +42,7 @@ public class Lesson5ClassWork {
         article.click();
 
 
-        Integer articlePageCommentCount = commentIntegerCountDetector(driver, COMMENT_COUNT);
+        Integer articlePageCommentCount = commentIntegerCountDetector(driver, ARTICLE_PAGE_COMMENT_COUNT);
         String articlePageTitle;
         if (articlePageCommentCount == 0){
             articlePageTitle = elementDetector(driver, ARTICLE_PAGE_WITHOUT_COMMENTS);
@@ -50,11 +52,13 @@ public class Lesson5ClassWork {
         }
 
         Assertions.assertEquals(articleTitle, articlePageTitle, "Articles not equal");
+
+        System.out.println("Home: " + commentCount + " Article: " + articlePageCommentCount);
         Assertions.assertEquals(commentCount, articlePageCommentCount, "Comments count not equal");
 
 
-        if (articlePageCommentCount == 0) {
-            driver.findElement(COMMENT_COUNT).click();
+        if (articlePageCommentCount != 0) {
+            driver.findElement(ARTICLE_PAGE_COMMENT_COUNT).click();
 
             String commentPageTitle = elementDetector(driver, COMMENT_PAGE);
             Assertions.assertTrue(commentPageTitle.contains(articleTitle));
@@ -85,8 +89,8 @@ public class Lesson5ClassWork {
             elementString = webElement.findElement(xPath).getText();
             System.out.println("Molodec1");
         }
-        catch (org.openqa.selenium.NoSuchElementException e) {
-            e.getMessage();
+        catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
             System.out.println("Indus!1");
             elementString = "(0)";
         }
@@ -99,8 +103,8 @@ public class Lesson5ClassWork {
             detectedElement = driver.findElement(xPath).getText();
             System.out.println("Molodec2");
         }
-        catch (org.openqa.selenium.NoSuchElementException e) {
-            e.getMessage();
+        catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
             detectedElement = "(0)";
             System.out.println("Pidor");
         }
