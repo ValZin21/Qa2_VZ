@@ -1,3 +1,5 @@
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,7 @@ public class Lesson5ClassWork {
     private final By REG_COMMENTS = By.xpath(".//a[contains(@class,'comment-thread-switcher-list-a-reg')]/span");
     private final By ANON_COMMENTS = By.xpath(".//a[contains(@class,'comment-thread-switcher-list-a-anon')]/span");
     public WebDriver driver;
+    private static final Logger LOGGER = LogManager.getLogger(Lesson5ClassWork.class);
 
     @Test
     public void delfiPractice() throws NoSuchElementException {
@@ -32,12 +35,14 @@ public class Lesson5ClassWork {
         driver.get("http://rus.delfi.lv/");
 
         List<WebElement> articles = driver.findElements(ARTICLE);
-        WebElement article = articles.get(1);
+        WebElement article = articles.get(2);
 
         String articleTitle = articleAndCommentStringDetector(null, article, ARTICLE_TITLE);
         Assertions.assertNotEquals("0", articleTitle, "FAILURE! Second article doesn't exists!");
         String commentString = articleAndCommentStringDetector(null, article, COMMENT_COUNT);
         Integer commentCount = commentsCountBracketsCutterAndToNumberConverter(commentString);
+
+        LOGGER.info("Moving to Article page");
 
         article.click();
 
@@ -46,10 +51,14 @@ public class Lesson5ClassWork {
 
         String articlePageTitle;
         if (articlePageCommentCount == 0){
+            LOGGER.info("No comments detected for article - comparing only titles");
+
             articlePageTitle = articleAndCommentStringDetector(driver, null, ARTICLE_PAGE_WITHOUT_COMMENTS);
             Assertions.assertEquals(articleTitle, articlePageTitle, "Articles not equal");
         }
         else {
+            LOGGER.info("Comparing as articles as comments count");
+
             articlePageTitle = articleAndCommentStringDetector(driver, null, ARTICLE_PAGE_WITH_COMMENTS);
             Assertions.assertEquals(articleTitle, articlePageTitle, "Articles not equal");
             Assertions.assertEquals(commentCount, articlePageCommentCount, "Article page comment count not equal with home page!");
@@ -57,6 +66,9 @@ public class Lesson5ClassWork {
 
 
         if (articlePageCommentCount != 0) {
+
+            LOGGER.info("Moving to Comments page");
+
             driver.findElement(ARTICLE_PAGE_COMMENT_COUNT).click();
 
             String commentPageTitle = articleAndCommentStringDetector(driver, null, COMMENT_PAGE);
