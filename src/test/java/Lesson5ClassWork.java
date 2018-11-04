@@ -35,7 +35,7 @@ public class Lesson5ClassWork {
         driver.get("http://rus.delfi.lv/");
 
         List<WebElement> articles = driver.findElements(ARTICLE);
-        WebElement article = articles.get(2);
+        WebElement article = articles.get(1);
 
         String articleTitle = articleAndCommentStringDetector(null, article, ARTICLE_TITLE);
         Assertions.assertNotEquals("0", articleTitle, "FAILURE! Second article doesn't exists!");
