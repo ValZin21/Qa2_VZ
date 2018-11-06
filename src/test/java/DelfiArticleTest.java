@@ -9,11 +9,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import java.util.InputMismatchException;
-
 import java.util.List;
 
-public class Lesson5ClassWork {
+public class DelfiArticleTest {
     private final By ARTICLE = By.xpath(".//h3[@class = 'top2012-title']");
     private final By ARTICLE_TITLE = By.xpath(".//a[@class = 'top2012-title']");
     private final By COMMENT_COUNT = By.xpath(".//a[@class = 'comment-count']");
@@ -23,8 +21,9 @@ public class Lesson5ClassWork {
     private final By COMMENT_PAGE = By.xpath(".//a[@class = 'comment-main-title-link']");
     private final By REG_COMMENTS = By.xpath(".//a[contains(@class,'comment-thread-switcher-list-a-reg')]/span");
     private final By ANON_COMMENTS = By.xpath(".//a[contains(@class,'comment-thread-switcher-list-a-anon')]/span");
+    private final String DEFLI_HOME_PAGE = "http://rus.delfi.lv/";
     public WebDriver driver;
-    private static final Logger LOGGER = LogManager.getLogger(Lesson5ClassWork.class);
+    private static final Logger LOGGER = LogManager.getLogger(DelfiArticleTest.class);
 
     @Test
     public void delfiPractice() throws NoSuchElementException {
@@ -32,34 +31,37 @@ public class Lesson5ClassWork {
         System.setProperty("webdriver.chrome.driver","C://chromedriver_win32/chromedriver.exe");
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        driver.get("http://rus.delfi.lv/");
+        driver.get(DEFLI_HOME_PAGE);
 
         List<WebElement> articles = driver.findElements(ARTICLE);
+        Assertions.assertTrue(!articles.isEmpty());
         WebElement article = articles.get(1);
 
-        String articleTitle = articleAndCommentStringDetector(null, article, ARTICLE_TITLE);
+       // driver.findElements(COMMENT_COUNT).isEmpty();
+
+        String articleTitle = articleAndCommentStringDetector(article, ARTICLE_TITLE);
         Assertions.assertNotEquals("0", articleTitle, "FAILURE! Second article doesn't exists!");
-        String commentString = articleAndCommentStringDetector(null, article, COMMENT_COUNT);
-        Integer commentCount = commentsCountBracketsCutterAndToNumberConverter(commentString);
+        String commentString = articleAndCommentStringDetector(article, COMMENT_COUNT);
+        Integer commentCount = getCommentsFromString(commentString);
 
         LOGGER.info("Moving to Article page");
 
         article.click();
 
 
-        Integer articlePageCommentCount = commentIntegerCountDetector(driver, null, ARTICLE_PAGE_COMMENT_COUNT);
+        Integer articlePageCommentCount = commentIntegerCountDetector( null, ARTICLE_PAGE_COMMENT_COUNT);
 
         String articlePageTitle;
         if (articlePageCommentCount == 0){
             LOGGER.info("No comments detected for article - comparing only titles");
 
-            articlePageTitle = articleAndCommentStringDetector(driver, null, ARTICLE_PAGE_WITHOUT_COMMENTS);
+            articlePageTitle = articleAndCommentStringDetector(null, ARTICLE_PAGE_WITHOUT_COMMENTS);
             Assertions.assertEquals(articleTitle, articlePageTitle, "Articles not equal");
         }
         else {
             LOGGER.info("Comparing as articles as comments count");
 
-            articlePageTitle = articleAndCommentStringDetector(driver, null, ARTICLE_PAGE_WITH_COMMENTS);
+            articlePageTitle = articleAndCommentStringDetector(null, ARTICLE_PAGE_WITH_COMMENTS);
             Assertions.assertEquals(articleTitle, articlePageTitle, "Articles not equal");
             Assertions.assertEquals(commentCount, articlePageCommentCount, "Article page comment count not equal with home page!");
         }
@@ -71,11 +73,11 @@ public class Lesson5ClassWork {
 
             driver.findElement(ARTICLE_PAGE_COMMENT_COUNT).click();
 
-            String commentPageTitle = articleAndCommentStringDetector(driver, null, COMMENT_PAGE);
+            String commentPageTitle = articleAndCommentStringDetector(null, COMMENT_PAGE);
             Assertions.assertTrue(commentPageTitle.contains(articleTitle));
 
-            Integer regCommentCount = commentIntegerCountDetector(driver, null, REG_COMMENTS);
-            Integer anonCommentCount = commentIntegerCountDetector(driver, null, ANON_COMMENTS);
+            Integer regCommentCount = commentIntegerCountDetector(null, REG_COMMENTS);
+            Integer anonCommentCount = commentIntegerCountDetector(null, ANON_COMMENTS);
 
             Integer sum = regCommentCount + anonCommentCount;
 
@@ -88,8 +90,8 @@ public class Lesson5ClassWork {
         driver.close();
     }
     
-    public String articleAndCommentStringDetector (WebDriver driver, WebElement webElement, By xPath){
-        String titleOrCommentText = null;
+    public String articleAndCommentStringDetector (WebElement webElement, By xPath){
+        String titleOrCommentText;
         try {
             if (driver != null) {
                 titleOrCommentText = driver.findElement(xPath).getText();
@@ -104,13 +106,13 @@ public class Lesson5ClassWork {
         return titleOrCommentText;
     }
 
-    public Integer commentIntegerCountDetector(WebDriver driver, WebElement webElement, By xPath){
-        String commentText = articleAndCommentStringDetector(driver, webElement, xPath);
-        Integer commentCount = commentsCountBracketsCutterAndToNumberConverter(commentText);
+    public Integer commentIntegerCountDetector(WebElement webElement, By xPath){
+        String commentText = articleAndCommentStringDetector(webElement, xPath);
+        Integer commentCount = getCommentsFromString(commentText);
         return commentCount;
     }
 
-    public Integer commentsCountBracketsCutterAndToNumberConverter (String textString) {
+    public Integer getCommentsFromString (String textString) {
         textString = textString.substring(1, textString.length()-1);
         Integer commentsCountNumber = Integer.valueOf(textString);
         return commentsCountNumber;
