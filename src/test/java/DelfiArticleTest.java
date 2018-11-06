@@ -37,8 +37,6 @@ public class DelfiArticleTest {
         Assertions.assertTrue(!articles.isEmpty());
         WebElement article = articles.get(1);
 
-       // driver.findElements(COMMENT_COUNT).isEmpty();
-
         String articleTitle = articleAndCommentStringDetector(article, ARTICLE_TITLE);
         Assertions.assertNotEquals("0", articleTitle, "FAILURE! Second article doesn't exists!");
         String commentString = articleAndCommentStringDetector(article, COMMENT_COUNT);
@@ -47,7 +45,6 @@ public class DelfiArticleTest {
         LOGGER.info("Moving to Article page");
 
         article.click();
-
 
         Integer articlePageCommentCount = commentIntegerCountDetector( null, ARTICLE_PAGE_COMMENT_COUNT);
 
