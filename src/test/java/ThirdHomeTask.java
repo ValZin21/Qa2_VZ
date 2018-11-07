@@ -17,13 +17,18 @@ public class ThirdHomeTask {
     private final By WOMAN_BUTTON_SEARCH = By.xpath(".//li/a[@title='Women']");
     private final By DRESSES_BUTTON_SEARCH = By.xpath(".//ul[@class='sf-menu clearfix menu-content sf-js-enabled sf-arrows']/li/a[@title='Dresses']");
     private final By ORANGE_FILTER_SEARCH = By.xpath(".//*[@id='layered_id_attribute_group_13']");
-    private final By ORANGE_FILTER_ELEMENT_COUNT = By.xpath(".//*[@class='layered_color']/a[text()='Orange']/span");
+    private final By ORANGE_FILTER_PRODUCT_COUNT = By.xpath(".//*[@class='layered_color']/a[text()='Orange']/span");
 //    private final By aaa = By.xpath(".//*[text()='Dresses > Color Orange']");
 //    private final By bbb = By.xpath(".//*[@class='page-heading product-listing']/text()='Dresses > Color Orange'");
 //    private final By ccc = By.xpath(".//h1/span[@class='cat-name']/text()='Dresses > Color Orange'");
     private final By FILTER_CHECK = By.xpath(".//h1/span[contains(text(), 'Dresses > Color Orange')]");
-    private final By FILTERED_ELEMENTS = By.xpath(".//*[@class='color-list-container']");
-    private final By ELEMENT_ORANGE_COLOR = By.xpath(".//*[@class='color-list-container']/ul/li/a[@style='background:#F39C11;']");
+
+    private final By FILTERED_PRODUCTS = By.xpath(".//*[@class='color-list-container']");
+    private final By PRODUCT_ORANGE_COLOR = By.xpath(".//*[@class='color-list-container']/ul/li/a[@style='background:#F39C11;']");
+    private final By FILTERED_PRODUCTS_COUNT = By.xpath(".//*[@class='heading-counter']/span");
+
+    private final By PRODUCT_CLICK = By.xpath(".//a[@class='product_img_link']");
+    private final By IF_PRODUCT_IS_ORANGE = By.xpath(".//*[@title='Orange']");
 //    private final By eee = By.xpath(".//h1/span[@class='cat-name']");
 
     private static final Logger LOGGER = LogManager.getLogger(ThirdHomeTask.class);
@@ -70,23 +75,38 @@ public class ThirdHomeTask {
         //add check if Orange filter present
         Assertions.assertEquals("DRESSES > COLOR ORANGE", driver.findElement(FILTER_CHECK).getText(), "Orange filter is not applied!");
 
-        //Check if filtered elements has orange color and it count is the same as mareked count - point 4
-        List<WebElement> filteredElements = driver.findElements(FILTERED_ELEMENTS);
-        Assertions.assertTrue(!filteredElements.isEmpty());
-        LOGGER.info(filteredElements.size());
-        Assertions.assertEquals(filteredElements.size(), filteredElementCountNumber(),"IpatijKrjilov");
+        //Check if filtered elements has orange color and it count is the same as mareked count - point 4 (REFACTOR REQUIRED) here
+        List<WebElement> filteredProducts = driver.findElements(FILTERED_PRODUCTS);
+        Assertions.assertTrue(!filteredProducts.isEmpty());
+        LOGGER.info(filteredProducts.size());
+        Assertions.assertEquals(filteredProducts.size(), filteredBracketsNumberCheck(),"Filter in-breakets product count mismatch with filtered products count"); //Filter existing object count check
+        Assertions.assertEquals(filteredProducts.size(), filteredProductCountNumber(),"Filtered product count mismatch with total filtered product count text"); //Filtered element count check
+
+        //point5 - open 1 random item and check if orange is selected
+
+//        filteredProducts.clear();
+        
     }
 
 
-    
+
     @AfterEach
     public void driverClose(){
         driver.close();
+        driver.quit();
     }
 
-    public int filteredElementCountNumber(){
-        String text = driver.findElement(ORANGE_FILTER_ELEMENT_COUNT).getText();
+    public int filteredBracketsNumberCheck(){
+        String text = driver.findElement(ORANGE_FILTER_PRODUCT_COUNT).getText();
         Integer result = Integer.valueOf(text.substring(1,text.length()-1));
+        return result;
+    }
+
+    public int filteredProductCountNumber(){
+        String text = driver.findElement(FILTERED_PRODUCTS_COUNT).getText();
+        LOGGER.info("String is: " + text);
+        Integer result = Integer.valueOf(text.substring(10,text.length()-10));
+        LOGGER.info("filteredProductCountNumber is: " + result);
         return result;
     }
 
