@@ -23,11 +23,12 @@ public class ThirdHomeTask {
 //    private final By ccc = By.xpath(".//h1/span[@class='cat-name']/text()='Dresses > Color Orange'");
     private final By FILTER_CHECK = By.xpath(".//h1/span[contains(text(), 'Dresses > Color Orange')]");
 
-    private final By FILTERED_PRODUCTS = By.xpath(".//*[@class='color-list-container']");
+    private final By FILTERED_PRODUCTS_COLOR_LISTS = By.xpath(".//*[@class='color-list-container']");
     private final By PRODUCT_ORANGE_COLOR = By.xpath(".//*[@class='color-list-container']/ul/li/a[@style='background:#F39C11;']");
-    private final By FILTERED_PRODUCTS_COUNT = By.xpath(".//*[@class='heading-counter']/span");
+    private final By FILTERED_PRODUCTS_COLOR_LISTS_COUNT = By.xpath(".//*[@class='heading-counter']/span");
 
-    private final By PRODUCT_CLICK = By.xpath(".//a[@class='product_img_link']");
+//    private final By PRODUCT_CLICK = By.xpath(".//a[@class='product_img_link']");  //thi one opens product view
+    private final By PRODUCT_CLICK = By.xpath(".//*[@class = 'product_img_link']");
     private final By IF_PRODUCT_IS_ORANGE = By.xpath(".//*[@title='Orange']");
 //    private final By eee = By.xpath(".//h1/span[@class='cat-name']");
 
@@ -76,16 +77,37 @@ public class ThirdHomeTask {
         Assertions.assertEquals("DRESSES > COLOR ORANGE", driver.findElement(FILTER_CHECK).getText(), "Orange filter is not applied!");
 
         //Check if filtered elements has orange color and it count is the same as mareked count - point 4 (REFACTOR REQUIRED) here
-        List<WebElement> filteredProducts = driver.findElements(FILTERED_PRODUCTS);
-        Assertions.assertTrue(!filteredProducts.isEmpty());
+        List<WebElement> filteredProducts = driver.findElements(FILTERED_PRODUCTS_COLOR_LISTS);
+        Assertions.assertTrue(!filteredProducts.isEmpty(), "No filtered products detected!");
         LOGGER.info(filteredProducts.size());
-        Assertions.assertEquals(filteredProducts.size(), filteredBracketsNumberCheck(),"Filter in-breakets product count mismatch with filtered products count"); //Filter existing object count check
-        Assertions.assertEquals(filteredProducts.size(), filteredProductCountNumber(),"Filtered product count mismatch with total filtered product count text"); //Filtered element count check
+        //Filter existing object count check
+        Assertions.assertEquals(filteredProducts.size(), filteredBracketsNumberCheck(),"Filter in-breakets product count mismatch with filtered products count");
+        //Filtered element count check
+        Assertions.assertEquals(filteredProducts.size(), filteredProductCountNumber(),"Filtered product count mismatch with total filtered product count text");
 
         //point5 - open 1 random item and check if orange is selected
 
-//        filteredProducts.clear();
-        
+        filteredProducts.clear();
+        filteredProducts = driver.findElements(PRODUCT_CLICK);
+        Assertions.assertTrue(!filteredProducts.isEmpty(), "No filtered products to click on detected!");
+
+        int randomProductSelector = 0 + (int) (Math.random() * filteredProducts.size());
+        LOGGER.info("Random is: " + randomProductSelector);
+
+        filteredProducts.get(randomProductSelector).click();
+        //Switching to opend frame
+//        driver.switchTo().frame(driver.findElement(By.xpath(".//iframe[contains(@id, 'fancybox')]")));
+        driver.switchTo().frame(0);
+        //try-catch required for NoSuchElementException handle????
+        if(!driver.findElements(By.xpath(".//a[@name='Orange']")).isEmpty()){
+            LOGGER.info("Gottcha!");
+//            driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+
+            //back to DRESSES page
+            driver.switchTo().defaultContent();
+            //closing the frame
+            driver.findElement(By.xpath(".//*[@title = 'Close']")).click();
+        }
     }
 
 
@@ -103,7 +125,7 @@ public class ThirdHomeTask {
     }
 
     public int filteredProductCountNumber(){
-        String text = driver.findElement(FILTERED_PRODUCTS_COUNT).getText();
+        String text = driver.findElement(FILTERED_PRODUCTS_COLOR_LISTS_COUNT).getText();
         LOGGER.info("String is: " + text);
         Integer result = Integer.valueOf(text.substring(10,text.length()-10));
         LOGGER.info("filteredProductCountNumber is: " + result);
