@@ -18,19 +18,18 @@ public class ThirdHomeTask {
     private final By DRESSES_BUTTON_SEARCH = By.xpath(".//ul[@class='sf-menu clearfix menu-content sf-js-enabled sf-arrows']/li/a[@title='Dresses']");
     private final By ORANGE_FILTER_SEARCH = By.xpath(".//*[@id='layered_id_attribute_group_13']");
     private final By ORANGE_FILTER_PRODUCT_COUNT = By.xpath(".//*[@class='layered_color']/a[text()='Orange']/span");
-//    private final By aaa = By.xpath(".//*[text()='Dresses > Color Orange']");
-//    private final By bbb = By.xpath(".//*[@class='page-heading product-listing']/text()='Dresses > Color Orange'");
-//    private final By ccc = By.xpath(".//h1/span[@class='cat-name']/text()='Dresses > Color Orange'");
     private final By FILTER_CHECK = By.xpath(".//h1/span[contains(text(), 'Dresses > Color Orange')]");
 
     private final By FILTERED_PRODUCTS_COLOR_LISTS = By.xpath(".//*[@class='color-list-container']");
     private final By PRODUCT_ORANGE_COLOR = By.xpath(".//*[@class='color-list-container']/ul/li/a[@style='background:#F39C11;']");
     private final By FILTERED_PRODUCTS_COLOR_LISTS_COUNT = By.xpath(".//*[@class='heading-counter']/span");
 
-//    private final By PRODUCT_CLICK = By.xpath(".//a[@class='product_img_link']");  //thi one opens product view
+
     private final By PRODUCT_CLICK = By.xpath(".//*[@class = 'product_img_link']");
-    private final By IF_PRODUCT_IS_ORANGE = By.xpath(".//*[@title='Orange']");
-//    private final By eee = By.xpath(".//h1/span[@class='cat-name']");
+    private final By IF_PRODUCT_IS_ORANGE = By.xpath(".//a[@name='Orange']");
+    private final By CLOSE_PRODUCT = By.xpath(".//*[@title = 'Close']");
+
+    private  final By ADD_TO_CART_CLICK = By.xpath(".//a[contains(@class, 'ajax_add_to_cart_button')]");
 
     private static final Logger LOGGER = LogManager.getLogger(ThirdHomeTask.class);
 
@@ -99,24 +98,34 @@ public class ThirdHomeTask {
 //        driver.switchTo().frame(driver.findElement(By.xpath(".//iframe[contains(@id, 'fancybox')]")));
         driver.switchTo().frame(0);
         //try-catch required for NoSuchElementException handle????
-        if(!driver.findElements(By.xpath(".//a[@name='Orange']")).isEmpty()){
+        if(!driver.findElements(IF_PRODUCT_IS_ORANGE).isEmpty()){
             LOGGER.info("Gottcha!");
 //            driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 
             //back to DRESSES page
             driver.switchTo().defaultContent();
             //closing the frame
-            driver.findElement(By.xpath(".//*[@title = 'Close']")).click();
+            driver.findElement(CLOSE_PRODUCT).click();
+        }
+
+        //POINT 6
+
+        filteredProducts = driver.findElements(ADD_TO_CART_CLICK);
+        Assertions.assertTrue(!filteredProducts.isEmpty(), "Add To cart butonn missed!");
+        driver.manage().timeouts().implicitlyWait(14, TimeUnit.SECONDS);
+        for (int i = 0; i < filteredProducts.size(); i++) {
+
+            filteredProducts.get(i).click();
         }
     }
 
 
 
-    @AfterEach
-    public void driverClose(){
-        driver.close();
-        driver.quit();
-    }
+//    @AfterEach
+//    public void driverClose(){
+//        driver.close();
+//        driver.quit();
+//    }
 
     public int filteredBracketsNumberCheck(){
         String text = driver.findElement(ORANGE_FILTER_PRODUCT_COUNT).getText();
