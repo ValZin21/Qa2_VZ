@@ -36,10 +36,12 @@ public class ThirdHomeTask {
     private final By ADD_TO_CART_CLICK = By.xpath(".//a[contains(@class, 'ajax_add_to_cart_button')]");
     private final By CONTINUE_SHOPPING_CLICK = By.xpath(".//span[contains(@title, 'Continue shopping')]");
     private final By SELECT_PRODUCT = By.xpath(".//*[@class='product-container']");
+    private final By PRODUCT_PRICE = By.xpath(".//*[@itemprop='price']");
 
     private static final Logger LOGGER = LogManager.getLogger(ThirdHomeTask.class);
 
     public WebDriver driver;
+    List<WebElement> filteredProducts;
 
     @Test
     public void ladiesStore() {
@@ -82,7 +84,7 @@ public class ThirdHomeTask {
         Assertions.assertEquals("DRESSES > COLOR ORANGE", driver.findElement(FILTER_CHECK).getText(), "Orange filter is not applied!");
 
         //Check if filtered elements has orange color and it count is the same as mareked count - point 4 (REFACTOR REQUIRED) here
-        List<WebElement> filteredProducts = driver.findElements(FILTERED_PRODUCTS_COLOR_LISTS);
+        filteredProducts = driver.findElements(FILTERED_PRODUCTS_COLOR_LISTS);
         Assertions.assertTrue(!filteredProducts.isEmpty(), "No filtered products detected!");
         LOGGER.info(filteredProducts.size());
         //Filter existing object count check
@@ -121,13 +123,20 @@ public class ThirdHomeTask {
         filteredProducts = driver.findElements(SELECT_PRODUCT);
         Assertions.assertTrue(!filteredProducts.isEmpty(), "Add To cart butonn missed!");
 //        driver.manage().timeouts().implicitlyWait(14, TimeUnit.SECONDS);
-        int revenue = 0;
+        double totalRevenue = 0.0;
         for (int i = 0; i < filteredProducts.size(); i++) {
 
             LOGGER.info(filteredProducts.size());
             //Actions allows to navigate on element(imitation of to put cursor to open the hidden element). Full Form: Actions manipulator = new Actions(driver);
+            //read about .perform()!!!!
             new Actions(driver).moveToElement(filteredProducts.get(i)).click().perform();
             wait.until(ExpectedConditions.elementToBeClickable(filteredProducts.get(i).findElement(ADD_TO_CART_CLICK)));
+
+            LOGGER.info("StringPrice: " + filteredProducts.get(i).findElement(PRODUCT_PRICE).getText());
+//            totalRevenue = totalRevenue + Double.valueOf(filteredProducts.get(i).findElement(PRODUCT_PRICE).getText().substring(1));
+            totalRevenue = productsTotalRevenue(i, totalRevenue);
+            LOGGER.info("totalRevenues: " + totalRevenue);
+
             filteredProducts.get(i).findElement(ADD_TO_CART_CLICK).click();
 //            driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
             driver.switchTo().activeElement();
@@ -135,10 +144,16 @@ public class ThirdHomeTask {
             LOGGER.info("It's time to kick ass and chew buuble gum!");
             driver.findElement(CONTINUE_SHOPPING_CLICK).click();
             LOGGER.info("I love you, Pumpkin!");
+
+//            wait.until(ExpectedConditions.elementToBeClickable(filteredProducts.get(i).findElement(PRODUCT_PRICE)));
+
+
+
             driver.switchTo().defaultContent();
         }
 
-        driver.manage().window().maximize();
+        totalRevenue = roundPriceToTwoSymbols(totalRevenue);
+        LOGGER.info("Total revenue after convertation: " + totalRevenue);
 
         /*to do
         ** add total price counter for selected objects into line 124 cycle
@@ -154,7 +169,7 @@ public class ThirdHomeTask {
     @AfterEach
     public void driverClose(){
         driver.close();
-//        driver.quit();
+        driver.quit();
     }
 
     public int filteredBracketsNumberCheck(){
@@ -169,6 +184,15 @@ public class ThirdHomeTask {
         Integer result = Integer.valueOf(text.substring(10,text.length()-10));
         LOGGER.info("filteredProductCountNumber is: " + result);
         return result;
+    }
+
+    public double productsTotalRevenue (int i, double totalPrice) {
+        totalPrice = totalPrice + Double.valueOf(filteredProducts.get(i).findElement(PRODUCT_PRICE).getText().substring(1));
+        return totalPrice;
+    }
+
+    public double roundPriceToTwoSymbols (double value){
+        return Double.valueOf(String.valueOf(value).substring(0,5));
     }
 
 }
