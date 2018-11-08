@@ -32,8 +32,9 @@ public class ThirdHomeTask {
     private final By IF_PRODUCT_IS_ORANGE = By.xpath(".//a[@name='Orange']");
     private final By CLOSE_PRODUCT = By.xpath(".//*[@title = 'Close']");
 
-    private  final By ADD_TO_CART_CLICK = By.xpath(".//a[contains(@class, 'ajax_add_to_cart_button')]");
+    private final By ADD_TO_CART_CLICK = By.xpath(".//a[contains(@class, 'ajax_add_to_cart_button')]");
     private final By CONTINUE_SHOPPING_CLICK = By.xpath(".//span[contains(@title, 'Continue shopping')]");
+    private final By SELECT_PRODUCT = By.xpath(".//*[@class='product-container']");
 
     private static final Logger LOGGER = LogManager.getLogger(ThirdHomeTask.class);
 
@@ -116,21 +117,21 @@ public class ThirdHomeTask {
 
         WebDriverWait wait = new WebDriverWait(driver, 15);
         driver.manage().window().setSize(new Dimension(750, 1050));
-        filteredProducts = driver.findElements(ADD_TO_CART_CLICK);
+        filteredProducts = driver.findElements(SELECT_PRODUCT);
         Assertions.assertTrue(!filteredProducts.isEmpty(), "Add To cart butonn missed!");
         driver.manage().timeouts().implicitlyWait(14, TimeUnit.SECONDS);
-//        for (int i = 0; i < filteredProducts.size(); i++) {
+        for (int i = 0; i < filteredProducts.size(); i++) {
 
             LOGGER.info(filteredProducts.size());
-            filteredProducts.get(1).click();
+            filteredProducts.get(i).findElement(ADD_TO_CART_CLICK).click();
 //            driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
             driver.switchTo().activeElement();
-            wait.until(ExpectedConditions.elementToBeClickable(CONTINUE_SHOPPING_CLICK));
+            wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(CONTINUE_SHOPPING_CLICK)));
             LOGGER.info("It's time to kick ass and chew buuble gum!");
             driver.findElement(CONTINUE_SHOPPING_CLICK).click();
             LOGGER.info("I love you, Pumpkin!");
-//            driver.switchTo().defaultContent();
- //       }
+            driver.switchTo().defaultContent();
+        }
     }
 
 
