@@ -4,9 +4,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -30,6 +33,7 @@ public class ThirdHomeTask {
     private final By CLOSE_PRODUCT = By.xpath(".//*[@title = 'Close']");
 
     private  final By ADD_TO_CART_CLICK = By.xpath(".//a[contains(@class, 'ajax_add_to_cart_button')]");
+    private final By CONTINUE_SHOPPING_CLICK = By.xpath(".//span[contains(@title, 'Continue shopping')]");
 
     private static final Logger LOGGER = LogManager.getLogger(ThirdHomeTask.class);
 
@@ -110,13 +114,23 @@ public class ThirdHomeTask {
 
         //POINT 6
 
+        WebDriverWait wait = new WebDriverWait(driver, 15);
+        driver.manage().window().setSize(new Dimension(750, 1050));
         filteredProducts = driver.findElements(ADD_TO_CART_CLICK);
         Assertions.assertTrue(!filteredProducts.isEmpty(), "Add To cart butonn missed!");
         driver.manage().timeouts().implicitlyWait(14, TimeUnit.SECONDS);
-        for (int i = 0; i < filteredProducts.size(); i++) {
+//        for (int i = 0; i < filteredProducts.size(); i++) {
 
-            filteredProducts.get(i).click();
-        }
+            LOGGER.info(filteredProducts.size());
+            filteredProducts.get(1).click();
+//            driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+            driver.switchTo().activeElement();
+            wait.until(ExpectedConditions.elementToBeClickable(CONTINUE_SHOPPING_CLICK));
+            LOGGER.info("It's time to kick ass and chew buuble gum!");
+            driver.findElement(CONTINUE_SHOPPING_CLICK).click();
+            LOGGER.info("I love you, Pumpkin!");
+//            driver.switchTo().defaultContent();
+ //       }
     }
 
 
