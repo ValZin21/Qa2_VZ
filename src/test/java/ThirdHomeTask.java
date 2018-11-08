@@ -8,6 +8,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -116,7 +117,7 @@ public class ThirdHomeTask {
         //POINT 6
 
         WebDriverWait wait = new WebDriverWait(driver, 15);
-        driver.manage().window().setSize(new Dimension(750, 1050));
+//        driver.manage().window().setSize(new Dimension(750, 1050));
         filteredProducts = driver.findElements(SELECT_PRODUCT);
         Assertions.assertTrue(!filteredProducts.isEmpty(), "Add To cart butonn missed!");
 //        driver.manage().timeouts().implicitlyWait(14, TimeUnit.SECONDS);
@@ -124,7 +125,9 @@ public class ThirdHomeTask {
         for (int i = 0; i < filteredProducts.size(); i++) {
 
             LOGGER.info(filteredProducts.size());
-            wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(ADD_TO_CART_CLICK)));
+            //Actions allows to navigate on element(imitation of to put cursor to open the hidden element). Full Form: Actions manipulator = new Actions(driver);
+            new Actions(driver).moveToElement(filteredProducts.get(i)).click().perform();
+            wait.until(ExpectedConditions.elementToBeClickable(filteredProducts.get(i).findElement(ADD_TO_CART_CLICK)));
             filteredProducts.get(i).findElement(ADD_TO_CART_CLICK).click();
 //            driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
             driver.switchTo().activeElement();
@@ -151,7 +154,7 @@ public class ThirdHomeTask {
     @AfterEach
     public void driverClose(){
         driver.close();
-        driver.quit();
+//        driver.quit();
     }
 
     public int filteredBracketsNumberCheck(){
