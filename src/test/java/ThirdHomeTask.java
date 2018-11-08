@@ -119,11 +119,12 @@ public class ThirdHomeTask {
         driver.manage().window().setSize(new Dimension(750, 1050));
         filteredProducts = driver.findElements(SELECT_PRODUCT);
         Assertions.assertTrue(!filteredProducts.isEmpty(), "Add To cart butonn missed!");
-        driver.manage().timeouts().implicitlyWait(14, TimeUnit.SECONDS);
+//        driver.manage().timeouts().implicitlyWait(14, TimeUnit.SECONDS);
         int revenue = 0;
         for (int i = 0; i < filteredProducts.size(); i++) {
 
             LOGGER.info(filteredProducts.size());
+            wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(ADD_TO_CART_CLICK)));
             filteredProducts.get(i).findElement(ADD_TO_CART_CLICK).click();
 //            driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
             driver.switchTo().activeElement();
