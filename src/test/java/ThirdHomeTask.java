@@ -120,6 +120,7 @@ public class ThirdHomeTask {
         filteredProducts = driver.findElements(SELECT_PRODUCT);
         Assertions.assertTrue(!filteredProducts.isEmpty(), "Add To cart butonn missed!");
         driver.manage().timeouts().implicitlyWait(14, TimeUnit.SECONDS);
+        int revenue = 0;
         for (int i = 0; i < filteredProducts.size(); i++) {
 
             LOGGER.info(filteredProducts.size());
@@ -132,15 +133,25 @@ public class ThirdHomeTask {
             LOGGER.info("I love you, Pumpkin!");
             driver.switchTo().defaultContent();
         }
+
+        driver.manage().window().maximize();
+
+        /*to do
+        ** add total price counter for selected objects into line 124 cycle
+        ** find products in cart
+        ** check that correct products are added in cart (in cycle names = in cart names)
+        ** compare prices??? probably - not needed
+        ** compare the in cycle total revenue with in cart total revenue (in cart total revenue - shipping price)
+        */
     }
 
 
 
-//    @AfterEach
-//    public void driverClose(){
-//        driver.close();
-//        driver.quit();
-//    }
+    @AfterEach
+    public void driverClose(){
+        driver.close();
+        driver.quit();
+    }
 
     public int filteredBracketsNumberCheck(){
         String text = driver.findElement(ORANGE_FILTER_PRODUCT_COUNT).getText();
