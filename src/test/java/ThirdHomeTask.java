@@ -42,6 +42,7 @@ public class ThirdHomeTask {
 
     public WebDriver driver;
     List<WebElement> filteredProducts;
+    List<String> inStockProducts;
 
     @Test
     public void ladiesStore() {
@@ -156,7 +157,6 @@ public class ThirdHomeTask {
         LOGGER.info("Total revenue after convertation: " + totalRevenue);
 
         /*to do
-        ** add total price counter for selected objects into line 124 cycle
         ** find products in cart
         ** check that correct products are added in cart (in cycle names = in cart names)
         ** compare prices??? probably - not needed
