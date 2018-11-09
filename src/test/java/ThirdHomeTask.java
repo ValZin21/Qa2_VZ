@@ -62,8 +62,9 @@ public class ThirdHomeTask {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.get(HOME_PAGE);
+
         //Select WOMEN - point 1
-        WebElement womenCheck = driver.findElement(WOMAN_BUTTON_SEARCH);
+        WebElement womenCheck = elementFind(WOMAN_BUTTON_SEARCH);
         Assertions.assertEquals("WOMEN", womenCheck.getText(), "No 'Women' button detected");
         String indexPageTitle = driver.getTitle();
         womenCheck.click();
@@ -71,29 +72,27 @@ public class ThirdHomeTask {
         //Select DRESSES - point 2
         String womenPageTitle = driver.getTitle();
         Assertions.assertFalse(indexPageTitle == womenPageTitle, "Page not changed from Main to WOMEN!!");
-        WebElement dressesCheck = driver.findElement(DRESSES_BUTTON_SEARCH);
+
+        WebElement dressesCheck = elementFind(DRESSES_BUTTON_SEARCH);
         Assertions.assertEquals("DRESSES", dressesCheck.getText(), "No dresses button Detected");
+
         dressesCheck.click();
 
         //Select ORANGE FILTER - point 3
         String dressesPageTitle = driver.getTitle();
         Assertions.assertFalse(dressesPageTitle == womenPageTitle, "Page not changed from WOMEN to DRESSES");
-//        System.out.println("Page title before filter is applied: "  + driver.getTitle());
         LOGGER.info("Page title before filter is applied: "  + driver.getTitle());
-        driver.findElement(ORANGE_FILTER_SEARCH).click();
+
+        elementClick(ORANGE_FILTER_SEARCH);
         //timer to wait for filter is applied. Try tp rebuil on wait.until(expectedConditions.visibilityOf(<element>))
-        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);  // try-catch would be nice to receive a beautiful message in case element is not found
+        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
         //element which appears after filtering only - until it not detected code execution won't go forward
-        WebElement elementAppearedAfterFitlteringCheck = driver.findElement(FILTER_CHECK);
-
-//        System.out.println("Page title after filter is applied: " + driver.getTitle());
+        String elementAppearedAfterFitlteringCheck = textGet(FILTER_CHECK);
         LOGGER.info("Page title after filter is applied: " + driver.getTitle());
-        String karl = driver.findElement(FILTER_CHECK).getText();
-//        System.out.println("This is filtered product text: " + karl);
-        LOGGER.info("This is filtered product text: " + karl);
+        LOGGER.info("This is filtered product text: " + elementAppearedAfterFitlteringCheck);
 
-        //add check if Orange filter present
-        Assertions.assertEquals("DRESSES > COLOR ORANGE", driver.findElement(FILTER_CHECK).getText(), "Orange filter is not applied!");
+        //check if Orange filter present
+        Assertions.assertEquals("DRESSES > COLOR ORANGE", elementAppearedAfterFitlteringCheck, "Orange filter is not applied!");
 
         //point 4 - Check if filtered elements has orange color and it count is the same as mareked count(REFACTOR REQUIRED) here
         filteredProducts = driver.findElements(FILTERED_PRODUCTS_COLOR_LISTS);
@@ -114,70 +113,50 @@ public class ThirdHomeTask {
         LOGGER.info("Random is: " + randomProductSelector);
 
         filteredProducts.get(randomProductSelector).click();
-        //Switching to opend frame
-//        driver.switchTo().frame(driver.findElement(By.xpath(".//iframe[contains(@id, 'fancybox')]")));
+        //Switching to opened frame
         driver.switchTo().frame(0);
-        //try-catch required for NoSuchElementException handle????
-        if(!driver.findElements(IF_PRODUCT_IS_ORANGE).isEmpty()){
-            LOGGER.info("Gottcha!");
-//            driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 
-            //back to DRESSES page
-            driver.switchTo().defaultContent();
-            //closing the frame
-            driver.findElement(CLOSE_PRODUCT).click();
-        }
+        Assertions.assertFalse(driver.findElements(IF_PRODUCT_IS_ORANGE).isEmpty(), "No orange filter present for this product!");
+        LOGGER.info("Checked element has Orange color!");
+        driver.switchTo().defaultContent();
+        elementClick(CLOSE_PRODUCT);
 
         //POINT 6
 
         WebDriverWait wait = new WebDriverWait(driver, 15);
-//        driver.manage().window().setSize(new Dimension(750, 1050));
         filteredProducts = driver.findElements(SELECT_PRODUCT);
         Assertions.assertTrue(!filteredProducts.isEmpty(), "Add To cart butonn missed!");
-//        driver.manage().timeouts().implicitlyWait(14, TimeUnit.SECONDS);
-        double totalRevenue = 0.0;
+        
         //Adding filtered products to cart. Collecting product prices to filteredProductsPrices list
         Actions manipulator = new Actions(driver);
 
         for (int i = 0; i < filteredProducts.size(); i++) {
 
             LOGGER.info(filteredProducts.size());
-            //Actions allows to navigate on element(imitation of to put cursor to open the hidden element). Full Form: Actions manipulator = new Actions(driver);
             //read about .perform()!!!!
 //            new Actions(driver).moveToElement(filteredProducts.get(i)).perform();
             manipulator.moveToElement(filteredProducts.get(i)).perform();
             wait.until(ExpectedConditions.elementToBeClickable(filteredProducts.get(i).findElement(ADD_TO_CART_CLICK)));
-
             LOGGER.info("StringPrice: " + filteredProducts.get(i).findElement(PRODUCT_PRICE).getText());
-//            totalRevenue = totalRevenue + Double.valueOf(filteredProducts.get(i).findElement(PRODUCT_PRICE).getText().substring(1));
-            //not needed
-            totalRevenue = productsTotalRevenue(i, totalRevenue);
-            LOGGER.info("totalRevenues: " + totalRevenue);
-
+            
+            filteredProductsPrices.add(filteredProducts.get(i).findElement(PRODUCT_PRICE).getText());
+            
             filteredProducts.get(i).findElement(ADD_TO_CART_CLICK).click();
-//            driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 //            driver.switchTo().activeElement();
-            wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(CONTINUE_SHOPPING_CLICK)));
-            LOGGER.info("It's time to kick ass and chew buuble gum!");
-            driver.findElement(CONTINUE_SHOPPING_CLICK).click();
-            LOGGER.info("I love you, Pumpkin!");
-
-//            wait.until(ExpectedConditions.elementToBeClickable(filteredProducts.get(i).findElement(PRODUCT_PRICE)));
-
+            wait.until(ExpectedConditions.elementToBeClickable(elementFind(CONTINUE_SHOPPING_CLICK)));
+            LOGGER.info("Continue shopping button detected!");
+            elementClick(CONTINUE_SHOPPING_CLICK);
+            LOGGER.info("Continue shopping button executed!");
 //            driver.switchTo().defaultContent();
         }
-
-        //not needed
-        totalRevenue = roundPriceToTwoSymbols(totalRevenue);
-        LOGGER.info("Total revenue after convertation: " + totalRevenue);
-
+        
         //opening Shopping Carts Drop-down menu
 //        new Actions(driver).moveToElement(driver.findElement(SHOPPING_CART)).perform();
-        manipulator.moveToElement(driver.findElement(SHOPPING_CART)).perform();
+        manipulator.moveToElement(elementFind(SHOPPING_CART)).perform();
        // driver.switchTo().activeElement();
         wait.until(ExpectedConditions.elementToBeClickable(PRODUCT_IN_CART));
 
-        Double totalRevenue2 = 0.0;
+        Double totalRevenue = 0.0;
 
         inStockProducts = driver.findElements(PRODUCT_IN_CART);
         for (int i = 0; i < inStockProducts.size(); i++) {
@@ -189,13 +168,13 @@ public class ThirdHomeTask {
 
             LOGGER.info("Product " + (i+1) + " price validation succeed!");
 
-            totalRevenue2 = productsTotalRevenue2(i, totalRevenue2);
+            totalRevenue = productsTotalRevenue(i, totalRevenue);
 
             if ((inStockProducts.size() - i) == 1 ) {
                 //checking if total price calculated correctly (s)
-                totalRevenue2 = roundPriceToTwoSymbols(totalRevenue2);
-                totalRevenue2 = totalRevenue2 + Float.valueOf(driver.findElement(PRODUCTS_SHIPPING_PRICE).getText().substring(1));
-                Assertions.assertEquals(totalRevenue2, Double.valueOf(driver.findElement(PRODUCTS_TOTAL_PRICE).getText().substring(1)), "Totals mismatch!");
+                totalRevenue = roundPriceToTwoSymbols(totalRevenue);
+                totalRevenue = totalRevenue + Double.valueOf(textGet(PRODUCTS_SHIPPING_PRICE).substring(1));
+                Assertions.assertEquals(totalRevenue, Double.valueOf(textGet(PRODUCTS_TOTAL_PRICE).substring(1)), "Totals mismatch!");
             }
         }
 
@@ -203,10 +182,9 @@ public class ThirdHomeTask {
 
         /*to do
         ** refactor the code!
+        ** textGet() and elementClick() methods update to work with list (list.get(i).bla-bla) required
         */
     }
-
-
 
     @AfterEach
     public void driverClose(){
@@ -215,32 +193,38 @@ public class ThirdHomeTask {
     }
 
     public int filteredBracketsNumberCheck(){
-        String text = driver.findElement(ORANGE_FILTER_PRODUCT_COUNT).getText();
+        String text = textGet(ORANGE_FILTER_PRODUCT_COUNT);
         Integer result = Integer.valueOf(text.substring(1,text.length()-1));
         return result;
     }
 
     public int filteredProductCountNumber(){
-        String text = driver.findElement(FILTERED_PRODUCTS_COLOR_LISTS_COUNT).getText();
+        String text = textGet(FILTERED_PRODUCTS_COLOR_LISTS_COUNT);
         LOGGER.info("String is: " + text);
         Integer result = Integer.valueOf(text.substring(10,text.length()-10));
         LOGGER.info("filteredProductCountNumber is: " + result);
         return result;
     }
 
-    public double productsTotalRevenue (int i, double totalPrice) { //this method not needed
-        totalPrice = totalPrice + Double.valueOf(filteredProducts.get(i).findElement(PRODUCT_PRICE).getText().substring(1));
-        filteredProductsPrices.add(filteredProducts.get(i).findElement(PRODUCT_PRICE).getText());
-        return totalPrice;
-    }
-
-    public double productsTotalRevenue2 (int i, double totalPrice) {
+    public double productsTotalRevenue (int i, double totalPrice) {
         totalPrice = totalPrice + Double.valueOf(inStockProducts.get(i).findElement(PRODUCT_IN_CART_PRICE).getText().substring(1));
         return totalPrice;
     }
 
     public double roundPriceToTwoSymbols (double value){
         return Double.valueOf(String.valueOf(value).substring(0,5));
+    }
+
+    public String textGet (By xpath) {
+        return elementFind(xpath).getText();
+    }
+
+    public WebElement elementFind (By xpath) {
+        return driver.findElement(xpath);
+    }
+
+    public void elementClick (By xpath) {
+        elementFind(xpath).click();
     }
 
 }
