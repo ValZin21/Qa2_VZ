@@ -37,12 +37,22 @@ public class ThirdHomeTask {
     private final By CONTINUE_SHOPPING_CLICK = By.xpath(".//span[contains(@title, 'Continue shopping')]");
     private final By SELECT_PRODUCT = By.xpath(".//*[@class='product-container']");
     private final By PRODUCT_PRICE = By.xpath(".//*[@itemprop='price']");
+    private final By PRODUCT_NAME = By.xpath(".//*[@class='product-name']");
+
+    private final By SHOPPING_CART = By.xpath(".//*[@title='View my shopping cart']");
+    private final By PRODUCT_IN_CART = By.xpath(".//*[contains(@data-id, 'cart_block_product')]");
+    private final By PRODUCT_IN_CART_PRICE = By.xpath(".//*[@class='price']");
+    private final By PRODUCT_IN_CART_NAME = By.xpath(".//*[@class='cart_block_product_name']");
+    private final By PRODUCTS_SHIPPING_PRICE = By.xpath(".//*[contains(@class, 'cart_block_shipping_cost')]");
+    private final By PRODUCTS_TOTAL_PRICE = By.xpath(".//*[contains(@class, 'cart_block_total')]");
+
+
 
     private static final Logger LOGGER = LogManager.getLogger(ThirdHomeTask.class);
 
     public WebDriver driver;
     List<WebElement> filteredProducts;
-    List<String> inStockProducts;
+    List<WebElement> inStockProducts;
 
     @Test
     public void ladiesStore() {
@@ -125,12 +135,14 @@ public class ThirdHomeTask {
         Assertions.assertTrue(!filteredProducts.isEmpty(), "Add To cart butonn missed!");
 //        driver.manage().timeouts().implicitlyWait(14, TimeUnit.SECONDS);
         double totalRevenue = 0.0;
+        Actions manipulator = new Actions(driver);
         for (int i = 0; i < filteredProducts.size(); i++) {
 
             LOGGER.info(filteredProducts.size());
             //Actions allows to navigate on element(imitation of to put cursor to open the hidden element). Full Form: Actions manipulator = new Actions(driver);
             //read about .perform()!!!!
-            new Actions(driver).moveToElement(filteredProducts.get(i)).click().perform();
+//            new Actions(driver).moveToElement(filteredProducts.get(i)).perform();
+            manipulator.moveToElement(filteredProducts.get(i)).perform();
             wait.until(ExpectedConditions.elementToBeClickable(filteredProducts.get(i).findElement(ADD_TO_CART_CLICK)));
 
             LOGGER.info("StringPrice: " + filteredProducts.get(i).findElement(PRODUCT_PRICE).getText());
@@ -156,6 +168,21 @@ public class ThirdHomeTask {
         totalRevenue = roundPriceToTwoSymbols(totalRevenue);
         LOGGER.info("Total revenue after convertation: " + totalRevenue);
 
+//        new Actions(driver).moveToElement(driver.findElement(SHOPPING_CART)).perform();
+        manipulator.moveToElement(driver.findElement(SHOPPING_CART)).perform();
+
+        inStockProducts = driver.findElements(PRODUCT_IN_CART);
+        for (int i = 0; i < inStockProducts.size(); i++) {
+            Assertions.assertEquals(
+                    filteredProducts.get(i).findElement(PRODUCT_PRICE).getText(),
+                    inStockProducts.get(i).findElement(PRODUCT_IN_CART_PRICE).getText(),
+                    "Product " + (i+1) + " prices mismatch!");
+        }
+
+        LOGGER.info("Product price validation succeed!");
+
+
+
         /*to do
         ** find products in cart
         ** check that correct products are added in cart (in cycle names = in cart names)
@@ -166,11 +193,11 @@ public class ThirdHomeTask {
 
 
 
-    @AfterEach
-    public void driverClose(){
-        driver.close();
-        driver.quit();
-    }
+//    @AfterEach
+//    public void driverClose(){
+//        driver.close();
+//        driver.quit();
+//    }
 
     public int filteredBracketsNumberCheck(){
         String text = driver.findElement(ORANGE_FILTER_PRODUCT_COUNT).getText();
