@@ -26,7 +26,6 @@ public class ThirdHomeTask {
     private final By FILTER_CHECK = By.xpath(".//h1/span[contains(text(), 'Dresses > Color Orange')]");
 
     private final By FILTERED_PRODUCTS_COLOR_LISTS = By.xpath(".//*[@class='color-list-container']");
-    private final By PRODUCT_ORANGE_COLOR = By.xpath(".//*[@class='color-list-container']/ul/li/a[@style='background:#F39C11;']");
     private final By FILTERED_PRODUCTS_COLOR_LISTS_COUNT = By.xpath(".//*[@class='heading-counter']/span");
 
     private final By PRODUCT_CLICK = By.xpath(".//*[@class = 'product_img_link']");
@@ -37,16 +36,12 @@ public class ThirdHomeTask {
     private final By CONTINUE_SHOPPING_CLICK = By.xpath(".//span[contains(@title, 'Continue shopping')]");
     private final By SELECT_PRODUCT = By.xpath(".//*[@class='product-container']");
     private final By PRODUCT_PRICE = By.xpath(".//*[@itemprop='price']");
-    private final By PRODUCT_NAME = By.xpath(".//*[@class='product-name']");
 
     private final By SHOPPING_CART = By.xpath(".//*[@title='View my shopping cart']");
     private final By PRODUCT_IN_CART = By.xpath(".//*[contains(@data-id, 'cart_block_product')]");
     private final By PRODUCT_IN_CART_PRICE = By.xpath(".//*[@class='price']");
-    private final By PRODUCT_IN_CART_NAME = By.xpath(".//*[@class='cart_block_product_name']");
     private final By PRODUCTS_SHIPPING_PRICE = By.xpath(".//*[contains(@class, 'cart_block_shipping_cost')]");
     private final By PRODUCTS_TOTAL_PRICE = By.xpath(".//*[contains(@class, 'cart_block_total')]");
-
-
 
     private static final Logger LOGGER = LogManager.getLogger(ThirdHomeTask.class);
 
@@ -64,7 +59,7 @@ public class ThirdHomeTask {
         driver.get(HOME_PAGE);
 
         //Select WOMEN - point 1
-        WebElement womenCheck = elementFind(WOMAN_BUTTON_SEARCH);
+        WebElement womenCheck = elementFind(WOMAN_BUTTON_SEARCH, 0, null);
         Assertions.assertEquals("WOMEN", womenCheck.getText(), "No 'Women' button detected");
         String indexPageTitle = driver.getTitle();
         womenCheck.click();
@@ -73,7 +68,7 @@ public class ThirdHomeTask {
         String womenPageTitle = driver.getTitle();
         Assertions.assertFalse(indexPageTitle == womenPageTitle, "Page not changed from Main to WOMEN!!");
 
-        WebElement dressesCheck = elementFind(DRESSES_BUTTON_SEARCH);
+        WebElement dressesCheck = elementFind(DRESSES_BUTTON_SEARCH, 0 , null);
         Assertions.assertEquals("DRESSES", dressesCheck.getText(), "No dresses button Detected");
 
         dressesCheck.click();
@@ -83,11 +78,11 @@ public class ThirdHomeTask {
         Assertions.assertFalse(dressesPageTitle == womenPageTitle, "Page not changed from WOMEN to DRESSES");
         LOGGER.info("Page title before filter is applied: "  + driver.getTitle());
 
-        elementClick(ORANGE_FILTER_SEARCH);
+        elementClick(ORANGE_FILTER_SEARCH, 0, null);
         //timer to wait for filter is applied. Try tp rebuil on wait.until(expectedConditions.visibilityOf(<element>))
         driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
         //element which appears after filtering only - until it not detected code execution won't go forward
-        String elementAppearedAfterFitlteringCheck = textGet(FILTER_CHECK);
+        String elementAppearedAfterFitlteringCheck = textGet(FILTER_CHECK, 0, null);
         LOGGER.info("Page title after filter is applied: " + driver.getTitle());
         LOGGER.info("This is filtered product text: " + elementAppearedAfterFitlteringCheck);
 
@@ -119,7 +114,7 @@ public class ThirdHomeTask {
         Assertions.assertFalse(driver.findElements(IF_PRODUCT_IS_ORANGE).isEmpty(), "No orange filter present for this product!");
         LOGGER.info("Checked element has Orange color!");
         driver.switchTo().defaultContent();
-        elementClick(CLOSE_PRODUCT);
+        elementClick(CLOSE_PRODUCT, 0, null);
 
         //POINT 6
 
@@ -136,23 +131,23 @@ public class ThirdHomeTask {
             //read about .perform()!!!!
 //            new Actions(driver).moveToElement(filteredProducts.get(i)).perform();
             manipulator.moveToElement(filteredProducts.get(i)).perform();
-            wait.until(ExpectedConditions.elementToBeClickable(filteredProducts.get(i).findElement(ADD_TO_CART_CLICK)));
-            LOGGER.info("StringPrice: " + filteredProducts.get(i).findElement(PRODUCT_PRICE).getText());
+            wait.until(ExpectedConditions.elementToBeClickable(elementFind(ADD_TO_CART_CLICK, i, filteredProducts)));
+            LOGGER.info("StringPrice: " + textGet(PRODUCT_PRICE , i, filteredProducts));
             
             filteredProductsPrices.add(filteredProducts.get(i).findElement(PRODUCT_PRICE).getText());
             
-            filteredProducts.get(i).findElement(ADD_TO_CART_CLICK).click();
+            elementClick(ADD_TO_CART_CLICK, i, filteredProducts);
 //            driver.switchTo().activeElement();
-            wait.until(ExpectedConditions.elementToBeClickable(elementFind(CONTINUE_SHOPPING_CLICK)));
+            wait.until(ExpectedConditions.elementToBeClickable(elementFind(CONTINUE_SHOPPING_CLICK, 0, null)));
             LOGGER.info("Continue shopping button detected!");
-            elementClick(CONTINUE_SHOPPING_CLICK);
+            elementClick(CONTINUE_SHOPPING_CLICK, 0 ,null);
             LOGGER.info("Continue shopping button executed!");
 //            driver.switchTo().defaultContent();
         }
         
         //opening Shopping Carts Drop-down menu
 //        new Actions(driver).moveToElement(driver.findElement(SHOPPING_CART)).perform();
-        manipulator.moveToElement(elementFind(SHOPPING_CART)).perform();
+        manipulator.moveToElement(elementFind(SHOPPING_CART, 0 , null)).perform();
        // driver.switchTo().activeElement();
         wait.until(ExpectedConditions.elementToBeClickable(PRODUCT_IN_CART));
 
@@ -160,10 +155,11 @@ public class ThirdHomeTask {
 
         inStockProducts = driver.findElements(PRODUCT_IN_CART);
         for (int i = 0; i < inStockProducts.size(); i++) {
+            wait.until(ExpectedConditions.elementToBeClickable(PRODUCT_IN_CART_PRICE));
             Assertions.assertEquals(
                     //comparing if added elements prices match Etalons
                     filteredProductsPrices.get(i),
-                    inStockProducts.get(i).findElement(PRODUCT_IN_CART_PRICE).getText(),
+                    textGet(PRODUCT_IN_CART_PRICE, i, inStockProducts),
                     "Product " + (i+1) + " prices mismatch!");
 
             LOGGER.info("Product " + (i+1) + " price validation succeed!");
@@ -173,17 +169,14 @@ public class ThirdHomeTask {
             if ((inStockProducts.size() - i) == 1 ) {
                 //checking if total price calculated correctly (s)
                 totalRevenue = roundPriceToTwoSymbols(totalRevenue);
-                totalRevenue = totalRevenue + Double.valueOf(textGet(PRODUCTS_SHIPPING_PRICE).substring(1));
-                Assertions.assertEquals(totalRevenue, Double.valueOf(textGet(PRODUCTS_TOTAL_PRICE).substring(1)), "Totals mismatch!");
+                totalRevenue = totalRevenue + Double.valueOf(removeDollar(textGet(PRODUCTS_SHIPPING_PRICE, 0, null)));
+                LOGGER.info("InStock total revenue calculated successfully!");
+                Assertions.assertEquals(totalRevenue, Double.valueOf(removeDollar(textGet(PRODUCTS_TOTAL_PRICE, 0, null))), "Totals mismatch!");
+                LOGGER.info("InStock 'Total' revenue field value check succeed!");
             }
         }
 
         LOGGER.info("You made it!");
-
-        /*to do
-        ** refactor the code!
-        ** textGet() and elementClick() methods update to work with list (list.get(i).bla-bla) required
-        */
     }
 
     @AfterEach
@@ -193,13 +186,13 @@ public class ThirdHomeTask {
     }
 
     public int filteredBracketsNumberCheck(){
-        String text = textGet(ORANGE_FILTER_PRODUCT_COUNT);
+        String text = textGet(ORANGE_FILTER_PRODUCT_COUNT, 0, null);
         Integer result = Integer.valueOf(text.substring(1,text.length()-1));
         return result;
     }
 
     public int filteredProductCountNumber(){
-        String text = textGet(FILTERED_PRODUCTS_COLOR_LISTS_COUNT);
+        String text = textGet(FILTERED_PRODUCTS_COLOR_LISTS_COUNT, 0, null);
         LOGGER.info("String is: " + text);
         Integer result = Integer.valueOf(text.substring(10,text.length()-10));
         LOGGER.info("filteredProductCountNumber is: " + result);
@@ -207,7 +200,7 @@ public class ThirdHomeTask {
     }
 
     public double productsTotalRevenue (int i, double totalPrice) {
-        totalPrice = totalPrice + Double.valueOf(inStockProducts.get(i).findElement(PRODUCT_IN_CART_PRICE).getText().substring(1));
+        totalPrice = totalPrice + Double.valueOf(removeDollar(textGet(PRODUCT_IN_CART_PRICE, i, inStockProducts)));
         return totalPrice;
     }
 
@@ -215,16 +208,27 @@ public class ThirdHomeTask {
         return Double.valueOf(String.valueOf(value).substring(0,5));
     }
 
-    public String textGet (By xpath) {
-        return elementFind(xpath).getText();
+    public String textGet (By xpath, int i, List<WebElement> list) {
+        return elementFind(xpath, i , list).getText();
     }
 
-    public WebElement elementFind (By xpath) {
-        return driver.findElement(xpath);
+    public WebElement elementFind (By xpath, int i, List<WebElement> list) {
+        WebElement result;
+        if (list == null) {
+            result = driver.findElement(xpath);
+        }
+        else {
+            result = list.get(i).findElement(xpath);
+        }
+        return  result;
     }
 
-    public void elementClick (By xpath) {
-        elementFind(xpath).click();
+    public void elementClick (By xpath, int i, List<WebElement> list) {
+        elementFind(xpath, i , list).click();
+    }
+
+    public String removeDollar (String text) {
+        return text.substring(1);
     }
 
 }
