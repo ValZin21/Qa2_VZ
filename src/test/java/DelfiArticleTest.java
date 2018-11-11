@@ -37,9 +37,9 @@ public class DelfiArticleTest {
         Assertions.assertTrue(!articles.isEmpty());
         WebElement article = articles.get(1);
 
-        String articleTitle = articleAndCommentStringDetector(article, ARTICLE_TITLE);
+        String articleTitle = articleAndCommentStringDetector(null, ARTICLE_TITLE);
         Assertions.assertNotEquals("0", articleTitle, "FAILURE! Second article doesn't exists!");
-        String commentString = articleAndCommentStringDetector(article, COMMENT_COUNT);
+        String commentString = articleAndCommentStringDetector(null, COMMENT_COUNT);
         Integer commentCount = getCommentsFromString(commentString);
 
         LOGGER.info("Moving to Article page");
@@ -89,16 +89,26 @@ public class DelfiArticleTest {
     
     public String articleAndCommentStringDetector (WebElement webElement, By xPath){
         String titleOrCommentText;
-        try {
-            if (driver != null) {
-                titleOrCommentText = driver.findElement(xPath).getText();
-            }
-            else {
-                titleOrCommentText = webElement.findElement(xPath).getText();
-            }
+//        try {
+//            if (driver != null) {
+//                titleOrCommentText = driver.findElement(xPath).getText();
+//            }
+//            else {
+//                titleOrCommentText = webElement.findElement(xPath).getText();
+//            }
+//        }
+//        catch (NoSuchElementException e) {
+//            titleOrCommentText = "(0)";
+//        }
+
+        List<WebElement> articleComments = driver.findElements(xPath);
+        if (!articleComments.isEmpty()) {
+            titleOrCommentText = articleComments.get(0).getText();
+            LOGGER.info("article present");
         }
-        catch (NoSuchElementException e) {
+        else {
             titleOrCommentText = "(0)";
+            LOGGER.info("article does not present");
         }
         return titleOrCommentText;
     }
