@@ -7,18 +7,16 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.util.List;
 
 public class DelfiArticleTest {
 
-//    private final By ARTICLE = By.xpath(".//span[@class = 'text-size-22']");
-    private final By ARTICLE = By.xpath(".//span[contains(@class, 'text-size-16')]");
+    private final By ARTICLE = By.xpath(".//span[@class = 'text-size-22']");
     private final By ARTICLE_TITLE = By.xpath(".//h1[contains(@class, 'headline__title')]");
     private final By COMMENT_COUNT = By.xpath(".//a[contains(@class, 'comment-count')]");
     private final By ARTICLE_PAGE_WITH_COMMENTS = By.xpath(".//h1[contains(@class, 'text-size-22')]");
-//    private final By ARTICLE_PAGE_WITHOUT_COMMENTS = By.xpath(".//h1[@itemprop = 'name']");
     private final By ARTICLE_PAGE_COMMENT_COUNT = By.xpath(".//a[contains(@class, 'text-size-19')]");
     private final By COMMENT_PAGE = By.xpath(".//a[@class = 'text-mine-shaft']");
     private final By REG_COMMENTS = By.xpath(".//a[contains(@class,'comment-thread-switcher-list-a-reg')]/span");
@@ -31,20 +29,20 @@ public class DelfiArticleTest {
     @Test
     public void delfiPractice() throws NoSuchElementException {
 
-        System.setProperty("webdriver.chrome.driver","C://chromedriver_win32/chromedriver.exe");
-        driver = new ChromeDriver();
+        System.setProperty("webdriver.gecko.driver", "C:/geckodriver-v0.23.0-win64/geckodriver.exe"); //set the system property
+        driver = new FirefoxDriver();
         driver.manage().window().maximize();
         driver.get(DEFLI_HOME_PAGE);
 
         List<WebElement> articles = driver.findElements(ARTICLE);
         Assertions.assertTrue(!articles.isEmpty());
-        WebElement article = articles.get(5);
+        WebElement article = articles.get(1);
 
         String articleTitle = articleAndCommentStringDetector(article, ARTICLE_TITLE);
-        LOGGER.info(articleTitle);
+        LOGGER.info("Detected article is: " + articleTitle);
         Assertions.assertNotEquals("0", articleTitle, "FAILURE! Second article doesn't exists!");
         String commentString = articleAndCommentStringDetector(article, COMMENT_COUNT);
-        LOGGER.info(commentString);
+        LOGGER.info("Articles comment count is: " + commentString);
         Integer commentCount = getCommentsFromString(commentString);
 
         LOGGER.info("Moving to Article page");
@@ -67,7 +65,6 @@ public class DelfiArticleTest {
             Assertions.assertEquals(articleTitle, articlePageTitle, "Articles not equal");
             Assertions.assertEquals(commentCount, articlePageCommentCount, "Article page comment count not equal with home page!");
         }
-
 
         if (articlePageCommentCount != 0) {
 
@@ -92,28 +89,28 @@ public class DelfiArticleTest {
         driver.close();
     }
     
-    public String articleAndCommentStringDetector (WebElement webElement, By xPath){
+    public String articleAndCommentStringDetector (WebElement inputText, By xPath){
         String titleOrCommentText;
 
-        if (webElement != null) {
-            if (!webElement.findElements(xPath).isEmpty()) {
-                titleOrCommentText = webElement.findElement(xPath).getText();
-                LOGGER.info("webElement article present");
+        if (inputText != null) {
+            if (!inputText.findElements(xPath).isEmpty()) {
+                titleOrCommentText = inputText.findElement(xPath).getText();
+                LOGGER.info("inputText article present");
             }
             else {
                 titleOrCommentText = "(0)";
-                LOGGER.info("webElement article does not present");
+                LOGGER.info("inputText article does not present");
             }
         }
         else {
-            List<WebElement> monAmour = driver.findElements(xPath);
-            if (!monAmour.isEmpty()) {
-                titleOrCommentText = monAmour.get(0).getText();
-                LOGGER.info("driver article present");
+            List<WebElement> inputTextList = driver.findElements(xPath);
+            if (!inputTextList.isEmpty()) {
+                titleOrCommentText = inputTextList.get(0).getText();
+                LOGGER.info("inputTextList article present");
             }
             else {
                 titleOrCommentText = "(0)";
-                LOGGER.info("driver article does not present");
+                LOGGER.info("inputTextList article does not present");
             }
         }
 
