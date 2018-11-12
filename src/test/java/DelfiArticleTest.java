@@ -25,10 +25,10 @@ public class DelfiArticleTest {
     private final By ARTICLE = By.xpath(".//span[@class = 'text-size-22']");
     private final By ARTICLE_TITLE = By.xpath(".//h1[contains(@class, 'headline__title')]");
     private final By COMMENT_COUNT = By.xpath(".//a[contains(@class, 'comment-count')]");
-    private final By ARTICLE_PAGE_WITH_COMMENTS = By.xpath(".//span[@itemprop = 'headline name']");
+    private final By ARTICLE_PAGE_WITH_COMMENTS = By.xpath(".//h1[contains(@class, 'text-size-22')]");
     private final By ARTICLE_PAGE_WITHOUT_COMMENTS = By.xpath(".//h1[@itemprop = 'name']");
-    private final By ARTICLE_PAGE_COMMENT_COUNT = By.xpath(".//div[@class='article-title']/a");
-    private final By COMMENT_PAGE = By.xpath(".//a[@class = 'comment-main-title-link']");
+    private final By ARTICLE_PAGE_COMMENT_COUNT = By.xpath(".//a[contains(@class, 'text-size-19')]");
+    private final By COMMENT_PAGE = By.xpath(".//a[@class = 'text-mine-shaft']");
     private final By REG_COMMENTS = By.xpath(".//a[contains(@class,'comment-thread-switcher-list-a-reg')]/span");
     private final By ANON_COMMENTS = By.xpath(".//a[contains(@class,'comment-thread-switcher-list-a-anon')]/span");
     private final String DEFLI_HOME_PAGE = "http://rus.delfi.lv/";
@@ -48,8 +48,10 @@ public class DelfiArticleTest {
         WebElement article = articles.get(1);
 
         String articleTitle = articleAndCommentStringDetector(article, ARTICLE_TITLE);
+        LOGGER.info(articleTitle);
         Assertions.assertNotEquals("0", articleTitle, "FAILURE! Second article doesn't exists!");
         String commentString = articleAndCommentStringDetector(article, COMMENT_COUNT);
+        LOGGER.info(commentString);
         Integer commentCount = getCommentsFromString(commentString);
 
         LOGGER.info("Moving to Article page");
@@ -62,7 +64,7 @@ public class DelfiArticleTest {
         if (articlePageCommentCount == 0){
             LOGGER.info("No comments detected for article - comparing only titles");
 
-            articlePageTitle = articleAndCommentStringDetector(null, ARTICLE_PAGE_WITHOUT_COMMENTS);
+            articlePageTitle = articleAndCommentStringDetector(null, ARTICLE_PAGE_WITH_COMMENTS); //without comments was here
             Assertions.assertEquals(articleTitle, articlePageTitle, "Articles not equal");
         }
         else {
@@ -99,6 +101,8 @@ public class DelfiArticleTest {
     
     public String articleAndCommentStringDetector (WebElement webElement, By xPath){
         String titleOrCommentText;
+
+
 //        try {
 //            if (driver != null) {
 //                titleOrCommentText = driver.findElement(xPath).getText();
@@ -111,14 +115,29 @@ public class DelfiArticleTest {
 //            titleOrCommentText = "(0)";
 //        }
 
-        if (!webElement.findElements(xPath).isEmpty()) {
-            titleOrCommentText = webElement.getText();
-            LOGGER.info("article present");
+        if (webElement != null) {
+            if (!webElement.findElements(xPath).isEmpty()) {
+                titleOrCommentText = webElement.findElement(xPath).getText();
+                LOGGER.info("webElement article present");
+            }
+            else {
+                titleOrCommentText = "(0)";
+                LOGGER.info("webElement article does not present");
+            }
         }
         else {
-            titleOrCommentText = "(0)";
-            LOGGER.info("article does not present");
+            List<WebElement> monAmour = driver.findElements(xPath);
+            if (!monAmour.isEmpty()) {
+                titleOrCommentText = monAmour.get(0).getText();
+                LOGGER.info("driver article present");
+            }
+            else {
+                titleOrCommentText = "(0)";
+                LOGGER.info("driver article does not present");
+            }
+
         }
+
         return titleOrCommentText;
     }
 
