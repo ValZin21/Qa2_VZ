@@ -29,7 +29,7 @@ public class DelfiArticleTest {
     @Test
     public void delfiPractice() throws NoSuchElementException {
 
-        System.setProperty("webdriver.gecko.driver", "C:/geckodriver-v0.23.0-win64/geckodriver.exe"); //set the system property
+        System.setProperty("webdriver.gecko.driver", "C:/geckodriver-v0.23.0-win64/geckodriver.exe");
         driver = new FirefoxDriver();
         driver.manage().window().maximize();
         driver.get(DEFLI_HOME_PAGE);
@@ -55,7 +55,7 @@ public class DelfiArticleTest {
         if (articlePageCommentCount == 0){
             LOGGER.info("No comments detected for article - comparing only titles");
 
-            articlePageTitle = articleAndCommentStringDetector(null, ARTICLE_PAGE_WITH_COMMENTS); //without comments was here
+            articlePageTitle = articleAndCommentStringDetector(null, ARTICLE_PAGE_WITH_COMMENTS);
             Assertions.assertEquals(articleTitle, articlePageTitle, "Articles not equal");
         }
         else {
