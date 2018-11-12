@@ -12,26 +12,19 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import java.util.List;
 
 public class DelfiArticleTest {
-//    private final By ARTICLE = By.xpath(".//h3[@class = 'top2012-title']");
-//    private final By ARTICLE_TITLE = By.xpath(".//a[@class = 'top2012-title']");
-//    private final By COMMENT_COUNT = By.xpath(".//a[@class = 'comment-count']");
-//    private final By ARTICLE_PAGE_WITH_COMMENTS = By.xpath(".//span[@itemprop = 'headline name']");
-//    private final By ARTICLE_PAGE_WITHOUT_COMMENTS = By.xpath(".//h1[@itemprop = 'name']");
-//    private final By ARTICLE_PAGE_COMMENT_COUNT = By.xpath(".//div[@class='article-title']/a");
-//    private final By COMMENT_PAGE = By.xpath(".//a[@class = 'comment-main-title-link']");
-//    private final By REG_COMMENTS = By.xpath(".//a[contains(@class,'comment-thread-switcher-list-a-reg')]/span");
-//    private final By ANON_COMMENTS = By.xpath(".//a[contains(@class,'comment-thread-switcher-list-a-anon')]/span");
-//    private final String DEFLI_HOME_PAGE = "http://rus.delfi.lv/";
-    private final By ARTICLE = By.xpath(".//span[@class = 'text-size-22']");
+
+//    private final By ARTICLE = By.xpath(".//span[@class = 'text-size-22']");
+    private final By ARTICLE = By.xpath(".//span[contains(@class, 'text-size-16')]");
     private final By ARTICLE_TITLE = By.xpath(".//h1[contains(@class, 'headline__title')]");
     private final By COMMENT_COUNT = By.xpath(".//a[contains(@class, 'comment-count')]");
     private final By ARTICLE_PAGE_WITH_COMMENTS = By.xpath(".//h1[contains(@class, 'text-size-22')]");
-    private final By ARTICLE_PAGE_WITHOUT_COMMENTS = By.xpath(".//h1[@itemprop = 'name']");
+//    private final By ARTICLE_PAGE_WITHOUT_COMMENTS = By.xpath(".//h1[@itemprop = 'name']");
     private final By ARTICLE_PAGE_COMMENT_COUNT = By.xpath(".//a[contains(@class, 'text-size-19')]");
     private final By COMMENT_PAGE = By.xpath(".//a[@class = 'text-mine-shaft']");
     private final By REG_COMMENTS = By.xpath(".//a[contains(@class,'comment-thread-switcher-list-a-reg')]/span");
     private final By ANON_COMMENTS = By.xpath(".//a[contains(@class,'comment-thread-switcher-list-a-anon')]/span");
     private final String DEFLI_HOME_PAGE = "http://rus.delfi.lv/";
+
     public WebDriver driver;
     private static final Logger LOGGER = LogManager.getLogger(DelfiArticleTest.class);
 
@@ -45,7 +38,7 @@ public class DelfiArticleTest {
 
         List<WebElement> articles = driver.findElements(ARTICLE);
         Assertions.assertTrue(!articles.isEmpty());
-        WebElement article = articles.get(1);
+        WebElement article = articles.get(5);
 
         String articleTitle = articleAndCommentStringDetector(article, ARTICLE_TITLE);
         LOGGER.info(articleTitle);
@@ -102,19 +95,6 @@ public class DelfiArticleTest {
     public String articleAndCommentStringDetector (WebElement webElement, By xPath){
         String titleOrCommentText;
 
-
-//        try {
-//            if (driver != null) {
-//                titleOrCommentText = driver.findElement(xPath).getText();
-//            }
-//            else {
-//                titleOrCommentText = webElement.findElement(xPath).getText();
-//            }
-//        }
-//        catch (NoSuchElementException e) {
-//            titleOrCommentText = "(0)";
-//        }
-
         if (webElement != null) {
             if (!webElement.findElements(xPath).isEmpty()) {
                 titleOrCommentText = webElement.findElement(xPath).getText();
@@ -135,7 +115,6 @@ public class DelfiArticleTest {
                 titleOrCommentText = "(0)";
                 LOGGER.info("driver article does not present");
             }
-
         }
 
         return titleOrCommentText;
