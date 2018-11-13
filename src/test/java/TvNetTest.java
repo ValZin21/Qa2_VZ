@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 public class TvNetTest {
     private final String HOME_PAGE = "https://www.tvnet.lv/";
     private WebDriver browser;
+    private Actions manipulator;
 
     //    private final By ARTICLE = By.xpath(".//*[@itemprop = 'url']");
     private final By ARTICLE = By.xpath(".//*[@class = 'list-article']");
@@ -43,18 +44,19 @@ public class TvNetTest {
         System.setProperty("webdriver.chrome.driver", "C:/chromedriver_win32/chromedriver.exe");
         browser = new ChromeDriver();
         WebDriverWait wait = new WebDriverWait(browser, 15);
+        manipulator = new Actions(browser);
         browser.manage().window().maximize();
         browser.get(HOME_PAGE);
 
         articles = browser.findElements(ARTICLE);
         Assertions.assertFalse(articles.isEmpty(), "No articles detected!");
-        WebElement testArticle = articles.get(2);//3
+        WebElement testArticle = articles.get(3);//3
        // WebElement commentCountPresenseCheck = articles.get(articleSelector);
         Assertions.assertFalse(testArticle.findElements(COMMENT_COUNT).isEmpty(), "No comments detected!");
-        Integer commentCount = Integer.valueOf(testArticle.findElement(COMMENT_COUNT).getText());
+        Integer commentCount = getCommentsNumber(textGet(COMMENT_COUNT, testArticle));
         LOGGER.info(commentCount);
 
-        String articleTitle = testArticle.findElement(ARTICLE_TITLE).getText();
+        String articleTitle = textGet(ARTICLE_TITLE, testArticle);
         LOGGER.info("Article title: " + articleTitle);
         LOGGER.info("testArticle: " + testArticle);
         testArticle.click();
@@ -70,13 +72,14 @@ public class TvNetTest {
 
         //Article page
 
-        String articlePageTitle = browser.findElement(ARTICLE_AND_COMMENTS_PAGES_TITLE).getText();
+        String articlePageTitle = textGet(ARTICLE_AND_COMMENTS_PAGES_TITLE, null);
         LOGGER.info("Article page title: " + articlePageTitle);
         Assertions.assertTrue(articlePageTitle.contains(articleTitle), "Article page is wrong!");
         LOGGER.info("Article page title check pass");
 
 //        new Actions(browser).moveToElement(browser.findElement(By.xpath(".//h1[@class='block-title section-font-color']/a"))).perform();
-        new Actions(browser).moveToElement(browser.findElement(By.xpath(".//*[@class = 'article-terms']"))).perform();
+//        new Actions(browser).moveToElement(browser.findElement(By.xpath(".//*[@class = 'article-terms']"))).perform();
+        manipulator.moveToElement(browser.findElement(By.xpath(".//*[@class = 'article-terms']"))).perform();
 //        new Actions(browser).moveToElement(browser.findElement(By.xpath(".//*[contains(@class, 'comments-block__heading')]"))).perform();
 //        new Actions(browser).moveToElement(browser.findElement(ARTICLE_PAGE_COMENT_COUNT)).click().perform();
 
@@ -99,23 +102,23 @@ public class TvNetTest {
 
 
 
-        Integer articlePageCommentCount = Integer.valueOf(browser.findElement(ARTICLE_PAGE_COMENT_COUNT).getText());
+        Integer articlePageCommentCount = getCommentsNumber(textGet(ARTICLE_PAGE_COMENT_COUNT, null));
         LOGGER.info("Article page comments count: " + articlePageCommentCount);
         Assertions.assertTrue(commentCount == articlePageCommentCount, "Wrong Article page Comment Count");
         LOGGER.info("Comments page title check pass");
 
         wait.until(ExpectedConditions.presenceOfElementLocated(COMMENTS_BTN));
-        new Actions(browser).moveToElement(browser.findElement(COMMENTS_BTN)).perform();
+        manipulator.moveToElement(browser.findElement(COMMENTS_BTN)).perform();
         browser.findElement(COMMENTS_BTN).click();
 
 
         //Comments page
 
-        String commentsPageTitle = browser.findElement(ARTICLE_AND_COMMENTS_PAGES_TITLE).getText();
+        String commentsPageTitle = textGet(ARTICLE_AND_COMMENTS_PAGES_TITLE, null);
         Assertions.assertTrue(commentsPageTitle.contains(articlePageTitle), "Comments page is wrong!");
 
         LOGGER.info("I made it!");
-        Integer commentPageCommentCount = Integer.valueOf(browser.findElement(ARTICLE_PAGE_COMENT_COUNT).getText());
+        Integer commentPageCommentCount = getCommentsNumber(textGet(ARTICLE_PAGE_COMENT_COUNT, null));
         LOGGER.info("Comments page comment count: " + commentPageCommentCount);
         Assertions.assertTrue(commentCount == commentPageCommentCount, "Wrong Article page Comment Count");
     }
@@ -123,5 +126,18 @@ public class TvNetTest {
     @AfterEach
     private void driverClose(){
         browser.quit();
+    }
+
+    private String textGet (By xPath, WebElement elementWeb) {
+        if (elementWeb == null){
+            return browser.findElement(xPath).getText();
+        }
+        else {
+            return elementWeb.findElement(xPath).getText();
+        }
+    }
+
+    private Integer getCommentsNumber (String text) {
+        return Integer.valueOf(text);
     }
 }
