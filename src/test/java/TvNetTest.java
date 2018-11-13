@@ -52,7 +52,7 @@ public class TvNetTest {
        // WebElement commentCountPresenseCheck = articles.get(articleSelector);
         Assertions.assertFalse(testArticle.findElements(COMMENT_COUNT).isEmpty(), "No comments detected!");
         Integer commentCount = Integer.valueOf(testArticle.findElement(COMMENT_COUNT).getText());
-        System.out.println(commentCount);
+        LOGGER.info(commentCount);
 
         String articleTitle = testArticle.findElement(ARTICLE_TITLE).getText();
         LOGGER.info("Article title: " + articleTitle);
