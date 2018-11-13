@@ -48,7 +48,7 @@ public class TvNetTest {
 
         articles = browser.findElements(ARTICLE);
         Assertions.assertFalse(articles.isEmpty(), "No articles detected!");
-        WebElement testArticle = articles.get(4);//3
+        WebElement testArticle = articles.get(2);//3
        // WebElement commentCountPresenseCheck = articles.get(articleSelector);
         Assertions.assertFalse(testArticle.findElements(COMMENT_COUNT).isEmpty(), "No comments detected!");
         Integer commentCount = Integer.valueOf(testArticle.findElement(COMMENT_COUNT).getText());
@@ -56,6 +56,7 @@ public class TvNetTest {
 
         String articleTitle = testArticle.findElement(ARTICLE_TITLE).getText();
         LOGGER.info("Article title: " + articleTitle);
+        LOGGER.info("testArticle: " + testArticle);
         testArticle.click();
 //        articles.get(3).click();
 
@@ -81,12 +82,13 @@ public class TvNetTest {
 
 //        browser.switchTo().frame("google_ads_iframe_/84367975/www.tvnet.lv/59_0");
 //        wait.until(ExpectedConditions.elementToBeSelected(By.xpath(".//*[contains(@id, 'google_ads_iframe_/84367975')]")));
-        browser.switchTo().frame("google_ads_iframe_/84367975/www.tvnet.lv/59_0__container__");
+      //  wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("google_ads_iframe_/84367975/www.tvnet.lv/59_0__container__"));
+//        browser.switchTo().frame("google_ads_iframe_/84367975/www.tvnet.lv/59_0__container__");
        // browser.switchTo().activeElement();
 //        browser.switchTo().frame(browser.findElement(By.xpath(".//*[@id = 'google_ads_iframe_/84367975/www.tvnet.lv/59_0']")));
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath(".//*[contains(@id, 'google_ads_iframe_/84367975')]/div[contains(@style, 'position')]")));
         browser.findElement(By.xpath(".//*[contains(@id, 'google_ads_iframe_/84367975')]/div[contains(@style, 'position')]")).click();
-        browser.switchTo().defaultContent();
+//        browser.switchTo().defaultContent();
             //    .//*[@id = 'google_ads_iframe_/84367975/www.tvnet.lv/59_0']/div
 
 
@@ -120,7 +122,6 @@ public class TvNetTest {
 
     @AfterEach
     private void driverClose(){
-        // browser.close();
         browser.quit();
     }
 }
