@@ -42,14 +42,13 @@ public class TvNetTest {
 //        browser = new FirefoxDriver();
         System.setProperty("webdriver.chrome.driver", "C:/chromedriver_win32/chromedriver.exe");
         browser = new ChromeDriver();
+        WebDriverWait wait = new WebDriverWait(browser, 15);
         browser.manage().window().maximize();
         browser.get(HOME_PAGE);
 
-
-
         articles = browser.findElements(ARTICLE);
         Assertions.assertFalse(articles.isEmpty(), "No articles detected!");
-        WebElement testArticle = articles.get(1);//3
+        WebElement testArticle = articles.get(4);//3
        // WebElement commentCountPresenseCheck = articles.get(articleSelector);
         Assertions.assertFalse(testArticle.findElements(COMMENT_COUNT).isEmpty(), "No comments detected!");
         Integer commentCount = Integer.valueOf(testArticle.findElement(COMMENT_COUNT).getText());
@@ -68,17 +67,29 @@ public class TvNetTest {
 //        jse.executeScript("window.scrollBy(1500,0)", "");
 //        ((JavascriptExecutor) browser).executeScript("arguments[0].scrollIntoView(true);", browser.findElement(COMMENTS_BTN));
 
+        //Article page
 
         String articlePageTitle = browser.findElement(ARTICLE_AND_COMMENTS_PAGES_TITLE).getText();
         LOGGER.info("Article page title: " + articlePageTitle);
         Assertions.assertTrue(articlePageTitle.contains(articleTitle), "Article page is wrong!");
         LOGGER.info("Article page title check pass");
 
-        new Actions(browser).moveToElement(browser.findElement(By.xpath(".//h1[@class='block-title section-font-color']/a"))).perform();
+//        new Actions(browser).moveToElement(browser.findElement(By.xpath(".//h1[@class='block-title section-font-color']/a"))).perform();
+        new Actions(browser).moveToElement(browser.findElement(By.xpath(".//*[@class = 'article-terms']"))).perform();
 //        new Actions(browser).moveToElement(browser.findElement(By.xpath(".//*[contains(@class, 'comments-block__heading')]"))).perform();
 //        new Actions(browser).moveToElement(browser.findElement(ARTICLE_PAGE_COMENT_COUNT)).click().perform();
 
-        WebDriverWait wait = new WebDriverWait(browser, 30);
+//        browser.switchTo().frame("google_ads_iframe_/84367975/www.tvnet.lv/59_0");
+//        wait.until(ExpectedConditions.elementToBeSelected(By.xpath(".//*[contains(@id, 'google_ads_iframe_/84367975')]")));
+        browser.switchTo().frame("google_ads_iframe_/84367975/www.tvnet.lv/59_0__container__");
+       // browser.switchTo().activeElement();
+//        browser.switchTo().frame(browser.findElement(By.xpath(".//*[@id = 'google_ads_iframe_/84367975/www.tvnet.lv/59_0']")));
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(".//*[contains(@id, 'google_ads_iframe_/84367975')]/div[contains(@style, 'position')]")));
+        browser.findElement(By.xpath(".//*[contains(@id, 'google_ads_iframe_/84367975')]/div[contains(@style, 'position')]")).click();
+        browser.switchTo().defaultContent();
+            //    .//*[@id = 'google_ads_iframe_/84367975/www.tvnet.lv/59_0']/div
+
+
         wait.until(ExpectedConditions.presenceOfElementLocated(ARTICLE_PAGE_COMENT_COUNT));
 
 //        String a = browser.findElement(By.xpath(".//h1[@class='article-headline']")).getText();
@@ -95,6 +106,9 @@ public class TvNetTest {
         new Actions(browser).moveToElement(browser.findElement(COMMENTS_BTN)).perform();
         browser.findElement(COMMENTS_BTN).click();
 
+
+        //Comments page
+
         String commentsPageTitle = browser.findElement(ARTICLE_AND_COMMENTS_PAGES_TITLE).getText();
         Assertions.assertTrue(commentsPageTitle.contains(articlePageTitle), "Comments page is wrong!");
 
@@ -104,9 +118,9 @@ public class TvNetTest {
         Assertions.assertTrue(commentCount == commentPageCommentCount, "Wrong Article page Comment Count");
     }
 
-//    @AfterEach
-//    private void driverClose(){
-//        browser.close();
-//        browser.quit();
-//    }
+    @AfterEach
+    private void driverClose(){
+        // browser.close();
+        browser.quit();
+    }
 }
