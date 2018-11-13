@@ -49,15 +49,15 @@ public class TvNetTest {
 
         articles = browser.findElements(ARTICLE);
         Assertions.assertFalse(articles.isEmpty(), "No articles detected!");
-        int articleSelector = 0;
-        WebElement commentCountPresenseCheck = articles.get(articleSelector);
-        Assertions.assertFalse(commentCountPresenseCheck.findElements(COMMENT_COUNT).isEmpty(), "No comments detected!");
-        Integer commentCount = Integer.valueOf(articles.get(articleSelector).findElement(COMMENT_COUNT).getText());
+        WebElement testArticle = articles.get(1);//3
+       // WebElement commentCountPresenseCheck = articles.get(articleSelector);
+        Assertions.assertFalse(testArticle.findElements(COMMENT_COUNT).isEmpty(), "No comments detected!");
+        Integer commentCount = Integer.valueOf(testArticle.findElement(COMMENT_COUNT).getText());
         System.out.println(commentCount);
 
-        String articleTitle = commentCountPresenseCheck.findElement(ARTICLE_TITLE).getText();
+        String articleTitle = testArticle.findElement(ARTICLE_TITLE).getText();
         LOGGER.info("Article title: " + articleTitle);
-        getElementById(articleSelector).click();
+        testArticle.click();
 //        articles.get(3).click();
 
 //        new Actions(browser).moveToElement(browser.findElement(ARTICLE_PAGE_COMENT_COUNT);
@@ -102,19 +102,6 @@ public class TvNetTest {
         Integer commentPageCommentCount = Integer.valueOf(browser.findElement(ARTICLE_PAGE_COMENT_COUNT).getText());
         LOGGER.info("Comments page comment count: " + commentPageCommentCount);
         Assertions.assertTrue(commentCount == commentPageCommentCount, "Wrong Article page Comment Count");
-    }
-
-    private WebElement getElementById(int id) {
-//        List<WebElement> articles = browser.findElements(ARTICLE);
-
-        for (int i = 0; i < articles.size(); i++) {
-            WebElement element = articles.get(i);
-            if (i == id) {
-                return element;
-            }
-        }
-
-        return null;
     }
 
 //    @AfterEach
