@@ -1,8 +1,11 @@
 package TVNetTestInPageObjects.pages;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
 
 public class BaseFunctions {
 
@@ -22,6 +25,8 @@ public class BaseFunctions {
         }
         driver.get(url);
     }
+
+//    public List<WebElement> getArticles ()
 
     //add more functional here
 }
