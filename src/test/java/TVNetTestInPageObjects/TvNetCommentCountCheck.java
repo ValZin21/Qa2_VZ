@@ -19,19 +19,19 @@ public class TvNetCommentCountCheck {
         baseFunctions.goToPage(HOME_PAGE);
         HomePage homePage = new HomePage(baseFunctions);
 
-        WebElement testArticle = homePage.getElementById(0);
+        WebElement testArticle = homePage.getElementById(3);
         Integer commentCount = homePage.getCommentsNumber(testArticle);
-        String articleTitle = homePage.getArticleName(testArticle);
+        String articleTitle = homePage.getArticleTitle(testArticle);
         ArticlePage articlePage = homePage.goToArticle(testArticle);
 
-        String articlePageTitle = articlePage.getArticlePageName();
+        String articlePageTitle = articlePage.getArticlePageTitle();
         Assertions.assertTrue(articleTitle.contains(articlePageTitle), "Article page is wrong!");
         articlePage.closeTheBanner();
         Integer articlePageCommentCount = articlePage.getArticlePageCommentsNumber();
         Assertions.assertTrue(commentCount == articlePageCommentCount, "Wrong Article page Comment Count");
         CommentsPage commentsPage = articlePage.goToComments();
 
-        String commentsPageTitle = commentsPage.getCommentsPageName();
+        String commentsPageTitle = commentsPage.getCommentsPageTitle();
         Assertions.assertTrue(articleTitle.contains(commentsPageTitle), "Comments page is wrong!");
         Integer commentPageCommentCount = commentsPage.getCommentsPageCommentsNumber();
         Assertions.assertTrue(commentCount == commentPageCommentCount, "Wrong Comment page Comment Count");

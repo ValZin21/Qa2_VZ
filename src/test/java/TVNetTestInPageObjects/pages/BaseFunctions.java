@@ -34,7 +34,7 @@ public class BaseFunctions {
     }
 
     public WebElement getElement (By xPath) {
-        Assertions.assertFalse(getElements(xPath).isEmpty(), "No element " + xPath + " detected!");
+        Assertions.assertFalse(getElements(xPath).isEmpty(), "No element <<<<" + xPath + ">>>> detected!");
         return driver.findElement(xPath);
     }
 

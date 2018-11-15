@@ -20,14 +20,18 @@ public class ArticlePage {
         this.baseFunctions = baseFunctions;
     }
 
-    public String getArticlePageName() {
+    public String getArticlePageTitle() {
         baseFunctions.isElementPresent(PAGE_TITLE);
-        return baseFunctions.getText(PAGE_TITLE);
+        String articlePageTitle = baseFunctions.getText(PAGE_TITLE);
+        LOGGER.info("Article page title is: " + articlePageTitle);
+        return articlePageTitle;
     }
 
     public Integer getArticlePageCommentsNumber() {
         baseFunctions.isElementPresent(COMENT_COUNT);
-        return baseFunctions.getCommentsNumber(baseFunctions.getElement(COMENT_COUNT).getAttribute("data-content"));
+        Integer articlePageCommentsNumber = baseFunctions.getCommentsNumber(baseFunctions.getElement(COMENT_COUNT).getAttribute("data-content"));
+        LOGGER.info("Article page comments count is: " + articlePageCommentsNumber);
+        return articlePageCommentsNumber;
     }
 
     public void closeTheBanner() {
