@@ -22,6 +22,7 @@ public class TvNetTest {
     private final By ARTICLE_PAGE_COMENT_COUNT = By.xpath(".//a[contains(@class, 'article-share__item--comments')]");
     private final By LOWER_ADVERTISING = By.xpath(".//*[contains(@id, 'google_ads_iframe_/84367975')]/div[contains(@style, 'position')]");
     private final By LOWER_ADV_CLOSE_BUTTON = By.xpath(".//*[contains(@id, 'google_ads_iframe_/84367975')]/div[contains(@style, 'position')]");
+    private final By BIG_10S_BANNER = By.xpath(".//*[contains(@id, 'google_ads_iframe_/84367975/www.tvnet.lv/621_0')]");
 
     private WebDriver browser;
     private WebDriverWait wait;
@@ -54,7 +55,7 @@ public class TvNetTest {
         isElementPresent(ARTICLE_AND_COMMENTS_PAGES_TITLE);
         String articlePageTitle = textGet(ARTICLE_AND_COMMENTS_PAGES_TITLE, null);
         LOGGER.info("Article page title: " + articlePageTitle);
-        Assertions.assertTrue(articlePageTitle.contains(articleTitle), "Article page is wrong!");
+        Assertions.assertTrue(articleTitle.contains(articlePageTitle), "Article page is wrong!");
         LOGGER.info("Article page title check pass");
 
         closeTheBanner();
@@ -69,7 +70,7 @@ public class TvNetTest {
 
         isElementPresent(ARTICLE_AND_COMMENTS_PAGES_TITLE);
         String commentsPageTitle = textGet(ARTICLE_AND_COMMENTS_PAGES_TITLE, null);
-        Assertions.assertTrue(commentsPageTitle.contains(articlePageTitle), "Comments page is wrong!");
+        Assertions.assertTrue(articleTitle.contains(commentsPageTitle), "Comments page is wrong!");
         LOGGER.info("Comments page title check pass");
 
         Integer commentPageCommentCount = getCommentsNumber(textGet(COMMENTS_PAGE_COMENT_COUNT, null));
@@ -97,6 +98,7 @@ public class TvNetTest {
     }
 
     private void closeTheBanner() {
+        isElementInvisible(BIG_10S_BANNER);
         isElementPresent(LOWER_ADVERTISING);
         browser.findElement(LOWER_ADV_CLOSE_BUTTON).click();
         LOGGER.info("Lower advertising closed");
@@ -108,6 +110,10 @@ public class TvNetTest {
 
     private void isElementPresent(By xPath) {
         wait.until(ExpectedConditions.presenceOfElementLocated(xPath));
+    }
+
+    private void isElementInvisible(By xPath) {
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(xPath));
     }
 
     private void articlePageClick() {
