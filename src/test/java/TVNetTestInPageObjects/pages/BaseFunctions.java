@@ -58,6 +58,10 @@ public class BaseFunctions {
         wait.until(ExpectedConditions.elementToBeClickable(xPath));
     }
 
+    public void isElementInvisible(By xPath) {
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(xPath));
+    }
+
     @AfterEach
     private void driverClose(){
         driver.quit();

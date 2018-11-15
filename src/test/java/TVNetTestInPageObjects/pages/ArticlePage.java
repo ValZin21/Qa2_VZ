@@ -5,6 +5,9 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import java.util.concurrent.TimeUnit;
 
 public class ArticlePage {
 
@@ -12,6 +15,7 @@ public class ArticlePage {
     private static final Logger LOGGER = LogManager.getLogger(ArticlePage.class);
     private final By ARTICLE_AND_COMMENTS_PAGES_TITLE = By.xpath(".//*[contains(@class, 'headline')]");
     private final By ARTICLE_PAGE_COMENT_COUNT = By.xpath(".//a[contains(@class, 'article-share__item--comments')]");
+    private final By BIG_10S_BANNER = By.xpath(".//*[contains(@id, 'google_ads_iframe_/84367975/www.tvnet.lv/621_0')]");
     private final By LOWER_ADVERTISING = By.xpath(".//*[contains(@id, 'google_ads_iframe_/84367975')]/div[contains(@style, 'position')]");
     private final By LOWER_ADV_CLOSE_BUTTON = By.xpath(".//*[contains(@id, 'google_ads_iframe_/84367975')]/div[contains(@style, 'position')]");
 
@@ -30,10 +34,12 @@ public class ArticlePage {
     }
 
     public void closeTheBanner() {
+        baseFunctions.isElementInvisible(BIG_10S_BANNER);
+        LOGGER.info("Big banner vanished");
         baseFunctions.isElementPresent(LOWER_ADVERTISING);
-        LOGGER.info("knock-knock!");
-        baseFunctions.isElementClickable(LOWER_ADVERTISING);
-        LOGGER.info("knock-knock2!");
+        LOGGER.info("Lower advertising banner exists");
+        baseFunctions.isElementClickable(LOWER_ADV_CLOSE_BUTTON);
+        LOGGER.info("Lower advertising banner close button available");
         baseFunctions.getElement(LOWER_ADV_CLOSE_BUTTON).click();
         LOGGER.info("Lower advertising closed");
     }

@@ -26,7 +26,7 @@ public class TvNetCommentCountCheck {
 
         String articlePageTitle = articlePage.getArticlePageName();
         Assertions.assertTrue(articlePageTitle.contains(articleTitle), "Article page is wrong!");
-//        articlePage.closeTheBanner();
+        articlePage.closeTheBanner();
         Integer articlePageCommentCount = articlePage.getArticlePageCommentsNumber();
         Assertions.assertTrue(commentCount == articlePageCommentCount, "Wrong Article page Comment Count");
 
