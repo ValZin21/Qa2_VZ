@@ -2,12 +2,7 @@ package TVNetTestInPageObjects.pages;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.AfterEach;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-
-import java.util.concurrent.TimeUnit;
 
 public class ArticlePage {
 
@@ -42,5 +37,11 @@ public class ArticlePage {
         LOGGER.info("Lower advertising banner close button available");
         baseFunctions.getElement(LOWER_ADV_CLOSE_BUTTON).click();
         LOGGER.info("Lower advertising closed");
+    }
+
+    public CommentsPage goToComments () {
+        baseFunctions.isElementClickable(ARTICLE_PAGE_COMENT_COUNT);
+        baseFunctions.getElement(ARTICLE_PAGE_COMENT_COUNT).click();
+        return new CommentsPage(baseFunctions);
     }
 }

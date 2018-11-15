@@ -2,6 +2,7 @@ package TVNetTestInPageObjects;
 
 import TVNetTestInPageObjects.pages.ArticlePage;
 import TVNetTestInPageObjects.pages.BaseFunctions;
+import TVNetTestInPageObjects.pages.CommentsPage;
 import TVNetTestInPageObjects.pages.HomePage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -22,13 +23,12 @@ public class TvNetCommentCountCheck {
         String articleTitle = homePage.getArticleName(testArticle);
         ArticlePage articlePage = homePage.goToArticle(3);
 
-
-
         String articlePageTitle = articlePage.getArticlePageName();
         Assertions.assertTrue(articlePageTitle.contains(articleTitle), "Article page is wrong!");
         articlePage.closeTheBanner();
         Integer articlePageCommentCount = articlePage.getArticlePageCommentsNumber();
         Assertions.assertTrue(commentCount == articlePageCommentCount, "Wrong Article page Comment Count");
+        CommentsPage commentsPage = articlePage.goToComments();
 
     }
 }

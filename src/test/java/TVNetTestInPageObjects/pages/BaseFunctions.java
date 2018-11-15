@@ -67,5 +67,4 @@ public class BaseFunctions {
         driver.quit();
     }
 
-    //add more functional here
 }
