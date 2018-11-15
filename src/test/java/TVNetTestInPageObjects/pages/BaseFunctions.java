@@ -1,8 +1,5 @@
 package TVNetTestInPageObjects.pages;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -15,9 +12,8 @@ import java.util.List;
 
 public class BaseFunctions {
 
-    WebDriver driver;
+    public WebDriver driver;
     WebDriverWait wait;
-    private static final Logger LOGGER = LogManager.getLogger(BaseFunctions.class);
 
     public BaseFunctions() {
         System.setProperty("webdriver.chrome.driver", "C:/chromedriver_win32/chromedriver.exe");
@@ -38,7 +34,7 @@ public class BaseFunctions {
     }
 
     public WebElement getElement (By xPath) {
-        Assertions.assertFalse(getElements(xPath).isEmpty(), "No element dtected !");
+        Assertions.assertFalse(getElements(xPath).isEmpty(), "No element " + xPath + " detected!");
         return driver.findElement(xPath);
     }
 
@@ -60,11 +56,6 @@ public class BaseFunctions {
 
     public void isElementInvisible(By xPath) {
         wait.until(ExpectedConditions.invisibilityOfElementLocated(xPath));
-    }
-
-    @AfterEach
-    private void driverClose(){
-        driver.quit();
     }
 
 }

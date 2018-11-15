@@ -4,8 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import java.util.List;
-
 public class HomePage {
 
     BaseFunctions baseFunctions;
@@ -32,11 +30,11 @@ public class HomePage {
     }
 
     public void ifElementExists (WebElement element, By xPath){
-        Assertions.assertFalse(element.findElements(xPath).isEmpty(), "Element doesn't exist!");
+        Assertions.assertFalse(element.findElements(xPath).isEmpty(), "Element " + xPath + " doesn't exist!");
     }
 
-    public ArticlePage goToArticle (int id) {
-        getElementById(id).click();
+    public ArticlePage goToArticle (WebElement element) {
+        element.click();
         return new ArticlePage(baseFunctions);
     }
 }
