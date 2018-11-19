@@ -1,5 +1,6 @@
 package defliAtverskapi;
 
+import defliAtverskapi.pages.ApaviPage;
 import defliAtverskapi.pages.BaseFunctions;
 import defliAtverskapi.pages.HomePage;
 import org.apache.http.conn.util.PublicSuffixList;
@@ -23,39 +24,30 @@ public class MenBootsCheck {
 
 
 
+
+
     @Test
     public void new5BlackBootsCheck() {
         baseFunctions.goToPage(HOME_PAGE);
 
+        System.out.println(baseFunctions.driver.getTitle());
+
         HomePage homePage = new HomePage(baseFunctions);
         homePage.findAndOpenVirieshiDropDownMenu();
-        homePage.findAndClickOnApaviProduct();
+        ApaviPage apaviPage = homePage.goToApaviPage(homePage.findApaviProduct());
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        //ADD assertion for a page change
+        System.out.println(baseFunctions.driver.getTitle());
+        apaviPage.selectKurpes();
 
 
 
     }
 
-    @AfterEach
-    private void drvierQuit(){
-        baseFunctions.driver.quit();
-    }
+//    @AfterEach
+//    private void drvierQuit(){
+//        baseFunctions.driver.quit();
+//    }
 }
 
 

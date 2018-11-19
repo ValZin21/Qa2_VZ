@@ -15,8 +15,6 @@ public class HomePage {
     public static final By DROP_DOWN_MENU_OPEN = By.xpath(".//li[@class='dropdown open']");
     public static final By DROP_DOWN_MUENU_ELEMENTS = By.xpath(".//ul[@class='dropdown-menu']/li/a");
 
-    public List<WebElement> elementList;
-
     private static Logger LOGGER = LogManager.getLogger(HomePage.class);
 
     public HomePage (BaseFunctions baseFunctions) {
@@ -24,11 +22,11 @@ public class HomePage {
     }
 
     public void findAndOpenVirieshiDropDownMenu() {
-        elementList = baseFunctions.getElements(DROP_DOWN_MENU_SUMMARY);
+        baseFunctions.elementList = baseFunctions.getElements(DROP_DOWN_MENU_SUMMARY);
         boolean statementDetected = false;
-        for (int i = 0; i < elementList.size(); i++) {
-            if (baseFunctions.getTextFromList(elementList, i).equals("Vīriešiem")) {
-                baseFunctions.getElementFromList(elementList, i).click();
+        for (int i = 0; i < baseFunctions.elementList.size(); i++) {
+            if (baseFunctions.getTextFromList(baseFunctions.elementList, i).equals("Vīriešiem")) {
+                baseFunctions.getElementFromList(baseFunctions.elementList, i).click();
                 baseFunctions.isElementPresent(DROP_DOWN_MENU_OPEN);
                 statementDetected = true;
                 break;
@@ -37,21 +35,23 @@ public class HomePage {
         Assertions.assertTrue(statementDetected, "<Vīriešiem> menu missed!");
     }
 
-    public void findAndClickOnApaviProduct() {
-        elementList = baseFunctions.getElements(DROP_DOWN_MUENU_ELEMENTS);
+    public WebElement findApaviProduct() {
+        baseFunctions.elementList = baseFunctions.getElements(DROP_DOWN_MUENU_ELEMENTS);
+        WebElement result = null;
         boolean statementDetected = false;
-        for (int i = 0; i < elementList.size(); i++) {
-            if (baseFunctions.getTextFromList(elementList, i).equals("Apavi")) {
-                goToApaviPage(elementList, i);
+        for (int i = 0; i < baseFunctions.elementList.size(); i++) {
+            if (baseFunctions.getTextFromList(baseFunctions.elementList, i).equals("Apavi")) {
+                result = baseFunctions.getElementFromList(baseFunctions.elementList, i);
                 statementDetected = true;
                 break;
             }
         }
         Assertions.assertTrue(statementDetected, "<Apavi> product missed!");
+        return result;
     }
 
-    private ApaviPage goToApaviPage (List<WebElement> list, int number) {
-        baseFunctions.getElementFromList(list, number).click();
+    public ApaviPage goToApaviPage (WebElement element) {
+        element.click();
         return new ApaviPage(baseFunctions);
     }
 }
