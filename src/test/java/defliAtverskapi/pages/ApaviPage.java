@@ -21,6 +21,8 @@ public class ApaviPage {
     public static final By KRASAS = By.xpath(".//*[contains(@class, 'filter-colors-item')]/label");
     public static final By STAVOKLIS_FILTER_TITLE = By.xpath(".//*[contains(@class, 'filters-section')]/div[contains(text(), 'Stāvoklis')]");
     public static final By STAVOKLI = By.xpath(".//*[contains(@class, 'filter-condition')]/div/label");
+    public static final By PRODUCT = By.xpath(".//div[@class = 'col-xs-6 col-sm-3']");
+    public static final By PRODUCT_CLICK = By.xpath(".//div/a[@itemprop='url']");
 
     private static Logger LOGGER = LogManager.getLogger(ApaviPage.class);
 
@@ -112,9 +114,25 @@ public class ApaviPage {
         Assertions.assertTrue(statementDetected, "<Melna krasa> filter missed!");
     }
 
-    public ProductPage goToProductPage (WebElement element, int number) {
+    public List<WebElement> collectFirstFiveProducts() {
+        baseFunctions.elementList.clear();
+        baseFunctions.isElementPresent(PRODUCT);
+        LOGGER.info("Products collected");
+        return baseFunctions.elementList = baseFunctions.getElements(PRODUCT);
+    }
 
+    //not finished
+    public void checkProducts() {
+        for (int i = 0; i < 5; i++) {
+            Assertions.assertTrue(baseFunctions.elementList.get(i).findElements(PRODUCT_CLICK).isEmpty());
+            WebElement element = baseFunctions.elementList.get(i).findElement(PRODUCT_CLICK);
+            goToProductPage(element);
 
+        }
+    }
+
+    public ProductPage goToProductPage (WebElement element) {
+        element.click();
         return new ProductPage(baseFunctions);
 
     }

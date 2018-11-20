@@ -40,15 +40,18 @@ public class MenBootsCheck {
         apaviPage.selectKurpes();
         apaviPage.selectBlackColor();
         apaviPage.selectNewState();
+        apaviPage.collectFirstFiveProducts();
+        apaviPage.checkProducts();
+
 
 
 
     }
 
-    @AfterEach
-    private void drvierQuit(){
-        baseFunctions.driver.quit();
-    }
+//    @AfterEach
+//    private void drvierQuit(){
+//        baseFunctions.driver.quit();
+//    }
 }
 
 
