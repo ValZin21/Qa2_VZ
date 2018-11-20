@@ -39,6 +39,7 @@ public class MenBootsCheck {
         //ADD assertion for a page change
         System.out.println(baseFunctions.driver.getTitle());
         apaviPage.selectKurpes();
+        apaviPage.selectBlackColor();
 
 
 
