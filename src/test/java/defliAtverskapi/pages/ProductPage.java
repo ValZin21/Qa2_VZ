@@ -8,6 +8,7 @@ public class ProductPage {
 
     BaseFunctions baseFunctions;
 
+
     private static final By KURPES = By.xpath(".//a[@itemprop='item']/span[contains(text(), 'Kurpes')]");
     private static final By MElNS = By.xpath(".//a[@itemprop='item']/span[contains(text(), 'Kurpes')]");
     private static final By JAUNS = By.xpath(".//a[@itemprop='item']/span[contains(text(), 'Kurpes')]");
@@ -16,7 +17,16 @@ public class ProductPage {
         this.baseFunctions = baseFunctions;
     }
 
+    public void goBack() {
+        baseFunctions.driver.navigate().back();
+
+    }
+
     public void isKurpes(By xPath) {
         baseFunctions.isElementPresent(KURPES);
+    }
+
+    public void checkProductPage() {
+        goBack();
     }
 }

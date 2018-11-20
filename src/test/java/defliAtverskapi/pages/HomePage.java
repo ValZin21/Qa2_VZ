@@ -29,7 +29,6 @@ public class HomePage {
                 baseFunctions.getElementFromList(baseFunctions.elementList, i).click();
                 baseFunctions.isElementPresent(DROP_DOWN_MENU_OPEN);
                 statementDetected = true;
-                break;
             }
         }
         Assertions.assertTrue(statementDetected, "<Vīriešiem> menu missed!");

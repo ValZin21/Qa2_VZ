@@ -3,6 +3,7 @@ package defliAtverskapi;
 import defliAtverskapi.pages.ApaviPage;
 import defliAtverskapi.pages.BaseFunctions;
 import defliAtverskapi.pages.HomePage;
+import defliAtverskapi.pages.ProductPage;
 import org.apache.http.conn.util.PublicSuffixList;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -40,8 +41,14 @@ public class MenBootsCheck {
         apaviPage.selectKurpes();
         apaviPage.selectBlackColor();
         apaviPage.selectNewState();
-        apaviPage.collectFirstFiveProducts();
-        apaviPage.checkProducts();
+       // apaviPage.collectFirstFiveProducts();
+
+        for (int i = 0; i < 5; i++) {
+            apaviPage.checkProducts(i);
+            ProductPage productPage = apaviPage.goToProductPage(apaviPage.checkProducts(i));
+            productPage.checkProductPage();
+        }
+
 
 
 

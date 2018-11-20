@@ -122,13 +122,17 @@ public class ApaviPage {
     }
 
     //not finished
-    public void checkProducts() {
-        for (int i = 0; i < 5; i++) {
-            Assertions.assertTrue(baseFunctions.elementList.get(i).findElements(PRODUCT_CLICK).isEmpty());
+    public WebElement checkProducts(int i) {
+//        for (int i = 0; i < 5; i++) {
+            collectFirstFiveProducts();
+            Assertions.assertFalse(baseFunctions.elementList.get(i).findElements(PRODUCT_CLICK).isEmpty());
             WebElement element = baseFunctions.elementList.get(i).findElement(PRODUCT_CLICK);
-            goToProductPage(element);
+//            goToProductPage(element);
+            return element;
+//            productPage.checkProductPage();
+//            baseFunctions.driver.navigate().back();
 
-        }
+//        }
     }
 
     public ProductPage goToProductPage (WebElement element) {
