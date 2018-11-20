@@ -128,6 +128,7 @@ public class ApaviPage {
             Assertions.assertFalse(baseFunctions.elementList.get(i).findElements(PRODUCT_CLICK).isEmpty());
             WebElement element = baseFunctions.elementList.get(i).findElement(PRODUCT_CLICK);
 //            goToProductPage(element);
+            LOGGER.info("Product " + i + " check started");
             return element;
 //            productPage.checkProductPage();
 //            baseFunctions.driver.navigate().back();

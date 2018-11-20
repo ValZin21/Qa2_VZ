@@ -44,7 +44,6 @@ public class MenBootsCheck {
        // apaviPage.collectFirstFiveProducts();
 
         for (int i = 0; i < 5; i++) {
-            apaviPage.checkProducts(i);
             ProductPage productPage = apaviPage.goToProductPage(apaviPage.checkProducts(i));
             productPage.checkProductPage();
         }
@@ -55,10 +54,10 @@ public class MenBootsCheck {
 
     }
 
-//    @AfterEach
-//    private void drvierQuit(){
-//        baseFunctions.driver.quit();
-//    }
+    @AfterEach
+    private void drvierQuit(){
+        baseFunctions.driver.quit();
+    }
 }
 
 
