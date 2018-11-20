@@ -30,25 +30,25 @@ public class MenBootsCheck {
     public void new5BlackBootsCheck() {
         baseFunctions.goToPage(HOME_PAGE);
 
-        System.out.println(baseFunctions.driver.getTitle());
-
+        String homePageTitle = baseFunctions.titleGet();
         HomePage homePage = new HomePage(baseFunctions);
         homePage.findAndOpenVirieshiDropDownMenu();
         ApaviPage apaviPage = homePage.goToApaviPage(homePage.findApaviProduct());
 
-        //ADD assertion for a page change
-        System.out.println(baseFunctions.driver.getTitle());
+        String apaviPageTitle = baseFunctions.titleGet();
+        Assertions.assertFalse(homePageTitle.equals(apaviPageTitle), "Pages not switched!");
         apaviPage.selectKurpes();
         apaviPage.selectBlackColor();
+        apaviPage.selectNewState();
 
 
 
     }
 
-//    @AfterEach
-//    private void drvierQuit(){
-//        baseFunctions.driver.quit();
-//    }
+    @AfterEach
+    private void drvierQuit(){
+        baseFunctions.driver.quit();
+    }
 }
 
 

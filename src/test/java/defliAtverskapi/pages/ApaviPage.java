@@ -19,6 +19,8 @@ public class ApaviPage {
 //    public static final By APAVI_FILTER_VALUE_CHECKBOX = By.xpath(".//*[@id='tag_205']");
     public static final By KRASA_FILTER_TITLE = By.xpath(".//*[contains(@class, 'filters-section')]/div[contains(text(), 'Krāsa')]");
     public static final By KRASAS = By.xpath(".//*[contains(@class, 'filter-colors-item')]/label");
+    public static final By STAVOKLIS_FILTER_TITLE = By.xpath(".//*[contains(@class, 'filters-section')]/div[contains(text(), 'Stāvoklis')]");
+    public static final By STAVOKLI = By.xpath(".//*[contains(@class, 'filter-condition')]/div/label");
 
     private static Logger LOGGER = LogManager.getLogger(ApaviPage.class);
 
@@ -77,11 +79,43 @@ public class ApaviPage {
                 baseFunctions.driver.navigate().refresh();
                 LOGGER.info("Melna krasa Clicked!");
                 baseFunctions.isElementPresent(By.xpath(".//*[@id='" + checkBoxId + "'][@checked]"));
-                LOGGER.info("Melna karasa filter validation pass");
+                LOGGER.info("Melna krasa filter validation pass");
                 statementDetected = true;
                 break;
             }
         }
         Assertions.assertTrue(statementDetected, "<Melna krasa> filter missed!");
+    }
+
+    public void selectNewState() {
+        baseFunctions.isElementPresent(STAVOKLIS_FILTER_TITLE);
+        LOGGER.info("Stavoklis filter detected");
+        baseFunctions.elementList.clear();
+        baseFunctions.isElementPresent(STAVOKLI);
+        LOGGER.info("Stavokli detected");
+        baseFunctions.elementList = baseFunctions.getElements(STAVOKLI);
+        boolean statementDetected = false;
+        for (int i = 0; i < baseFunctions.elementList.size(); i++) {
+            if (baseFunctions.getTextFromList(baseFunctions.elementList, i).equals("Jauns")) {
+                WebElement checkMe = baseFunctions.getElementFromList(baseFunctions.elementList, i);
+                String checkBoxId = checkMe.getAttribute("for");
+                LOGGER.info("Stavokla Id: " + checkBoxId);
+                checkMe.click();
+                baseFunctions.driver.navigate().refresh();
+                LOGGER.info("Jauns stavoklis Clicked!");
+                baseFunctions.isElementPresent(By.xpath(".//*[@id='" + checkBoxId + "'][@checked]"));
+                LOGGER.info("Jauns stavoklis filter validation pass");
+                statementDetected = true;
+                break;
+            }
+        }
+        Assertions.assertTrue(statementDetected, "<Melna krasa> filter missed!");
+    }
+
+    public ProductPage goToProductPage (WebElement element, int number) {
+
+
+        return new ProductPage(baseFunctions);
+
     }
 }

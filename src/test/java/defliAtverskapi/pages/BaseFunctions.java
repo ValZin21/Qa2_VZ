@@ -60,4 +60,8 @@ public class BaseFunctions {
     public void isElementInvisible(By xPath) {
         wait.until(ExpectedConditions.invisibilityOfElementLocated(xPath));
     }
+
+    public String titleGet() {
+        return driver.getTitle();
+    }
 }
