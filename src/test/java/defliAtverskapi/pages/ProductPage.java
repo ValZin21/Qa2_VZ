@@ -17,14 +17,14 @@ public class ProductPage {
 
     private static final By KURPES = By.xpath(".//a[@itemprop='item']/span[contains(text(), 'Kurpes')]");
     private static final By PRODUCT_CRITERIAS = By.xpath(".//table[@class='table']/tbody/tr");
-    private static final By PRODUCT_COLOR_ROW_DETECTION = By.xpath(".//table[@class]/tbody/tr[@class]/td");
-//    private static final By PRODUCT_COLOR_ROW_DETECTION = By.xpath(".//tr[@class]/td[contains(text(), 'Krāsa')]");
+    private static final By PRODUCT_COLOR_ROW_DETECTION = By.xpath(".//tr[@class]/td[contains(text(), 'Krāsa')]");
     private static final By PRODUCT_STATE_ROW_DETECTION = By.xpath(".//tr[@class]/td[contains(text(), 'Stāvoklis')]");
     private static final By PRODUCT_CRITERIA_VALUE = By.xpath(".//tr[@class]/td/b");
 
+    private static final By TABLE_ROWS_COUNT = By.xpath(".//table[@class='table']/tbody/tr");
+    private static final By TABLE_COLUMNS_COUNT = By.xpath(".//table[@class='table']/tbody/tr/td");
 
-    private static final By MElNS = By.xpath(".//a[@itemprop='item']/span[contains(text(), 'Kurpes')]");
-    private static final By JAUNS = By.xpath(".//a[@itemprop='item']/span[contains(text(), 'Kurpes')]");
+
     private static final By PRODUCT_NAME_CHECK = By.xpath(".//h1[@itemprop='name']");
     private static final By PRODUCT_PRICE_CHECK = By.xpath(".//div[contains(@class, 'col-sm-6 price')]/meta[@itemprop='price']");
     private static final By PRODUCT_CURRENCY_CHECK = By.xpath(".//div[contains(@class, 'col-sm-6 price')]/meta[@itemprop='priceCurrency']");
@@ -51,6 +51,8 @@ public class ProductPage {
         isKurpes();
         checkColor();
         checkState();
+//        LOGGER.info("RowCount: " + getRowCount());
+//        LOGGER.info("ColumnCount: " + getColumnCount());
         goBack();
     }
 
@@ -64,28 +66,55 @@ public class ProductPage {
     }
 
     public void checkColor() {
-        criteriaCheck(PRODUCT_COLOR_ROW_DETECTION, "Krāsa:", baseFunctions.checkColor);
+        criteriaCheck("Krāsa", baseFunctions.checkColor);
         LOGGER.info("Product color checked successfully");
     }
 
     public void checkState() {
-        criteriaCheck(PRODUCT_STATE_ROW_DETECTION, "Stāvoklis:", baseFunctions.checkState);
+        criteriaCheck("Stāvoklis", baseFunctions.checkState);
         LOGGER.info("Product state checked successfully");
     }
 
-    private void criteriaCheck(By criteriaNameLocator, String criteriaNameCheck, String criteriaValueCheck) {
-        criteriaCollector.clear();
-        baseFunctions.isElementPresent(PRODUCT_CRITERIAS);
-        criteriaCollector = baseFunctions.getElements(PRODUCT_CRITERIAS);
-        for (int i = 0; i < criteriaCollector.size(); i++) {
-            Assertions.assertFalse(criteriaCollector.get(i).findElements(criteriaNameLocator).isEmpty(), "No such criteria!");  // I want function gorlist.get(i).findElements(xPath);
-            String criteriaName = criteriaCollector.get(i).findElement(criteriaNameLocator).getText();
-            if (criteriaName == criteriaNameCheck) {
-                Assertions.assertFalse(criteriaCollector.get(i).findElements(PRODUCT_CRITERIA_VALUE).isEmpty(), "");  // I want function gorlist.get(i).findElements(xPath);
-                Assertions.assertEquals(criteriaValueCheck, criteriaCollector.get(i).findElement(PRODUCT_CRITERIA_VALUE).getText(), "Values mismatch!");
+//    private void criteriaCheck(By criteriaNameLocator, String criteriaNameCheck, String criteriaValueCheck) {
+//        criteriaCollector.clear();
+//        baseFunctions.isElementPresent(By.xpath(".//table[@class='table']"));
+//        baseFunctions.isElementPresent(PRODUCT_CRITERIAS);
+//        criteriaCollector = baseFunctions.getElements(PRODUCT_CRITERIAS);
+//        for (int i = 0; i < criteriaCollector.size(); i++) {
+//            baseFunctions.isElementPresent(criteriaNameLocator);
+//            Assertions.assertFalse(criteriaCollector.get(i).findElements(criteriaNameLocator).isEmpty(), "No such criteria!");  // I want function gorlist.get(i).findElements(xPath);
+//            String criteriaName = criteriaCollector.get(i).findElement(criteriaNameLocator).getText();
+//            if (criteriaName.contains(criteriaNameCheck)) {
+//                Assertions.assertFalse(criteriaCollector.get(i).findElements(PRODUCT_CRITERIA_VALUE).isEmpty(), "");  // I want function gorlist.get(i).findElements(xPath);
+//                Assertions.assertEquals(criteriaValueCheck, criteriaCollector.get(i).findElement(PRODUCT_CRITERIA_VALUE).getText(), "Values mismatch!");
+//            }
+//        }
+//    }
+
+    public void criteriaCheck(String criteriaNameCheck, String criteriaValueCheck) {
+        for (int i = 1; i <= getRowCount(); i++) {
+            for (int j = 1; i <= getColumnCount(); j++) {
+                if (baseFunctions.textGet(By.xpath(".//table[@class='table']/tbody/tr[" + i + "]/td[" + j + "]")).equals(criteriaNameCheck)) {
+                    Assertions.assertEquals(criteriaValueCheck,
+                            baseFunctions.textGet(By.xpath(".//table[@class='table']/tbody/tr[" + i + "]/td[" + j + "]")),
+                            "Criteria value mismatched!");
+                }
             }
         }
 
-
     }
+
+    public Integer getRowCount() {
+        List<WebElement> rows = baseFunctions.getElements(TABLE_ROWS_COUNT);
+        return rows.size();
+    }
+
+    public Integer getColumnCount() {
+        List<WebElement> columns = baseFunctions.getElements(TABLE_COLUMNS_COUNT);
+        return columns.size()/getRowCount();
+    }
+
+
+
+
 }
