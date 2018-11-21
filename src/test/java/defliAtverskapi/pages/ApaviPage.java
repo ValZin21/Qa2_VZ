@@ -23,6 +23,9 @@ public class ApaviPage {
     public static final By STAVOKLI = By.xpath(".//*[contains(@class, 'filter-condition')]/div/label");
     public static final By PRODUCT = By.xpath(".//div[@class = 'col-xs-6 col-sm-3']");
     public static final By PRODUCT_CLICK = By.xpath(".//div/a[@itemprop='url']");
+    public static final By PRODUCT_NAME = By.xpath(".//div[@class='card-info-title']");
+    public static final By PRODUCT_PRICE = By.xpath(".//div[@class='card-info-price']/meta[@itemprop='price']");
+    public static final By PRODUCT_CURRENCY = By.xpath(".//div[@class='card-info-price']/meta[@itemprop='priceCurrency']");
 
     private static Logger LOGGER = LogManager.getLogger(ApaviPage.class);
 
@@ -125,10 +128,27 @@ public class ApaviPage {
     public WebElement checkProducts(int i) {
 //        for (int i = 0; i < 5; i++) {
             collectFirstFiveProducts();
-            Assertions.assertFalse(baseFunctions.elementList.get(i).findElements(PRODUCT_CLICK).isEmpty());
-            WebElement element = baseFunctions.elementList.get(i).findElement(PRODUCT_CLICK);
+        //product name - function please
+        baseFunctions.productCheckList.clear();
+        Assertions.assertFalse(baseFunctions.getElementFromList(baseFunctions.elementList, i).findElements(PRODUCT_NAME).isEmpty());
+        baseFunctions.productCheckList.add(baseFunctions.getElementFromList(baseFunctions.elementList, i).findElement(PRODUCT_NAME).getText());
+        //prodcut currency
+        Assertions.assertFalse(baseFunctions.getElementFromList(baseFunctions.elementList, i).findElements(PRODUCT_CURRENCY).isEmpty());
+        baseFunctions.productCheckList.add(baseFunctions.getElementFromList(baseFunctions.elementList, i).findElement(PRODUCT_CURRENCY).getAttribute("content"));
+        //prodcut price
+        Assertions.assertFalse(baseFunctions.getElementFromList(baseFunctions.elementList, i).findElements(PRODUCT_PRICE).isEmpty());
+        baseFunctions.productCheckList.add(baseFunctions.getElementFromList(baseFunctions.elementList, i).findElement(PRODUCT_PRICE).getAttribute("content"));
+
+        //ARRAY productCheckList content
+        LOGGER.info("Checking product name is: " + baseFunctions.productCheckList.get(0));
+        LOGGER.info("Checking product currency is: " + baseFunctions.productCheckList.get(1));
+        LOGGER.info("Checking product price is: " + baseFunctions.productCheckList.get(2));
+
+
+            Assertions.assertFalse(baseFunctions.getElementFromList(baseFunctions.elementList, i).findElements(PRODUCT_CLICK).isEmpty());
+            WebElement element = baseFunctions.getElementFromList(baseFunctions.elementList, i).findElement(PRODUCT_CLICK);
 //            goToProductPage(element);
-            LOGGER.info("Product " + i + " check started");
+            LOGGER.info("Product " + (i+1) + " check started");
             return element;
 //            productPage.checkProductPage();
 //            baseFunctions.driver.navigate().back();

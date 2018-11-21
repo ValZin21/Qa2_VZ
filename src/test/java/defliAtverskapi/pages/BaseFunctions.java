@@ -9,6 +9,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BaseFunctions {
@@ -16,6 +17,7 @@ public class BaseFunctions {
     public WebDriver driver;
     WebDriverWait wait;
     public List<WebElement> elementList;
+    public List<String> productCheckList = new ArrayList<String>();
 
     public BaseFunctions() {
         System.setProperty("webdriver.chrome.driver", "C:/chromedriver_win32/chromedriver.exe");
@@ -51,6 +53,16 @@ public class BaseFunctions {
 
     public void isElementPresent(By xPath) {
         wait.until(ExpectedConditions.presenceOfElementLocated(xPath));
+    }
+
+    public String textGet (By xPath) {
+        Assertions.assertFalse(getElements(xPath).isEmpty());
+        return driver.findElement(xPath).getText();
+    }
+
+    public String attributeGet (By xPath, String attribute) {
+        Assertions.assertFalse(getElements(xPath).isEmpty());
+        return driver.findElement(xPath).getAttribute(attribute);
     }
 
     public void isElementClickable(By xPath) {
