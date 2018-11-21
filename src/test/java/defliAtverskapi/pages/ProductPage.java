@@ -94,7 +94,7 @@ public class ProductPage {
 
     public void criteriaCheck(String criteriaNameCheck, String criteriaValueCheck) {
 //        for (int i = 1; i <= getRowCount(); i++) {
-//            for (int j = 1; i <= getColumnCount(); j++) {
+//            for (int j = 1; j <= getColumnCount(); j++) {
 //                if (baseFunctions.textGet(By.xpath(".//table[@class='table']/tbody/tr[" + (i) + "]/td[" + (j) + "]")).equals(criteriaNameCheck)) {
 //                    Assertions.assertEquals(criteriaValueCheck,
 //                            baseFunctions.textGet(By.xpath(".//table[@class='table']/tbody/tr[" + (i) + "]/td[" + (j) + "]")),
@@ -103,9 +103,9 @@ public class ProductPage {
 //            }
 //        }
         for (int i = 1; i <= getRowCount(); i++) {
-            if (baseFunctions.textGet(By.xpath(".//table[@class='table']/tbody/tr[" + (i) + "]/td[1]")).equals(criteriaNameCheck)){
+            if (baseFunctions.textGet(By.xpath(".//table[@class='table']/tbody/tr[" + i + "]/td[1]")).equals(criteriaNameCheck)){
                 Assertions.assertEquals(criteriaValueCheck,
-                        baseFunctions.textGet(By.xpath(".//table[@class='table']/tbody/tr[" + (i) + "]/td[2]")),
+                        baseFunctions.textGet(By.xpath(".//table[@class='table']/tbody/tr[" + i + "]/td[2]")),
                         "Criteria value mismatched!");
             }
         }
