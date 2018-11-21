@@ -76,7 +76,7 @@ public class ApaviPage {
         baseFunctions.elementList = baseFunctions.getElements(KRASAS);
         boolean statementDetected = false;
         for (int i = 0; i < baseFunctions.elementList.size(); i++) {
-            if (baseFunctions.getElementFromList(baseFunctions.elementList, i).getAttribute("data-title").equals("Melna")) {
+            if (baseFunctions.getElementFromList(baseFunctions.elementList, i).getAttribute("data-title").equals(baseFunctions.checkColor)) {
                 WebElement checkMe = baseFunctions.getElementFromList(baseFunctions.elementList, i);
                 String checkBoxId = checkMe.getAttribute("for");
                 LOGGER.info("Krasas Id: " + checkBoxId);
@@ -101,7 +101,7 @@ public class ApaviPage {
         baseFunctions.elementList = baseFunctions.getElements(STAVOKLI);
         boolean statementDetected = false;
         for (int i = 0; i < baseFunctions.elementList.size(); i++) {
-            if (baseFunctions.getTextFromList(baseFunctions.elementList, i).equals("Jauns")) {
+            if (baseFunctions.getTextFromList(baseFunctions.elementList, i).equals(baseFunctions.checkState)) {
                 WebElement checkMe = baseFunctions.getElementFromList(baseFunctions.elementList, i);
                 String checkBoxId = checkMe.getAttribute("for");
                 LOGGER.info("Stavokla Id: " + checkBoxId);
@@ -128,8 +128,9 @@ public class ApaviPage {
     public WebElement checkProducts(int i) {
 //        for (int i = 0; i < 5; i++) {
             collectFirstFiveProducts();
-        //product name - function please
+
         baseFunctions.productCheckList.clear();
+        //product name - function please
         Assertions.assertFalse(baseFunctions.getElementFromList(baseFunctions.elementList, i).findElements(PRODUCT_NAME).isEmpty());
         baseFunctions.productCheckList.add(baseFunctions.getElementFromList(baseFunctions.elementList, i).findElement(PRODUCT_NAME).getText());
         //prodcut currency

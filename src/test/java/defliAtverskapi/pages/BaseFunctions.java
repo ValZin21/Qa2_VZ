@@ -18,6 +18,8 @@ public class BaseFunctions {
     WebDriverWait wait;
     public List<WebElement> elementList;
     public List<String> productCheckList = new ArrayList<String>();
+    public String checkColor = "Melna";
+    public String checkState = "Jauns";
 
     public BaseFunctions() {
         System.setProperty("webdriver.chrome.driver", "C:/chromedriver_win32/chromedriver.exe");

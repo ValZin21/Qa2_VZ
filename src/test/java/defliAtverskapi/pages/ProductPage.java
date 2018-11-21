@@ -4,13 +4,25 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductPage {
 
     BaseFunctions baseFunctions;
 
+    protected List<WebElement> criteriaCollector = new ArrayList<WebElement>();
 
     private static final By KURPES = By.xpath(".//a[@itemprop='item']/span[contains(text(), 'Kurpes')]");
+    private static final By PRODUCT_CRITERIAS = By.xpath(".//table[@class='table']/tbody/tr");
+    private static final By PRODUCT_COLOR_ROW_DETECTION = By.xpath(".//table[@class]/tbody/tr[@class]/td");
+//    private static final By PRODUCT_COLOR_ROW_DETECTION = By.xpath(".//tr[@class]/td[contains(text(), 'Krāsa')]");
+    private static final By PRODUCT_STATE_ROW_DETECTION = By.xpath(".//tr[@class]/td[contains(text(), 'Stāvoklis')]");
+    private static final By PRODUCT_CRITERIA_VALUE = By.xpath(".//tr[@class]/td/b");
+
+
     private static final By MElNS = By.xpath(".//a[@itemprop='item']/span[contains(text(), 'Kurpes')]");
     private static final By JAUNS = By.xpath(".//a[@itemprop='item']/span[contains(text(), 'Kurpes')]");
     private static final By PRODUCT_NAME_CHECK = By.xpath(".//h1[@itemprop='name']");
@@ -37,6 +49,8 @@ public class ProductPage {
     public void checkProductPage() {
         isCorrectProductSelected();
         isKurpes();
+        checkColor();
+        checkState();
         goBack();
     }
 
@@ -47,5 +61,31 @@ public class ProductPage {
         LOGGER.info("Product currency check succeed");
         Assertions.assertTrue(baseFunctions.attributeGet(PRODUCT_PRICE_CHECK, "content").contains(baseFunctions.productCheckList.get(2)));
         LOGGER.info("Product price check succeed");
+    }
+
+    public void checkColor() {
+        criteriaCheck(PRODUCT_COLOR_ROW_DETECTION, "Krāsa:", baseFunctions.checkColor);
+        LOGGER.info("Product color checked successfully");
+    }
+
+    public void checkState() {
+        criteriaCheck(PRODUCT_STATE_ROW_DETECTION, "Stāvoklis:", baseFunctions.checkState);
+        LOGGER.info("Product state checked successfully");
+    }
+
+    private void criteriaCheck(By criteriaNameLocator, String criteriaNameCheck, String criteriaValueCheck) {
+        criteriaCollector.clear();
+        baseFunctions.isElementPresent(PRODUCT_CRITERIAS);
+        criteriaCollector = baseFunctions.getElements(PRODUCT_CRITERIAS);
+        for (int i = 0; i < criteriaCollector.size(); i++) {
+            Assertions.assertFalse(criteriaCollector.get(i).findElements(criteriaNameLocator).isEmpty(), "No such criteria!");  // I want function gorlist.get(i).findElements(xPath);
+            String criteriaName = criteriaCollector.get(i).findElement(criteriaNameLocator).getText();
+            if (criteriaName == criteriaNameCheck) {
+                Assertions.assertFalse(criteriaCollector.get(i).findElements(PRODUCT_CRITERIA_VALUE).isEmpty(), "");  // I want function gorlist.get(i).findElements(xPath);
+                Assertions.assertEquals(criteriaValueCheck, criteriaCollector.get(i).findElement(PRODUCT_CRITERIA_VALUE).getText(), "Values mismatch!");
+            }
+        }
+
+
     }
 }
