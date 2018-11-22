@@ -98,18 +98,20 @@ public class ApaviPage {
     }
 
     public void checkFiveProducts() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < baseFunctions.productCountForCheck; i++) {
             String apaviPageTitle = baseFunctions.titleGet();
             ProductPage productPage = goToProductPage(checkProducts(i));
 
             String productPageTitle = baseFunctions.titleGet();
             Assertions.assertNotEquals(apaviPageTitle, productPageTitle, "Page not switched from apaviPage to productPage!");
-            productPage.checkProductPage();
+            productPage.checkProductPage(i);
 
-            apaviPageTitle = baseFunctions.titleGet();
-            Assertions.assertNotEquals(productPageTitle, apaviPageTitle, "Page not switched from productPage to apaviPage!");
+            if (i != (baseFunctions.productCountForCheck - 1)) {
+                apaviPageTitle = baseFunctions.titleGet();
+                Assertions.assertNotEquals(productPageTitle, apaviPageTitle, "Page not switched from productPage to apaviPage!");
 
-            isFiltersRemainingAppliedCheck();
+                isFiltersRemainingAppliedCheck();
+            }
         }
     }
 

@@ -42,14 +42,16 @@ public class ProductPage {
         LOGGER.info("Is kurpes");
     }
 
-    protected void checkProductPage() {
+    protected void checkProductPage(int checkedProductNumber) {
         isCorrectProductSelected();
         isForMen();
         isKurpes();
         LOGGER.info("RowCount: " + getRowCount());
         checkColor();
         checkState();
-        goBack();
+        if (checkedProductNumber != (baseFunctions.productCountForCheck - 1)) {
+            goBack();
+        }
     }
 
     private void isCorrectProductSelected() {
