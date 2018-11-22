@@ -3,29 +3,15 @@ package defliAtverskapi;
 import defliAtverskapi.pages.ApaviPage;
 import defliAtverskapi.pages.BaseFunctions;
 import defliAtverskapi.pages.HomePage;
-import defliAtverskapi.pages.ProductPage;
-import org.apache.http.conn.util.PublicSuffixList;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import java.util.List;
 
 public class MenBootsCheck {
 
     private BaseFunctions baseFunctions = new BaseFunctions();
     private static final String HOME_PAGE = "http://atverskapi.delfi.lv/lv/style";
-//    public static final By DROP_DOWN_MENU = By.xpath(".//li[@class='dropdown']");
-//    public static final By DROP_DOWN_MENU_SUMMARY = By.xpath(".//li[@class='dropdown']/a");
-//    public static final By DROP_DOWN_MENU_OPEN = By.xpath(".//li[@class='dropdown open']");
-//    public static final By DROP_DOWN_MUENU_ELEMENTS = By.xpath(".//ul[@class='dropdown-menu']/li/a");
-
-
-
-
 
     @Test
     public void new5BlackBootsCheck() {
@@ -41,19 +27,7 @@ public class MenBootsCheck {
         apaviPage.selectKurpes();
         apaviPage.selectBlackColor();
         apaviPage.selectNewState();
-       // apaviPage.collectFirstFiveProducts();
-
-        //first five products check
         apaviPage.checkFiveProducts();
-//        for (int i = 0; i < 5; i++) {
-//            ProductPage productPage = apaviPage.goToProductPage(apaviPage.checkProducts(i));
-//            productPage.checkProductPage();
-//        }
-
-
-
-
-
     }
 
     @AfterEach

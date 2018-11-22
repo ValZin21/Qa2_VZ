@@ -11,7 +11,6 @@ import java.util.List;
 
 public class ApaviPage {
     BaseFunctions baseFunctions;
-    ProductPage productPage;
 
     public static final By APAVI_FILTER = By.xpath(".//div[@id='step3_38']/div[@class='step-item']");
 //    public static final By APAVI_FILTER_TEXT_VALUES = By.xpath(".//*[@id='step3_38']/div");
@@ -29,9 +28,6 @@ public class ApaviPage {
     public static final By PRODUCT_CURRENCY = By.xpath(".//div[@class='card-info-price']/meta[@itemprop='priceCurrency']");
 
     private static Logger LOGGER = LogManager.getLogger(ApaviPage.class);
-
-    private WebElement elementChecker;
-
 
     public ApaviPage(BaseFunctions baseFunctions){
         this.baseFunctions = baseFunctions;
