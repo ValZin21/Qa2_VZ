@@ -12,10 +12,7 @@ public class ApaviPage {
     BaseFunctions baseFunctions;
 
     public static final By APAVI_FILTER = By.xpath(".//div[@id='step3_38']/div[@class='step-item']");
-//    public static final By APAVI_FILTER_TEXT_VALUES = By.xpath(".//*[@id='step3_38']/div");
     public static final By APAVI_FILTER_TAG_FINDER = By.xpath(".//*[@id='step3_38']/div[@class='step-item']/label");
-//    public static final By APAVI_FILTER_VALUE_CHECKBOX = By.xpath(".//*[@id='step3_38']/div/*[@id='tag_205']");
-//    public static final By APAVI_FILTER_VALUE_CHECKBOX = By.xpath(".//*[@id='tag_205']");
     public static final By KRASA_FILTER_TITLE = By.xpath(".//*[contains(@class, 'filters-section')]/div[contains(text(), 'Krāsa')]");
     public static final By KRASAS = By.xpath(".//*[contains(@class, 'filter-colors-item')]/label");
     public static final By STAVOKLIS_FILTER_TITLE = By.xpath(".//*[contains(@class, 'filters-section')]/div[contains(text(), 'Stāvoklis')]");
@@ -33,29 +30,21 @@ public class ApaviPage {
     }
 
     public void selectKurpes() {
-
-        baseFunctions.isElementPresent(APAVI_FILTER_TAG_FINDER);  // by plan - APAVI_FILTER
+        baseFunctions.isElementPresent(APAVI_FILTER_TAG_FINDER);
         baseFunctions.elementList.clear();
-        baseFunctions.elementList = baseFunctions.getElements(APAVI_FILTER_TAG_FINDER);  // by plan - APAVI_FILTER
+        baseFunctions.elementList = baseFunctions.getElements(APAVI_FILTER_TAG_FINDER);
         boolean statementDetected = false;
         for (int i = 0; i < baseFunctions.elementList.size(); i++) {
             if (baseFunctions.getTextFromList(baseFunctions.elementList, i).equals("Kurpes")) {
-//                baseFunctions.isElementPresent(APAVI_FILTER_TAG_FINDER);
                 WebElement checkMe = baseFunctions.getElementFromList(baseFunctions.elementList, i);
-//                LOGGER.info(checkMe);
                 Assertions.assertTrue(checkMe.findElements(APAVI_FILTER_TAG_FINDER).isEmpty(), "No tag");
-//                String a = baseFunctions.getElement(APAVI_FILTER_TAG_FINDER).getAttribute("for");
-//                String a = checkMe.findElement(APAVI_FILTER_TAG_FINDER).getAttribute("for");
-                String checkBoxId = baseFunctions.getElementFromList(baseFunctions.elementList, i).getAttribute("for"); //working, APAVI_FILTER_TAG_FINDER for all locators
-//                String a = baseFunctions.getElementFromList(baseFunctions.elementList, i).findElement(APAVI_FILTER_TAG_FINDER).getAttribute("for");
+                String checkBoxId = baseFunctions.getElementFromList(baseFunctions.elementList, i).getAttribute("for");
                 LOGGER.info("Kurpes id: " + checkBoxId);
                 baseFunctions.getElement(By.xpath(".//*[@id='" + checkBoxId + "']")).click();
-//                baseFunctions.getElementFromList(baseFunctions.elementList, i)
                 baseFunctions.driver.navigate().refresh();
                 LOGGER.info("Kurpes Clicked!");
                 baseFunctions.isElementPresent(By.xpath(".//*[@id='" + checkBoxId + "'][@checked='checked']"));
-                LOGGER.info("Kurpes filter validation pass");
-                //ADD CHECK THAT CHECKBOX IS SELECTED (.//*[@id='tag_205'][@checked='checked'] exists)
+                LOGGER.info("Kurpes filter is applied");
                 statementDetected = true;
                 break;
             }
@@ -80,7 +69,7 @@ public class ApaviPage {
                 baseFunctions.driver.navigate().refresh();
                 LOGGER.info("Melna krasa Clicked!");
                 baseFunctions.isElementPresent(By.xpath(".//*[@id='" + checkBoxId + "'][@checked]"));
-                LOGGER.info("Melna krasa filter validation pass");
+                LOGGER.info("Melna krasa filter is applied");
                 statementDetected = true;
                 break;
             }
@@ -105,7 +94,7 @@ public class ApaviPage {
                 baseFunctions.driver.navigate().refresh();
                 LOGGER.info("Jauns stavoklis Clicked!");
                 baseFunctions.isElementPresent(By.xpath(".//*[@id='" + checkBoxId + "'][@checked]"));
-                LOGGER.info("Jauns stavoklis filter validation pass");
+                LOGGER.info("Jauns stavoklis filter is applied");
                 statementDetected = true;
                 break;
             }
@@ -122,35 +111,13 @@ public class ApaviPage {
 
     //not finished
     public WebElement checkProducts(int i) {
-//        for (int i = 0; i < 5; i++) {
-            collectFirstFiveProducts();
+        collectFirstFiveProducts();
 
-        baseFunctions.productCheckList.clear();
-        //product name - function please
-        Assertions.assertFalse(baseFunctions.getElementFromList(baseFunctions.elementList, i).findElements(PRODUCT_NAME).isEmpty());
-        baseFunctions.productCheckList.add(baseFunctions.getElementFromList(baseFunctions.elementList, i).findElement(PRODUCT_NAME).getText());
-        //prodcut currency
-        Assertions.assertFalse(baseFunctions.getElementFromList(baseFunctions.elementList, i).findElements(PRODUCT_CURRENCY).isEmpty());
-        baseFunctions.productCheckList.add(baseFunctions.getElementFromList(baseFunctions.elementList, i).findElement(PRODUCT_CURRENCY).getAttribute("content"));
-        //prodcut price
-        Assertions.assertFalse(baseFunctions.getElementFromList(baseFunctions.elementList, i).findElements(PRODUCT_PRICE).isEmpty());
-        baseFunctions.productCheckList.add(baseFunctions.getElementFromList(baseFunctions.elementList, i).findElement(PRODUCT_PRICE).getAttribute("content"));
+        checkList(i);
 
-        //ARRAY productCheckList content
-        LOGGER.info("Checking product name is: " + baseFunctions.productCheckList.get(0));
-        LOGGER.info("Checking product currency is: " + baseFunctions.productCheckList.get(1));
-        LOGGER.info("Checking product price is: " + baseFunctions.productCheckList.get(2));
-
-
-            Assertions.assertFalse(baseFunctions.getElementFromList(baseFunctions.elementList, i).findElements(PRODUCT_CLICK).isEmpty());
-            WebElement element = baseFunctions.getElementFromList(baseFunctions.elementList, i).findElement(PRODUCT_CLICK);
-//            goToProductPage(element);
-            LOGGER.info("Product " + (i+1) + " check started");
-            return element;
-//            productPage.checkProductPage();
-//            baseFunctions.driver.navigate().back();
-
-//        }
+        WebElement element = findElementFromListElement(PRODUCT_CLICK, i);
+        LOGGER.info("Product " + (i+1) + " check started");
+        return element;
     }
 
     public ProductPage goToProductPage (WebElement element) {
@@ -171,5 +138,29 @@ public class ApaviPage {
             apaviPageTitle = baseFunctions.titleGet();
             Assertions.assertNotEquals(productPageTitle, apaviPageTitle, "Page not switched from productPage to apaviPage!");
         }
+    }
+
+    protected void addToProductCheckList (By xPath, int i, String parameter) {
+        if (parameter.equals("text")) {
+            baseFunctions.productCheckList.add(findElementFromListElement(xPath, i).getText());
+        }
+        else {
+            baseFunctions.productCheckList.add(findElementFromListElement(xPath, i).getAttribute("content"));
+        }
+    }
+
+    protected WebElement findElementFromListElement (By xPath, int number) {
+        Assertions.assertFalse(baseFunctions.getElementFromList(baseFunctions.elementList, number).findElements(xPath).isEmpty());
+        return baseFunctions.getElementFromList(baseFunctions.elementList, number).findElement(xPath);
+    }
+
+    protected void checkList(int number) {
+        baseFunctions.productCheckList.clear();
+        addToProductCheckList(PRODUCT_NAME, number, "text");
+        LOGGER.info("Checking product name is: " + baseFunctions.productCheckList.get(0));
+        addToProductCheckList(PRODUCT_CURRENCY, number, "attribute");
+        LOGGER.info("Checking product currency is: " + baseFunctions.productCheckList.get(1));
+        addToProductCheckList(PRODUCT_PRICE, number, "attribute");
+        LOGGER.info("Checking product price is: " + baseFunctions.productCheckList.get(2));
     }
 }

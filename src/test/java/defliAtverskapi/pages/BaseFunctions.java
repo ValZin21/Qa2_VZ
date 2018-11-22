@@ -66,14 +66,6 @@ public class BaseFunctions {
         return driver.findElement(xPath).getAttribute(attribute);
     }
 
-    public void isElementClickable(By xPath) {
-        wait.until(ExpectedConditions.elementToBeClickable(xPath));
-    }
-
-    public void isElementInvisible(By xPath) {
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(xPath));
-    }
-
     public String titleGet() {
         return driver.getTitle();
     }
