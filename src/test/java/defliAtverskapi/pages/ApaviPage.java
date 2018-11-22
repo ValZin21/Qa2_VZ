@@ -137,7 +137,7 @@ public class ApaviPage {
         LOGGER.info("Checking product price is: " + baseFunctions.productCheckList.get(2));
     }
 
-    public void isFiltersRemainingAppliedCheck() {
+    private void isFiltersRemainingAppliedCheck() {
         for (int i = 0; i < filterIdCollector.size(); i++) {
             baseFunctions.isElementPresent(By.xpath(".//*[@id='" + filterIdCollector.get(i) + "'][@checked]"));
         }
