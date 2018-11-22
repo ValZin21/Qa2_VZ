@@ -27,18 +27,18 @@ public class ProductPage {
         this.baseFunctions = baseFunctions;
     }
 
-    public void goBack() {
+    private void goBack() {
         LOGGER.info("Going back to ApaviPage");
         baseFunctions.driver.navigate().back();
 
     }
 
-    public void isKurpes() {
+    private void isKurpes() {
         baseFunctions.isElementPresent(KURPES);
         LOGGER.info("Is kurpes");
     }
 
-    public void checkProductPage() {
+    protected void checkProductPage() {
         isCorrectProductSelected();
         isKurpes();
         LOGGER.info("RowCount: " + getRowCount());
@@ -48,7 +48,7 @@ public class ProductPage {
         goBack();
     }
 
-    public void isCorrectProductSelected() {
+    private void isCorrectProductSelected() {
         Assertions.assertEquals(baseFunctions.productCheckList.get(0), baseFunctions.textGet(PRODUCT_NAME_CHECK), "Product name mismatch!");
         LOGGER.info("Product name check succeed");
         Assertions.assertEquals(baseFunctions.productCheckList.get(1), baseFunctions.attributeGet(PRODUCT_CURRENCY_CHECK, "content"), "Product currency mismatch!");
@@ -57,17 +57,17 @@ public class ProductPage {
         LOGGER.info("Product price check succeed");
     }
 
-    public void checkColor() {
+    private void checkColor() {
         criteriaCheck("Krāsa", baseFunctions.checkColor);
         LOGGER.info("Product color checked successfully");
     }
 
-    public void checkState() {
+    private void checkState() {
         criteriaCheck("Stāvoklis", baseFunctions.checkState);
         LOGGER.info("Product state checked successfully");
     }
 
-    public void criteriaCheck(String criteriaNameCheck, String criteriaValueCheck) {
+    private void criteriaCheck(String criteriaNameCheck, String criteriaValueCheck) {
         for (int i = 1; i <= getRowCount(); i++) {
             if (baseFunctions.textGet(By.xpath(".//table[@class='table']/tbody/tr[" + i + "]/td[1]")).equals(criteriaNameCheck)){
                 Assertions.assertEquals(criteriaValueCheck,
@@ -77,12 +77,12 @@ public class ProductPage {
         }
     }
 
-    public Integer getRowCount() {
+    private Integer getRowCount() {
         List<WebElement> rows = baseFunctions.getElements(TABLE_ROWS_COUNT);
         return rows.size();
     }
 
-//    public Integer getColumnCount() {
+//    protected Integer getColumnCount() {
 //        List<WebElement> columns = baseFunctions.getElements(TABLE_COLUMNS_COUNT);
 //        return columns.size()/getRowCount();
 //    }

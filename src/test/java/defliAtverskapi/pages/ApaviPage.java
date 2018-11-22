@@ -11,17 +11,16 @@ import java.util.List;
 public class ApaviPage {
     BaseFunctions baseFunctions;
 
-    public static final By APAVI_FILTER = By.xpath(".//div[@id='step3_38']/div[@class='step-item']");
-    public static final By APAVI_FILTER_TAG_FINDER = By.xpath(".//*[@id='step3_38']/div[@class='step-item']/label");
-    public static final By KRASA_FILTER_TITLE = By.xpath(".//*[contains(@class, 'filters-section')]/div[contains(text(), 'Krāsa')]");
-    public static final By KRASAS = By.xpath(".//*[contains(@class, 'filter-colors-item')]/label");
-    public static final By STAVOKLIS_FILTER_TITLE = By.xpath(".//*[contains(@class, 'filters-section')]/div[contains(text(), 'Stāvoklis')]");
-    public static final By STAVOKLI = By.xpath(".//*[contains(@class, 'filter-condition')]/div/label");
-    public static final By PRODUCT = By.xpath(".//div[@class = 'col-xs-6 col-sm-3']");
-    public static final By PRODUCT_CLICK = By.xpath(".//div/a[@itemprop='url']");
-    public static final By PRODUCT_NAME = By.xpath(".//div[@class='card-info-title']");
-    public static final By PRODUCT_PRICE = By.xpath(".//div[@class='card-info-price']/meta[@itemprop='price']");
-    public static final By PRODUCT_CURRENCY = By.xpath(".//div[@class='card-info-price']/meta[@itemprop='priceCurrency']");
+    private static final By APAVI_FILTER_TAG_FINDER = By.xpath(".//*[@id='step3_38']/div[@class='step-item']/label");
+    private static final By KRASA_FILTER_TITLE = By.xpath(".//*[contains(@class, 'filters-section')]/div[contains(text(), 'Krāsa')]");
+    private static final By KRASAS = By.xpath(".//*[contains(@class, 'filter-colors-item')]/label");
+    private static final By STAVOKLIS_FILTER_TITLE = By.xpath(".//*[contains(@class, 'filters-section')]/div[contains(text(), 'Stāvoklis')]");
+    private static final By STAVOKLI = By.xpath(".//*[contains(@class, 'filter-condition')]/div/label");
+    private static final By PRODUCT = By.xpath(".//div[@class = 'col-xs-6 col-sm-3']");
+    private static final By PRODUCT_CLICK = By.xpath(".//div/a[@itemprop='url']");
+    private static final By PRODUCT_NAME = By.xpath(".//div[@class='card-info-title']");
+    private static final By PRODUCT_PRICE = By.xpath(".//div[@class='card-info-price']/meta[@itemprop='price']");
+    private static final By PRODUCT_CURRENCY = By.xpath(".//div[@class='card-info-price']/meta[@itemprop='priceCurrency']");
 
     private static Logger LOGGER = LogManager.getLogger(ApaviPage.class);
 
@@ -102,15 +101,14 @@ public class ApaviPage {
         Assertions.assertTrue(statementDetected, "<Melna krasa> filter missed!");
     }
 
-    public List<WebElement> collectFirstFiveProducts() {
+    private List<WebElement> collectFirstFiveProducts() {
         baseFunctions.elementList.clear();
         baseFunctions.isElementPresent(PRODUCT);
         LOGGER.info("Products collected");
         return baseFunctions.elementList = baseFunctions.getElements(PRODUCT);
     }
 
-    //not finished
-    public WebElement checkProducts(int i) {
+    private WebElement checkProducts(int i) {
         collectFirstFiveProducts();
 
         checkList(i);
@@ -120,7 +118,7 @@ public class ApaviPage {
         return element;
     }
 
-    public ProductPage goToProductPage (WebElement element) {
+    private ProductPage goToProductPage (WebElement element) {
         element.click();
         return new ProductPage(baseFunctions);
 
@@ -140,7 +138,7 @@ public class ApaviPage {
         }
     }
 
-    protected void addToProductCheckList (By xPath, int i, String parameter) {
+    private void addToProductCheckList (By xPath, int i, String parameter) {
         if (parameter.equals("text")) {
             baseFunctions.productCheckList.add(findElementFromListElement(xPath, i).getText());
         }
@@ -149,12 +147,12 @@ public class ApaviPage {
         }
     }
 
-    protected WebElement findElementFromListElement (By xPath, int number) {
+    private WebElement findElementFromListElement (By xPath, int number) {
         Assertions.assertFalse(baseFunctions.getElementFromList(baseFunctions.elementList, number).findElements(xPath).isEmpty());
         return baseFunctions.getElementFromList(baseFunctions.elementList, number).findElement(xPath);
     }
 
-    protected void checkList(int number) {
+    private void checkList(int number) {
         baseFunctions.productCheckList.clear();
         addToProductCheckList(PRODUCT_NAME, number, "text");
         LOGGER.info("Checking product name is: " + baseFunctions.productCheckList.get(0));
