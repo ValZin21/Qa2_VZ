@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
 import java.util.List;
 
@@ -162,8 +161,15 @@ public class ApaviPage {
 
     public void checkFiveProducts() {
         for (int i = 0; i < 5; i++) {
+            String apaviPageTitle = baseFunctions.titleGet();
             ProductPage productPage = goToProductPage(checkProducts(i));
+
+            String productPageTitle = baseFunctions.titleGet();
+            Assertions.assertNotEquals(apaviPageTitle, productPageTitle, "Page not switched from apaviPage to productPage!");
             productPage.checkProductPage();
+
+            apaviPageTitle = baseFunctions.titleGet();
+            Assertions.assertNotEquals(productPageTitle, apaviPageTitle, "Page not switched from productPage to apaviPage!");
         }
     }
 }
