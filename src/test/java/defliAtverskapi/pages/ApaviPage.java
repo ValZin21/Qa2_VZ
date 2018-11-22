@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ApaviPage {
@@ -24,6 +25,8 @@ public class ApaviPage {
     private static final By PRODUCT_CURRENCY = By.xpath(".//div[@class='card-info-price']/meta[@itemprop='priceCurrency']");
 
     private static Logger LOGGER = LogManager.getLogger(ApaviPage.class);
+
+    private List<String> filterIdCollector = new ArrayList<String>();
 
     public ApaviPage(BaseFunctions baseFunctions){
         this.baseFunctions = baseFunctions;
@@ -51,6 +54,7 @@ public class ApaviPage {
             if (workScriptDetector(i, mode).equals(checkValue)) {
                 WebElement checkMe = baseFunctions.getElementFromList(baseFunctions.elementList, i);
                 String checkBoxId = checkMe.getAttribute("for");
+                filterIdCollector.add(checkBoxId);
                 checkMe.click();
                 baseFunctions.driver.navigate().refresh();
                 baseFunctions.isElementPresent(By.xpath(".//*[@id='" + checkBoxId + "'][@checked]"));
@@ -104,6 +108,8 @@ public class ApaviPage {
 
             apaviPageTitle = baseFunctions.titleGet();
             Assertions.assertNotEquals(productPageTitle, apaviPageTitle, "Page not switched from productPage to apaviPage!");
+
+            isFiltersRemainingAppliedCheck();
         }
     }
 
@@ -129,5 +135,12 @@ public class ApaviPage {
         LOGGER.info("Checking product currency is: " + baseFunctions.productCheckList.get(1));
         addToProductCheckList(PRODUCT_PRICE, number, "attribute");
         LOGGER.info("Checking product price is: " + baseFunctions.productCheckList.get(2));
+    }
+
+    public void isFiltersRemainingAppliedCheck() {
+        for (int i = 0; i < filterIdCollector.size(); i++) {
+            baseFunctions.isElementPresent(By.xpath(".//*[@id='" + filterIdCollector.get(i) + "'][@checked]"));
+        }
+        LOGGER.info("apaviPage filters remaining applied");
     }
 }
