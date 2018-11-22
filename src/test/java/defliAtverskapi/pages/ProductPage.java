@@ -12,10 +12,10 @@ public class ProductPage {
 
     BaseFunctions baseFunctions;
 
+    private static final By FOR_MEN = By.xpath(".//a[@itemprop='item']/span[contains(text(), 'Vīriešiem')]");
     private static final By KURPES = By.xpath(".//a[@itemprop='item']/span[contains(text(), 'Kurpes')]");
 
     private static final By TABLE_ROWS_COUNT = By.xpath(".//table[@class='table']/tbody/tr");
-//    private static final By TABLE_COLUMNS_COUNT = By.xpath(".//table[@class='table']/tbody/tr/td");
 
     private static final By PRODUCT_NAME_CHECK = By.xpath(".//h1[@itemprop='name']");
     private static final By PRODUCT_PRICE_CHECK = By.xpath(".//div[contains(@class, 'col-sm-6 price')]/meta[@itemprop='price']");
@@ -30,7 +30,11 @@ public class ProductPage {
     private void goBack() {
         LOGGER.info("Going back to ApaviPage");
         baseFunctions.driver.navigate().back();
+    }
 
+    private void isForMen() {
+        baseFunctions.isElementPresent(FOR_MEN);
+        LOGGER.info("Is Vīriešiem");
     }
 
     private void isKurpes() {
@@ -40,9 +44,9 @@ public class ProductPage {
 
     protected void checkProductPage() {
         isCorrectProductSelected();
+        isForMen();
         isKurpes();
         LOGGER.info("RowCount: " + getRowCount());
-//        LOGGER.info("ColumnCount: " + getColumnCount());
         checkColor();
         checkState();
         goBack();
@@ -82,8 +86,4 @@ public class ProductPage {
         return rows.size();
     }
 
-//    protected Integer getColumnCount() {
-//        List<WebElement> columns = baseFunctions.getElements(TABLE_COLUMNS_COUNT);
-//        return columns.size()/getRowCount();
-//    }
 }

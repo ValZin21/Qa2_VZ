@@ -58,8 +58,7 @@ public class BaseFunctions {
     }
 
     public String textGet (By xPath) {
-        Assertions.assertFalse(getElements(xPath).isEmpty());
-        return driver.findElement(xPath).getText();
+        return getElement(xPath).getText();
     }
 
     public String attributeGet (By xPath, String attribute) {

@@ -11,7 +11,7 @@ import java.util.List;
 public class ApaviPage {
     BaseFunctions baseFunctions;
 
-    private static final By APAVI_FILTER = By.xpath(".//div[@id='step2_28'][@checked='checked']/div/input[@id='cat_38'][contains(@checked, 'checked')]");
+    private static final By APAVI_FILTER_TITLE = By.xpath(".//div[@id='step2_28'][@checked='checked']/div/input[@id='cat_38'][contains(@checked, 'checked')]/../ label[text()='Apavi']");
     private static final By APAVI_FILTER_TAG_FINDER = By.xpath(".//*[@id='step3_38']/div[@class='step-item']/label");
     private static final By KRASA_FILTER_TITLE = By.xpath(".//*[contains(@class, 'filters-section')]/div[contains(text(), 'Krāsa')]");
     private static final By KRASAS = By.xpath(".//*[contains(@class, 'filter-colors-item')]/label");
@@ -30,74 +30,21 @@ public class ApaviPage {
     }
 
     public void selectKurpes() {
-        baseFunctions.isElementPresent(APAVI_FILTER_TAG_FINDER);
-        baseFunctions.elementList.clear();
-        baseFunctions.isElementPresent(APAVI_FILTER);
-        baseFunctions.elementList = baseFunctions.getElements(APAVI_FILTER_TAG_FINDER);
-        boolean statementDetected = false;
-        for (int i = 0; i < baseFunctions.elementList.size(); i++) {
-            if (baseFunctions.getTextFromList(baseFunctions.elementList, i).equals("Kurpes")) {
-                WebElement checkMe = baseFunctions.getElementFromList(baseFunctions.elementList, i);
-//                Assertions.assertTrue(checkMe.findElements(APAVI_FILTER_TAG_FINDER).isEmpty(), "No tag");
-                String checkBoxId = baseFunctions.getElementFromList(baseFunctions.elementList, i).getAttribute("for");
-                baseFunctions.getElement(By.xpath(".//*[@id='" + checkBoxId + "']")).click();
-                baseFunctions.driver.navigate().refresh();
-                baseFunctions.isElementPresent(By.xpath(".//*[@id='" + checkBoxId + "'][@checked='checked']"));
-                LOGGER.info("Kurpes filter is applied");
-                statementDetected = true;
-                break;
-            }
-        }
-        Assertions.assertTrue(statementDetected, "<Kurpes> product missed!");
+        selectFilter(APAVI_FILTER_TITLE, APAVI_FILTER_TAG_FINDER, "text", baseFunctions.checkShoes);
     }
 
     public void selectBlackColor() {
-        baseFunctions.isElementPresent(KRASA_FILTER_TITLE);
-        baseFunctions.elementList.clear();
-        baseFunctions.isElementPresent(KRASAS);
-        baseFunctions.elementList = baseFunctions.getElements(KRASAS);
-        boolean statementDetected = false;
-        for (int i = 0; i < baseFunctions.elementList.size(); i++) {
-            if (baseFunctions.getElementFromList(baseFunctions.elementList, i).getAttribute("data-title").equals(baseFunctions.checkColor)) {
-                WebElement checkMe = baseFunctions.getElementFromList(baseFunctions.elementList, i);
-                String checkBoxId = checkMe.getAttribute("for");
-                checkMe.click();
-                baseFunctions.driver.navigate().refresh();
-                baseFunctions.isElementPresent(By.xpath(".//*[@id='" + checkBoxId + "'][@checked]"));
-                LOGGER.info("Melna krasa filter is applied");
-                statementDetected = true;
-                break;
-            }
-        }
-        Assertions.assertTrue(statementDetected, "<Melna krasa> filter missed!");
+        selectFilter(KRASA_FILTER_TITLE, KRASAS, "attribute", baseFunctions.checkColor);
     }
 
     public void selectNewState() {
-        baseFunctions.isElementPresent(STAVOKLIS_FILTER_TITLE);
-        baseFunctions.elementList.clear();
-        baseFunctions.isElementPresent(STAVOKLI);
-        baseFunctions.elementList = baseFunctions.getElements(STAVOKLI);
-        boolean statementDetected = false;
-        for (int i = 0; i < baseFunctions.elementList.size(); i++) {
-            if (baseFunctions.getTextFromList(baseFunctions.elementList, i).equals(baseFunctions.checkState)) {
-                WebElement checkMe = baseFunctions.getElementFromList(baseFunctions.elementList, i);
-                String checkBoxId = checkMe.getAttribute("for");
-                checkMe.click();
-                baseFunctions.driver.navigate().refresh();
-                baseFunctions.isElementPresent(By.xpath(".//*[@id='" + checkBoxId + "'][@checked]"));
-                LOGGER.info("Jauns stavoklis filter is applied");
-                statementDetected = true;
-                break;
-            }
-        }
-        Assertions.assertTrue(statementDetected, "<Jauns stavoklis> filter missed!");
+        selectFilter(STAVOKLIS_FILTER_TITLE, STAVOKLI, "text", baseFunctions.checkState);
     }
 
-    public void selectFilter(By filterName, By filterElementName, String mode, String checkValue) {
-
+    private void selectFilter(By filterName, By filterElementName, String mode, String checkValue) {
         baseFunctions.isElementPresent(filterName);
         baseFunctions.elementList.clear();
-        baseFunctions.isElementPresent(filterName);
+        baseFunctions.isElementPresent(filterElementName);
         baseFunctions.elementList = baseFunctions.getElements(filterElementName);
         boolean statementDetected = false;
         for (int i = 0; i < baseFunctions.elementList.size(); i++) {
@@ -107,12 +54,12 @@ public class ApaviPage {
                 checkMe.click();
                 baseFunctions.driver.navigate().refresh();
                 baseFunctions.isElementPresent(By.xpath(".//*[@id='" + checkBoxId + "'][@checked]"));
-                LOGGER.info(checkValue + " filter is applied");
+                LOGGER.info("<" + baseFunctions.textGet(filterName) + " " + checkValue + "> filter is applied");
                 statementDetected = true;
                 break;
             }
         }
-        Assertions.assertTrue(statementDetected, "<Jauns stavoklis> filter missed!");
+        Assertions.assertTrue(statementDetected, "<" + baseFunctions.textGet(filterName) + " " + checkValue + "> filter missed!");
     }
 
     private String workScriptDetector(int number, String mode) {
@@ -144,7 +91,6 @@ public class ApaviPage {
     private ProductPage goToProductPage (WebElement element) {
         element.click();
         return new ProductPage(baseFunctions);
-
     }
 
     public void checkFiveProducts() {

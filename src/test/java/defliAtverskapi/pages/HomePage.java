@@ -1,7 +1,5 @@
 package defliAtverskapi.pages;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -12,8 +10,6 @@ public class HomePage {
     private static final By DROP_DOWN_MENU_SUMMARY = By.xpath(".//li[@class='dropdown']/a");
     private static final By DROP_DOWN_MENU_OPEN = By.xpath(".//li[@class='dropdown open']");
     private static final By DROP_DOWN_MUENU_ELEMENTS = By.xpath(".//ul[@class='dropdown-menu']/li/a");
-
-    private static Logger LOGGER = LogManager.getLogger(HomePage.class);
 
     public HomePage (BaseFunctions baseFunctions) {
         this.baseFunctions = baseFunctions;
