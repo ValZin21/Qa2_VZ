@@ -11,6 +11,7 @@ import java.util.List;
 
 public class ApaviPage {
     BaseFunctions baseFunctions;
+    ProductPage productPage;
 
     public static final By APAVI_FILTER = By.xpath(".//div[@id='step3_38']/div[@class='step-item']");
 //    public static final By APAVI_FILTER_TEXT_VALUES = By.xpath(".//*[@id='step3_38']/div");
@@ -161,5 +162,12 @@ public class ApaviPage {
         element.click();
         return new ProductPage(baseFunctions);
 
+    }
+
+    public void checkFiveProducts() {
+        for (int i = 0; i < 5; i++) {
+            ProductPage productPage = goToProductPage(checkProducts(i));
+            productPage.checkProductPage();
+        }
     }
 }

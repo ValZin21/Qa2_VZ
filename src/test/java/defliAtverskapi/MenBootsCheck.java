@@ -44,10 +44,11 @@ public class MenBootsCheck {
        // apaviPage.collectFirstFiveProducts();
 
         //first five products check
-        for (int i = 0; i < 5; i++) {
-            ProductPage productPage = apaviPage.goToProductPage(apaviPage.checkProducts(i));
-            productPage.checkProductPage();
-        }
+        apaviPage.checkFiveProducts();
+//        for (int i = 0; i < 5; i++) {
+//            ProductPage productPage = apaviPage.goToProductPage(apaviPage.checkProducts(i));
+//            productPage.checkProductPage();
+//        }
 
 
 
