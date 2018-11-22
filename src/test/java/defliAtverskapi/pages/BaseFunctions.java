@@ -17,6 +17,7 @@ public class BaseFunctions {
     WebDriverWait wait;
     public List<WebElement> elementList;
     public List<String> productCheckList = new ArrayList<String>();
+    public String checkShoes = "Kurpes";
     public String checkColor = "Melna";
     public String checkState = "Jauns";
 
