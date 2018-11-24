@@ -1,7 +1,7 @@
-import org.apache.commons.math3.util.Precision;  // to use math functions
+import org.apache.commons.math3.util.Precision;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import java.util.Scanner;             //to read inputs from console using Java Scanner
+import java.util.Scanner;
 import java.util.InputMismatchException;
 
 public class BankLoanCheck {
