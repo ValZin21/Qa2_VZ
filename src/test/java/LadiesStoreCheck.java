@@ -31,9 +31,11 @@ public class LadiesStoreCheck {
     private final By IF_PRODUCT_IS_ORANGE = By.xpath(".//a[@name='Orange']");
     private final By CLOSE_PRODUCT = By.xpath(".//*[@title = 'Close']");
 
-    private final By ADD_TO_CART_CLICK = By.xpath(".//a[contains(@class, 'ajax_add_to_cart_button')]");
+//    private final By ADD_TO_CART_CLICK = By.xpath(".//a[contains(@class, 'ajax_add_to_cart_button')]");
+    private final By ADD_TO_CART_CLICK = By.xpath(".//a[@title = 'Add to cart']/span");
     private final By CONTINUE_SHOPPING_CLICK = By.xpath(".//span[contains(@title, 'Continue shopping')]");
-    private final By SELECT_PRODUCT = By.xpath(".//*[@class='product-container']");
+//    private final By SELECT_PRODUCT = By.xpath(".//*[@class='product-container']");
+    private final By SELECT_PRODUCT = By.xpath(".//div[contains(@class, 'product-container')]");
     private final By PRODUCT_PRICE = By.xpath(".//*[@itemprop='price']");
 
     private final By SHOPPING_CART = By.xpath(".//*[@title='View my shopping cart']");
@@ -60,14 +62,14 @@ public class LadiesStoreCheck {
 
         //Select WOMEN - point 1
         String indexPageTitle = driver.getTitle();
-        WebElement womenCheck = elementFind(WOMAN_BUTTON_SEARCH, 0, null);
+        WebElement womenCheck = getElement(WOMAN_BUTTON_SEARCH, 0, null);
         Assertions.assertEquals("WOMEN", womenCheck.getText(), "No 'Women' button detected");
         womenCheck.click();
 
         //Select DRESSES - point 2
         String womenPageTitle = driver.getTitle();
         Assertions.assertFalse(indexPageTitle == womenPageTitle, "Page not changed from Main to WOMEN!!");
-        WebElement dressesCheck = elementFind(DRESSES_BUTTON_SEARCH, 0 , null);
+        WebElement dressesCheck = getElement(DRESSES_BUTTON_SEARCH, 0 , null);
         Assertions.assertEquals("DRESSES", dressesCheck.getText(), "No 'Dresses' button Detected");
         dressesCheck.click();
 
@@ -77,7 +79,9 @@ public class LadiesStoreCheck {
         LOGGER.info("Page title before filter is applied: "  + driver.getTitle());
 
         elementClick(ORANGE_FILTER_SEARCH, 0, null);
+
         driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+        wait.until(ExpectedConditions.presenceOfElementLocated(FILTER_CHECK));
         String elementAppearedAfterFitlteringCheck = textGet(FILTER_CHECK, 0, null);
         LOGGER.info("Page title after filter is applied: " + driver.getTitle());
         LOGGER.info("This is filtered product text: " + elementAppearedAfterFitlteringCheck);
@@ -85,7 +89,7 @@ public class LadiesStoreCheck {
         Assertions.assertEquals("DRESSES > COLOR ORANGE", elementAppearedAfterFitlteringCheck, "Orange filter is not applied!");
 
         //point 4 - Check if filtered elements has orange color and it count is the same as mareked count(REFACTOR REQUIRED) here
-        filteredProducts = driver.findElements(FILTERED_PRODUCTS_COLOR_LISTS);
+        filteredProducts = getElements(FILTERED_PRODUCTS_COLOR_LISTS);
         Assertions.assertTrue(!filteredProducts.isEmpty(), "No filtered products detected!");
         LOGGER.info(filteredProducts.size());
         Assertions.assertEquals(filteredProducts.size(), filteredBracketsNumberCheck(),"Filter in-breakets product count mismatch with filtered products count");
@@ -93,7 +97,7 @@ public class LadiesStoreCheck {
 
         //point5 - open 1 random item and check if orange is selected
         filteredProducts.clear();
-        filteredProducts = driver.findElements(PRODUCT_CLICK);
+        filteredProducts = getElements(PRODUCT_CLICK);
         Assertions.assertTrue(!filteredProducts.isEmpty(), "No filtered products to click on detected!");
 
         int randomProductSelector = 0 + (int) (Math.random() * filteredProducts.size());
@@ -105,10 +109,11 @@ public class LadiesStoreCheck {
         Assertions.assertFalse(driver.findElements(IF_PRODUCT_IS_ORANGE).isEmpty(), "No orange filter present for this product!");
         LOGGER.info("Checked element has Orange color!");
         driver.switchTo().defaultContent();
+        wait.until(ExpectedConditions.elementToBeClickable(CLOSE_PRODUCT));
         elementClick(CLOSE_PRODUCT, 0, null);
 
         //POINT 6
-        filteredProducts = driver.findElements(SELECT_PRODUCT);
+        filteredProducts = getElements(SELECT_PRODUCT);
         Assertions.assertTrue(!filteredProducts.isEmpty(), "Add To cart butonn missed!");
         
         Actions moveCursor = new Actions(driver);
@@ -117,24 +122,24 @@ public class LadiesStoreCheck {
 
             LOGGER.info(filteredProducts.size());
             moveCursor.moveToElement(filteredProducts.get(i)).perform();
-            wait.until(ExpectedConditions.elementToBeClickable(elementFind(ADD_TO_CART_CLICK, i, filteredProducts)));
+            wait.until(ExpectedConditions.elementToBeClickable(getElement(ADD_TO_CART_CLICK, i, filteredProducts)));
             LOGGER.info("StringPrice: " + textGet(PRODUCT_PRICE , i, filteredProducts));
             
             filteredProductsPrices.add(filteredProducts.get(i).findElement(PRODUCT_PRICE).getText());
             
             elementClick(ADD_TO_CART_CLICK, i, filteredProducts);
-            wait.until(ExpectedConditions.elementToBeClickable(elementFind(CONTINUE_SHOPPING_CLICK, 0, null)));
+            wait.until(ExpectedConditions.elementToBeClickable(getElement(CONTINUE_SHOPPING_CLICK, 0, null)));
             LOGGER.info("Continue shopping button detected!");
             elementClick(CONTINUE_SHOPPING_CLICK, 0 ,null);
             LOGGER.info("Continue shopping button executed!");
         }
         
-        moveCursor.moveToElement(elementFind(SHOPPING_CART, 0 , null)).perform();
+        moveCursor.moveToElement(getElement(SHOPPING_CART, 0 , null)).perform();
         wait.until(ExpectedConditions.visibilityOfElementLocated(PRODUCT_IN_CART));
 
         Double totalRevenue = 0.0;
 
-        inStockProducts = driver.findElements(PRODUCT_IN_CART);
+        inStockProducts = getElements(PRODUCT_IN_CART);
         for (int i = 0; i < inStockProducts.size(); i++) {
             wait.until(ExpectedConditions.visibilityOfElementLocated(PRODUCT_IN_CART_PRICE));
             Assertions.assertEquals(
@@ -158,11 +163,10 @@ public class LadiesStoreCheck {
         LOGGER.info("FIN.");
     }
 
-    @AfterEach
-    private void driverClose(){
-        driver.close();
-        driver.quit();
-    }
+//    @AfterEach
+//    private void driverClose(){
+//        driver.quit();
+//    }
 
     private int filteredBracketsNumberCheck(){
         String text = textGet(ORANGE_FILTER_PRODUCT_COUNT, 0, null);
@@ -188,10 +192,10 @@ public class LadiesStoreCheck {
     }
 
     private String textGet (By xpath, int i, List<WebElement> list) {
-        return elementFind(xpath, i , list).getText();
+        return getElement(xpath, i , list).getText();
     }
 
-    private WebElement elementFind (By xpath, int i, List<WebElement> list) {
+    private WebElement getElement (By xpath, int i, List<WebElement> list) {
         WebElement result;
         if (list == null) {
             result = driver.findElement(xpath);
@@ -203,11 +207,21 @@ public class LadiesStoreCheck {
     }
 
     private void elementClick (By xpath, int i, List<WebElement> list) {
-        elementFind(xpath, i , list).click();
+        getElement(xpath, i , list).click();
     }
 
     private String removeDollar (String text) {
         return text.substring(1);
     }
+
+    private List<WebElement> getElements (By xPath) {
+        Assertions.assertFalse(driver.findElements(xPath).isEmpty(), "List is empty");
+        return driver.findElements(xPath);
+    }
+
+//    private void emptyIs(By xPath) {
+//        Assertions.assertFalse(driver.findElements(xPath).isEmpty(), "List is empty");
+//    }
+
 
 }
