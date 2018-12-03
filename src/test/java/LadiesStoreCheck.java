@@ -44,16 +44,18 @@ public class LadiesStoreCheck {
     private static final Logger LOGGER = LogManager.getLogger(LadiesStoreCheck.class);
 
     public WebDriver driver;
+    public WebDriverWait wait;
+    public Actions moveCursor;
     List<WebElement> filteredProducts = new ArrayList<WebElement>();
     List<WebElement> inStockProducts = new ArrayList<WebElement>();
     List<String> filteredProductsPrices = new ArrayList<String>();
 
     @Test
     public void dressesCheck() {
-
         System.setProperty("webdriver.chrome.driver", "C://chromedriver_win32/chromedriver.exe");
         driver = new ChromeDriver();
-        WebDriverWait wait = new WebDriverWait(driver, 15);
+        wait = new WebDriverWait(driver, 15);
+        moveCursor = new Actions(driver);
         driver.manage().window().maximize();
         driver.get(HOME_PAGE);
 
@@ -76,82 +78,33 @@ public class LadiesStoreCheck {
         LOGGER.info("Page title before filter is applied: "  + driver.getTitle());
 
         elementClick(ORANGE_FILTER_SEARCH, 0, null);
-        wait.until(ExpectedConditions.presenceOfElementLocated(FILTER_CHECK));
+        isElementPresent(FILTER_CHECK);
         String elementAppearedAfterFitlteringCheck = textGet(FILTER_CHECK, 0, null);
         LOGGER.info("Page title after filter is applied: " + driver.getTitle());
         LOGGER.info("This is filtered product text: " + elementAppearedAfterFitlteringCheck);
         
         Assertions.assertEquals("DRESSES > COLOR ORANGE", elementAppearedAfterFitlteringCheck, "Orange filter is not applied!");
 
-        //point 4 - Check if filtered elements has orange color and it count is the same as mareked count(REFACTOR REQUIRED) here
+        //point 4 - Check if filtered elements has orange color and it count is the same as marked count
         filteredProducts = getElements(FILTERED_PRODUCTS_COLOR_LISTS);
-        Assertions.assertFalse(filteredProducts.isEmpty(), "No filtered products detected!");
         Assertions.assertEquals(filteredProducts.size(), filteredBracketsNumberCheck(),"Filter in-breakets product count mismatch with filtered products count");
         Assertions.assertEquals(filteredProducts.size(), filteredProductCountNumber(),"Filtered product count mismatch with total filtered product count text");
 
         //point5 - open 1 random item and check if orange is selected
         filteredProducts.clear();
         filteredProducts = getElements(PRODUCT_CLICK);
-        Assertions.assertFalse(filteredProducts.isEmpty(), "No filtered products to click on detected!");
 
-        int randomProductSelector = 0 + (int) (Math.random() * filteredProducts.size());
-        LOGGER.info("Random is: " + randomProductSelector);
-
-        filteredProducts.get(randomProductSelector).click();
-        driver.switchTo().frame(0);
-
-        Assertions.assertFalse(driver.findElements(IF_PRODUCT_IS_ORANGE).isEmpty(), "No orange filter present for this product!");
-        LOGGER.info("Checked element has Orange color!");
-        driver.switchTo().defaultContent();
-        wait.until(ExpectedConditions.elementToBeClickable(CLOSE_PRODUCT));
-        elementClick(CLOSE_PRODUCT, 0, null);
+        checkRandomProductForOrangeColor();
 
         //POINT 6
         filteredProducts = getElements(SELECT_PRODUCT);
-        Assertions.assertFalse(filteredProducts.isEmpty(), "Add To cart butonn missed!");
+
+        addProductsToCart();
         
-        Actions moveCursor = new Actions(driver);
+        moveOnElelement(getElement(SHOPPING_CART, 0 , null));
+        isElementVisible(PRODUCT_IN_CART);
 
-        for (int i = 0; i < filteredProducts.size(); i++) {
-            moveCursor.moveToElement(filteredProducts.get(i)).perform();
-            wait.until(ExpectedConditions.elementToBeClickable(getElement(ADD_TO_CART_CLICK, i, filteredProducts)));
-            LOGGER.info("StringPrice: " + textGet(PRODUCT_PRICE , i, filteredProducts));
-            
-            filteredProductsPrices.add(filteredProducts.get(i).findElement(PRODUCT_PRICE).getText());
-            
-            elementClick(ADD_TO_CART_CLICK, i, filteredProducts);
-            wait.until(ExpectedConditions.elementToBeClickable(getElement(CONTINUE_SHOPPING_CLICK, 0, null)));
-            LOGGER.info("Continue shopping button detected!");
-            elementClick(CONTINUE_SHOPPING_CLICK, 0 ,null);
-            LOGGER.info("Continue shopping button executed!");
-        }
-        
-        moveCursor.moveToElement(getElement(SHOPPING_CART, 0 , null)).perform();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(PRODUCT_IN_CART));
-
-        Double totalRevenue = 0.0;
-
-        inStockProducts = getElements(PRODUCT_IN_CART);
-        for (int i = 0; i < inStockProducts.size(); i++) {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(PRODUCT_IN_CART_PRICE));
-            Assertions.assertEquals(
-                    filteredProductsPrices.get(i),
-                    textGet(PRODUCT_IN_CART_PRICE, i, inStockProducts),
-                    "Product " + (i+1) + " prices mismatch!");
-
-            LOGGER.info("Product " + (i+1) + " price validation succeed!");
-
-            totalRevenue = productsTotalRevenue(i, totalRevenue);
-
-            if ((inStockProducts.size() - i) == 1 ) {
-                //checking if total price calculated correctly (s)
-                totalRevenue = roundPriceToTwoSymbols(totalRevenue);
-                totalRevenue = totalRevenue + Double.valueOf(removeDollar(textGet(PRODUCTS_SHIPPING_PRICE, 0, null)));
-                LOGGER.info("InStock total revenue calculated successfully!");
-                Assertions.assertEquals(totalRevenue, totalRevenueNumberPrecalculated(), "Totals mismatch!");
-                LOGGER.info("InStock 'Total' revenue field value check succeed!");
-            }
-        }
+        checkInCartRevenues();
         LOGGER.info("FIN.");
     }
 
@@ -210,13 +163,86 @@ public class LadiesStoreCheck {
         Assertions.assertFalse(driver.findElements(xPath).isEmpty(), "List is empty");
         return driver.findElements(xPath);
     }
+
     private Double totalRevenueNumberPrecalculated() {
         return Double.valueOf(removeDollar(textGet(PRODUCTS_TOTAL_PRICE, 0, null)));
     }
 
-//    private void emptyIs(By xPath) {
-//        Assertions.assertFalse(driver.findElements(xPath).isEmpty(), "List is empty");
-//    }
+    private void isElementVisible(By xPath) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(xPath));
+    }
 
+    private void isElementPresent(By xPath) {
+        wait.until(ExpectedConditions.presenceOfElementLocated(xPath));
+    }
+
+    private void isElemenClickable(By xPath, WebElement element) {
+        if (xPath != null) {
+            wait.until(ExpectedConditions.elementToBeClickable(xPath));
+        }
+        else {
+            wait.until(ExpectedConditions.elementToBeClickable(element));
+        }
+    }
+
+    private void moveOnElelement(WebElement element) {
+        moveCursor.moveToElement(element).perform();
+    }
+
+    private void checkRandomProductForOrangeColor() {
+        int randomProductSelector = 0 + (int) (Math.random() * filteredProducts.size());
+        LOGGER.info("Random is: " + randomProductSelector);
+
+        filteredProducts.get(randomProductSelector).click();
+        driver.switchTo().frame(0);
+
+        Assertions.assertFalse(driver.findElements(IF_PRODUCT_IS_ORANGE).isEmpty(), "No orange filter present for this product!");
+        LOGGER.info("Checked element has Orange color!");
+        driver.switchTo().defaultContent();
+        isElemenClickable(CLOSE_PRODUCT, null);
+        elementClick(CLOSE_PRODUCT, 0, null);
+    }
+
+    private void addProductsToCart() {
+        for (int i = 0; i < filteredProducts.size(); i++) {
+            moveOnElelement(filteredProducts.get(i));
+            isElemenClickable(null, getElement(ADD_TO_CART_CLICK, i, filteredProducts));
+            LOGGER.info("StringPrice: " + textGet(PRODUCT_PRICE , i, filteredProducts));
+
+            filteredProductsPrices.add(filteredProducts.get(i).findElement(PRODUCT_PRICE).getText());
+
+            elementClick(ADD_TO_CART_CLICK, i, filteredProducts);
+            isElemenClickable(null, getElement(CONTINUE_SHOPPING_CLICK, 0, null));
+            LOGGER.info("Continue shopping button detected!");
+            elementClick(CONTINUE_SHOPPING_CLICK, 0 ,null);
+            LOGGER.info("Continue shopping button executed!");
+        }
+    }
+
+    private void checkInCartRevenues() {
+        Double totalRevenue = 0.0;
+
+        inStockProducts = getElements(PRODUCT_IN_CART);
+        for (int i = 0; i < inStockProducts.size(); i++) {
+            isElementVisible(PRODUCT_IN_CART_PRICE);
+            Assertions.assertEquals(
+                    filteredProductsPrices.get(i),
+                    textGet(PRODUCT_IN_CART_PRICE, i, inStockProducts),
+                    "Product " + (i+1) + " prices mismatch!");
+
+            LOGGER.info("Product " + (i+1) + " price validation succeed!");
+
+            totalRevenue = productsTotalRevenue(i, totalRevenue);
+
+            if ((inStockProducts.size() - i) == 1 ) {
+                //checking if total price calculated correctly (s)
+                totalRevenue = roundPriceToTwoSymbols(totalRevenue);
+                totalRevenue = totalRevenue + Double.valueOf(removeDollar(textGet(PRODUCTS_SHIPPING_PRICE, 0, null)));
+                LOGGER.info("InStock total revenue calculated successfully!");
+                Assertions.assertEquals(totalRevenue, totalRevenueNumberPrecalculated(), "Totals mismatch!");
+                LOGGER.info("InStock 'Total' revenue field value check succeed!");
+            }
+        }
+    }
 
 }
