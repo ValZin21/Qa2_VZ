@@ -148,7 +148,7 @@ public class LadiesStoreCheck {
                 totalRevenue = roundPriceToTwoSymbols(totalRevenue);
                 totalRevenue = totalRevenue + Double.valueOf(removeDollar(textGet(PRODUCTS_SHIPPING_PRICE, 0, null)));
                 LOGGER.info("InStock total revenue calculated successfully!");
-                Assertions.assertEquals(totalRevenue, Double.valueOf(removeDollar(textGet(PRODUCTS_TOTAL_PRICE, 0, null))), "Totals mismatch!");
+                Assertions.assertEquals(totalRevenue, totalRevenueNumberPrecalculated(), "Totals mismatch!");
                 LOGGER.info("InStock 'Total' revenue field value check succeed!");
             }
         }
@@ -209,6 +209,9 @@ public class LadiesStoreCheck {
     private List<WebElement> getElements (By xPath) {
         Assertions.assertFalse(driver.findElements(xPath).isEmpty(), "List is empty");
         return driver.findElements(xPath);
+    }
+    private Double totalRevenueNumberPrecalculated() {
+        return Double.valueOf(removeDollar(textGet(PRODUCTS_TOTAL_PRICE, 0, null)));
     }
 
 //    private void emptyIs(By xPath) {
