@@ -65,7 +65,7 @@ public class Lesson5ClassWorkWithTextAssignToEmptyWebElementTry {
 
     @AfterEach
     public void closeDriver(){
-        driver.close();
+        driver.quit();
     }
 
     public Integer commentsCountBracketsCutterAndToNumberConverter (String textString) {

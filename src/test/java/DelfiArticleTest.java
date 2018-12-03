@@ -86,7 +86,7 @@ public class DelfiArticleTest {
 
     @AfterEach
     public void closeDriver(){
-        driver.close();
+        driver.quit();
     }
     
     public String articleAndCommentStringDetector (WebElement inputText, By xPath){
