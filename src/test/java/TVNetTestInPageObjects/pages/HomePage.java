@@ -9,8 +9,8 @@ import org.openqa.selenium.WebElement;
 public class HomePage {
 
     BaseFunctions baseFunctions;
-    private final By ARTICLE = By.xpath(".//*[@class = 'list-article']");
-    private final By ARTICLE_TITLE = By.xpath(".//*[@class='list-article__headline']");
+    private final By ARTICLE = By.className("list-article");
+    private final By ARTICLE_TITLE = By.className("list-article__headline");
     private final By COMMENT_COUNT = By.xpath(".//span[contains(@class, 'list-article__comment')]");
 
     private static Logger LOGGER = LogManager.getLogger(HomePage.class);

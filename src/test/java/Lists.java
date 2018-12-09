@@ -61,6 +61,6 @@ public class Lists {
 
     @AfterEach
     public void closeBroser(){
-        driver.close();
+        driver.quit();
     }
 }

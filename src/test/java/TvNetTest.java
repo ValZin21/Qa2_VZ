@@ -14,8 +14,8 @@ import java.util.List;
 
 public class TvNetTest {
     private final String HOME_PAGE = "https://www.tvnet.lv/";
-    private final By ARTICLE = By.xpath(".//*[@class = 'list-article']");
-    private final By ARTICLE_TITLE = By.xpath(".//*[@class='list-article__headline']");
+    private final By ARTICLE = By.className("list-article");
+    private final By ARTICLE_TITLE = By.className("list-article__headline");
     private final By COMMENT_COUNT = By.xpath(".//span[contains(@class, 'list-article__comment')]");
     private final By ARTICLE_AND_COMMENTS_PAGES_TITLE = By.xpath(".//*[contains(@class, 'headline')]");
     private final By COMMENTS_PAGE_COMENT_COUNT = By.xpath(".//div/span[contains(@class, 'article-comments-heading__count')]");
@@ -41,7 +41,7 @@ public class TvNetTest {
 
         articles = browser.findElements(ARTICLE);
         Assertions.assertFalse(articles.isEmpty(), "No articles detected!");
-        WebElement testArticle = articles.get(3);
+        WebElement testArticle = articles.get(1);
 
         Assertions.assertFalse(testArticle.findElements(COMMENT_COUNT).isEmpty(), "No comments detected!");
 
