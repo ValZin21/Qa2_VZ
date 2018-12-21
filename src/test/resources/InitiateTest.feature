@@ -5,7 +5,7 @@ Feature: Initiate Test
     Given Print test annotation Hi tea bag!
 
 
-  Scenario: Open tea pack
+  Scenario: Check one student
     Given student:
       | name   | Valera |
       | age    | 12     |
@@ -16,3 +16,26 @@ Feature: Initiate Test
     When we requesting name and age together
 
     Then response must be Valera: 12
+
+
+    Scenario Outline: Check many students
+      Given students:
+        | name   | Valera |
+        | age    | 12     |
+        | weight | 123    |
+        | height | 34     |
+
+      And students:
+        | name   | Petja |
+        | age    | 23    |
+        | weight | 65    |
+        | height | 176   |
+
+      When we requesting name and age together
+
+      Then response must be <students>
+
+      Examples:
+        | students   |
+        | Valera: 12 |
+        | Petja: 23  |
