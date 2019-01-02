@@ -31,11 +31,11 @@ Feature: Initiate Test
         | weight | 65    |
         | height | 176   |
 
-      When we requesting name and age together
+      When we requesting names and ages together
 
-      Then response must be <students>
+      Then responses must be <students>
 
       Examples:
         | students   |
         | Valera: 12 |
-        | Petja: 23  |
+        | Petj: 23  |

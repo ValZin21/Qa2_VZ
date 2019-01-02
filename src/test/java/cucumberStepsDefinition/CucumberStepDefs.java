@@ -12,6 +12,7 @@ import java.util.Map;
 
 public class CucumberStepDefs {
 
+    String nameAge;
     List<Student> students = new ArrayList<Student>();
     List<String> namesAges = new ArrayList<String>();
     Student student = new Student();
@@ -65,12 +66,12 @@ public class CucumberStepDefs {
 
     @When("we requesting name and age together")
     public void get_nameAge() {
-        String nameAge = student.nameAgeGet();
+        nameAge = student.nameAgeGet();
     }
 
     @When("we requesting names and ages together")
     public void get_namesAges() {
-        for (int i = 0; i < namesAges.size(); i++) {
+        for (int i = 0; i < students.size(); i++) {
             namesAges.add(students.get(i).nameAgeGet());
             System.out.println("Iteration get: " + i + " equals: " + namesAges.get(i));
         }
@@ -79,21 +80,26 @@ public class CucumberStepDefs {
 
     @Then("response must be (.*)")
     public void check_result(String toCheck) {
-        Assertions.assertTrue(students.equals(toCheck), "Some fail occured");
+        System.out.println("Student is: " + toCheck);
+        Assertions.assertTrue(nameAge.equals(toCheck), "Some fail occured");
     }
 
     @Then("responses must be (.*)")
     public void check_results(String toCheck) {
         boolean check  = false;
+        String t = "";
         for (int i = 0; i < namesAges.size(); i++) {
-            if (namesAges.get(i).equals(toCheck));
-//            check = true;
-            System.out.println("Iteration set: " + i + " equals: " + namesAges.get(i));
-            break;
+            if (namesAges.get(i).equals(toCheck)) {
+                check = true;
+                System.out.println("Iteration set: " + i + " equals: " + namesAges.get(i));
+                t = namesAges.get(i);
+                break;
+            }
+//
         }
 //        Assertions.assertEquals(true, check, "Some fail occured");
 
-        Assertions.assertTrue(namesAges.equals(toCheck), "Some fail occured");
+        Assertions.assertTrue(t.equals(toCheck), "Some fail occured");
 
     }
 
