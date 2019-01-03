@@ -22,16 +22,6 @@ public class CucumberStepDefs {
         System.out.println(annotation);
     }
 
-    @Given("Student (.*)")
-    public void set_student(String name) {
-        student.setName(name);
-    }
-
-    @Given("Students (.*)")
-    public void set_students(String name) {
-        student.setName(name);
-    }
-
     @Given("age ([0-9]*)")
     public void set_age(Integer age) {
         student.setAge(age);
@@ -57,11 +47,21 @@ public class CucumberStepDefs {
 
     @Given("students:")
     public void set_students (Map<String, String> params) {
-        student.setName(params.get("name"));
-        student.setAge(Integer.valueOf(params.get("age")));
-        student.setHeight(Integer.valueOf(params.get("height")));
-        student.setWeight(Integer.valueOf(params.get("weight")));
-        students.add(student);
+        Student student2 = new Student();
+        student2.setName(params.get("name"));
+        student2.setAge(Integer.valueOf(params.get("age")));
+        student2.setHeight(Integer.valueOf(params.get("height")));
+        student2.setWeight(Integer.valueOf(params.get("weight")));
+        students.add(student2);
+        System.out.println(students.size());
+        for (int i = 0; i < students.size(); i++) {
+            System.out.println("given iteration " + i + " = " + students.get(i).getName());
+        }
+    }
+
+    @Given("students from example")
+    public void set_studentsFromExample() {
+        System.out.println("Working with student from Example");
     }
 
     @When("we requesting name and age together")
@@ -69,38 +69,39 @@ public class CucumberStepDefs {
         nameAge = student.nameAgeGet();
     }
 
+    @When("we are requesting (.*) and (.*) together from example")
+    public void get_namesAges(String name, String age) {
+        nameAge = student.namesAgesGetFromExample(name, age);
+
+    }
+
     @When("we requesting names and ages together")
     public void get_namesAges() {
         for (int i = 0; i < students.size(); i++) {
+            System.out.println("Iteration get students name: " + i + " equals: " + students.get(i).getName());
             namesAges.add(students.get(i).nameAgeGet());
-            System.out.println("Iteration get: " + i + " equals: " + namesAges.get(i));
+            System.out.println("Iteration get namesAges: " + i + " equals: " + namesAges.get(i));
         }
-
     }
 
     @Then("response must be (.*)")
     public void check_result(String toCheck) {
         System.out.println("Student is: " + toCheck);
+        System.out.println("Student should be : " + nameAge);
         Assertions.assertTrue(nameAge.equals(toCheck), "Some fail occured");
     }
 
     @Then("responses must be (.*)")
     public void check_results(String toCheck) {
         boolean check  = false;
-        String t = "";
         for (int i = 0; i < namesAges.size(); i++) {
             if (namesAges.get(i).equals(toCheck)) {
                 check = true;
                 System.out.println("Iteration set: " + i + " equals: " + namesAges.get(i));
-                t = namesAges.get(i);
                 break;
             }
-//
         }
-//        Assertions.assertEquals(true, check, "Some fail occured");
-
-        Assertions.assertTrue(t.equals(toCheck), "Some fail occured");
-
+        Assertions.assertTrue(check == true, "Some fail occured");
     }
 
 }

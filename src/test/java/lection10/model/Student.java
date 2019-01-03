@@ -1,5 +1,7 @@
 package lection10.model;
 
+import java.util.List;
+
 public class Student {
     int height;
     String name;
@@ -40,5 +42,13 @@ public class Student {
 
     public String nameAgeGet() {
         return name + ": " + String.valueOf(age);
+    }
+
+    public String namesAgesGetFromExample(String name2, String age2) {
+        return name2 + ": " + age2;
+    }
+
+    public String namesAgesGetFromList(List<Student> students, int element) {
+        return students.get(element).name + ": " + String.valueOf(students.get(element).age);
     }
 }
