@@ -12,10 +12,10 @@ import java.util.Map;
 
 public class CucumberStepDefs {
 
-    String nameAge;
-    List<Student> students = new ArrayList<Student>();
-    List<String> namesAges = new ArrayList<String>();
-    Student student = new Student();
+    private String nameAge;
+    private List<Student> students = new ArrayList<Student>();
+    private List<String> namesAges = new ArrayList<String>();
+    private Student student = new Student();
 
     @Given("Print test annotation (.*)")
     public void printTestAnnotation(String annotation) {
