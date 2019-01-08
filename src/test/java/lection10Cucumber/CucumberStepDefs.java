@@ -1,9 +1,9 @@
-package cucumberStepsDefinition;
+package lection10Cucumber;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import lection10.model.Student;
+import lection10Cucumber.model.Student;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.ArrayList;
@@ -12,10 +12,10 @@ import java.util.Map;
 
 public class CucumberStepDefs {
 
-    String nameAge;
-    List<Student> students = new ArrayList<Student>();
-    List<String> namesAges = new ArrayList<String>();
-    Student student = new Student();
+    private String nameAge;
+    private List<Student> students = new ArrayList<Student>();
+    private List<String> namesAges = new ArrayList<String>();
+    private Student student = new Student();
 
     @Given("Print test annotation (.*)")
     public void printTestAnnotation(String annotation) {
