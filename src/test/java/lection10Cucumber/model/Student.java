@@ -1,4 +1,4 @@
-package lection10.model;
+package lection10Cucumber.model;
 
 import java.util.List;
 

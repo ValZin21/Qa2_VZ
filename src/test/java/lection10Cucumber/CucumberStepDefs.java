@@ -1,9 +1,9 @@
-package cucumberStepsDefinition;
+package lection10Cucumber;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import lection10.model.Student;
+import lection10Cucumber.model.Student;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.ArrayList;
