@@ -26,27 +26,11 @@ public class HomePage {
     }
 
     public void selectDepartureAirport(String departureAirportName) {
-        dropDownValueSelect(DEPARTURE_AIRPORT_DROPDOWN, departureAirportName);
+        baseFunc.dropDownValueSelect(DEPARTURE_AIRPORT_DROPDOWN, departureAirportName);
     }
 
     public void selectDestinationAirport(String destinationAirportName) {
-        dropDownValueSelect(DESTINATION_AIRPORT_DROPDOWN, destinationAirportName);
-    }
-
-    private void dropDownValueSelect(By locator, String airport) {
-        Select dropDown = new Select (baseFunc.getElement(locator));
-        List<WebElement> list = dropDown.getOptions();
-
-        String key = "a";
-        for (int i  = 0; i < list.size(); i++) {
-            if (list.get(i).getText().equals(airport)) {
-                key = list.get(i).getText();
-                break;
-            }
-        }
-
-        Assertions.assertTrue(airport.equals(key), "No such airport");
-        dropDown.selectByValue(airport);
+        baseFunc.dropDownValueSelect(DESTINATION_AIRPORT_DROPDOWN, destinationAirportName);
     }
 
     public UserReservationDataPage goToUserReservationDataPage () {

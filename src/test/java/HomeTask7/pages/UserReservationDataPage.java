@@ -52,4 +52,8 @@ public class UserReservationDataPage {
         baseFunc.keysSend(LUGGAGE_COUNT_INPUT, luggageCount);
     }
 
+    public void sendFlightDate(String flightDate) {
+        baseFunc.dropDownValueSelect(FLIGHT_DATE, flightDate);
+    }
+
 }

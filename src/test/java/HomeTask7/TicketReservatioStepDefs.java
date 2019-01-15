@@ -81,8 +81,7 @@ public class TicketReservatioStepDefs {
         userReservationDataPage.sendTravellerCount(String.valueOf(userData.getTravellerCount()));
         userReservationDataPage.sendChildrenCount(String.valueOf(userData.getChildrenCount()));
         userReservationDataPage.sendLuggageCount(String.valueOf(userData.getLuggageCount()));
-
-
+        userReservationDataPage.sendFlightDate(userData.getNextFlight());
     }
 
     @When("we are pressing on the Get Price button")

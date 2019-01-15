@@ -1,11 +1,13 @@
 package HomeTask7.pages;
 
+import apiSteps.model.Sys;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
@@ -56,6 +58,23 @@ public class BaseFunc {
 
     public void keysSend (By locator, String text) {
         getElement(locator).sendKeys(text);
+    }
+
+    public void dropDownValueSelect(By locator, String valueToSelect) {
+        Select dropDown = new Select (getElement(locator));
+        List<WebElement> list = dropDown.getOptions();
+
+        String key = "a";
+        for (int i  = 0; i < list.size(); i++) {
+            System.out.println(list.get(i).getText());
+            if (list.get(i).getText().equals(valueToSelect)) {
+                key = list.get(i).getText();
+                break;
+            }
+        }
+
+        Assertions.assertTrue(valueToSelect.equals(key), "No such airport - <" + valueToSelect + ">");
+        dropDown.selectByVisibleText(valueToSelect);
     }
 
 }
