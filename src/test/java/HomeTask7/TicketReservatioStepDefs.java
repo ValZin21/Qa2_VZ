@@ -36,7 +36,7 @@ public class TicketReservatioStepDefs {
     public void set_user_data(Map<String, String> params) {
 
         userData.setName(params.get("name"));
-        userData.setSurname(params.get("surnaname"));
+        userData.setSurname(params.get("surname"));
         userData.setDiscountCode(params.get("discountCode"));
         userData.setTravellerCount(Integer.valueOf(params.get("travellerCount")));
         userData.setChildrenCount(Integer.valueOf(params.get("childrenCount")));
@@ -75,6 +75,13 @@ public class TicketReservatioStepDefs {
 
     @When("we are filling the registration form")
     public void fill_registration_form() {
+        userReservationDataPage.sendName(userData.getName());
+        userReservationDataPage.sendSurname(userData.getSurname());
+        userReservationDataPage.sendDiscount(userData.getDiscountCode());
+        userReservationDataPage.sendTravellerCount(String.valueOf(userData.getTravellerCount()));
+        userReservationDataPage.sendChildrenCount(String.valueOf(userData.getChildrenCount()));
+        userReservationDataPage.sendLuggageCount(String.valueOf(userData.getLuggageCount()));
+
 
     }
 

@@ -54,4 +54,8 @@ public class BaseFunc {
         wait.until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
+    public void keysSend (By locator, String text) {
+        getElement(locator).sendKeys(text);
+    }
+
 }

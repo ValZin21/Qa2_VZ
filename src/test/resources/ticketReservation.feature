@@ -10,7 +10,7 @@ Feature: Ticket Reservation
       | travellerCount | 2          |
       | childrenCount  | 1          |
       | luggageCount   | 3          |
-      | nextFlight     | 22-06-2019 |
+      | nextFlight     | 15-05-2018 |
     And seatNumber is: 15
     # all given should be on the upper steps
     And we are on the home page
