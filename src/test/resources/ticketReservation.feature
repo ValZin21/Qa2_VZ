@@ -2,7 +2,7 @@ Feature: Ticket Reservation
 
   Scenario: Ticket reservation check
     Given Deparutre airport: RIX
-    And   Destination airport: MAL
+    And   Destination airport: MEL
     And User data is:
       | name           | Valera     |
       | surname        | Zinchenko  |
