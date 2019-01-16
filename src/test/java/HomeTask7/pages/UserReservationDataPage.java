@@ -14,6 +14,9 @@ public class UserReservationDataPage {
     private final By CHILDREN_COUNT_INPUT = By.id("children");
     private final By LUGGAGE_COUNT_INPUT = By.id("bugs");
     private final By FLIGHT_DATE = By.id("flight");
+    private final By GET_PRICE_BUTTON = By.xpath(".//span[text() = 'Get Price']");
+    private final By RESERVATION_PRICE_TEXT = By.id("response");
+    private final By BOOK_BUTTON = By.id("book2");
 
     public UserReservationDataPage(BaseFunc baseFunc) {
         this.baseFunc = baseFunc;
@@ -54,6 +57,20 @@ public class UserReservationDataPage {
 
     public void sendFlightDate(String flightDate) {
         baseFunc.dropDownValueSelect(FLIGHT_DATE, flightDate);
+    }
+
+    public void getPriceButtonClick() {
+        baseFunc.buttonClick(GET_PRICE_BUTTON);
+    }
+
+    public void reservationPriceCheck() {  //Thin about hardcoded 3070 EUR
+        baseFunc.isElementVisible(RESERVATION_PRICE_TEXT);
+        Assertions.assertTrue(baseFunc.textGet(RESERVATION_PRICE_TEXT).contains("3070 EUR"), "Reservation price is wrong!");
+    }
+
+    public SeatSelectionPage goToSeatSelectionPage () {
+        baseFunc.buttonClick(BOOK_BUTTON);
+        return new SeatSelectionPage(baseFunc);
     }
 
 }

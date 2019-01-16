@@ -11,7 +11,7 @@ Feature: Ticket Reservation
       | childrenCount  | 1          |
       | luggageCount   | 3          |
       | nextFlight     | 15-05-2018 |
-    And seatNumber is: 15
+    And seatNumber is: 21
     # all given should be on the upper steps
     And we are on the home page
 
@@ -21,13 +21,14 @@ Feature: Ticket Reservation
 
     When we are filling the registration form
     And we are pressing on the Get Price button
-    Then our price will be: 1000 euro
+    Then our price will be 3070 EUR
 
     When we are pressing on the Book! button
     Then we can choose the seat
 
-    When we are selecting our seat number: 21
-    And we are clincking Book! button
+    When we are selecting our seat number: predefined
+#    When we are selecting our seat number: random
+    And we are clicking Book! button
     Then we are receiving successful registration page
 
     When we are requesting reservation list

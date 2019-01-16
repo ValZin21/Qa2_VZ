@@ -56,6 +56,10 @@ public class BaseFunc {
         wait.until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
+    public void isElementVisible(By locator) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
     public void keysSend (By locator, String text) {
         getElement(locator).sendKeys(text);
     }
@@ -66,7 +70,6 @@ public class BaseFunc {
 
         String key = "a";
         for (int i  = 0; i < list.size(); i++) {
-            System.out.println(list.get(i).getText());
             if (list.get(i).getText().equals(valueToSelect)) {
                 key = list.get(i).getText();
                 break;
@@ -75,6 +78,11 @@ public class BaseFunc {
 
         Assertions.assertTrue(valueToSelect.equals(key), "No such airport - <" + valueToSelect + ">");
         dropDown.selectByVisibleText(valueToSelect);
+    }
+
+
+    public void buttonClick (By locator) {
+        getElement(locator).click();
     }
 
 }

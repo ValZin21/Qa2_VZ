@@ -1,13 +1,12 @@
 package HomeTask7;
 
-import HomeTask7.pages.BaseFunc;
-import HomeTask7.pages.HomePage;
-import HomeTask7.pages.UserReservationDataPage;
+import HomeTask7.pages.*;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 
 import java.util.Map;
 
@@ -21,6 +20,8 @@ public class TicketReservatioStepDefs {
     private final String HOME_PAGE = "http://qaguru.lv:8090/tickets/";
     private HomePage homePage;
     private UserReservationDataPage userReservationDataPage;
+    private SeatSelectionPage seatSelectionPage;
+    private SuccessfulRegistrationPage successfulRegistrationPage;
 
     @Given("Deparutre airport: (.*)")
     public void set_departure_airport (String departureAirport) {
@@ -32,7 +33,7 @@ public class TicketReservatioStepDefs {
         this.destinationAirport = destinationAirport;
     }
 
-    @Given("User data is:") // userData model needed
+    @Given("User data is:")
     public void set_user_data(Map<String, String> params) {
 
         userData.setName(params.get("name"));
@@ -86,36 +87,43 @@ public class TicketReservatioStepDefs {
 
     @When("we are pressing on the Get Price button")
     public void click_get_price_button() {
-
+        userReservationDataPage.getPriceButtonClick();
     }
 
-    @Then("our price will be: 1000 euro")
+    @Then("our price will be 3070 EUR")
     public void check_reservation_price() {
-
+        userReservationDataPage.reservationPriceCheck();
     }
 
     @When("we are pressing on the Book! button")
     public void press_book_button() {
-
+        seatSelectionPage = userReservationDataPage.goToSeatSelectionPage();
     }
 
     @Then("we can choose the seat")
     public void get_choose_seat() {
-
+        seatSelectionPage.isSeatSelectionPageOpened();
     }
 
-    @When("we are selecting our seat number: 21")
-    public void get_seat_number() {
-
+    @When("we are selecting our seat number: predefined")
+    public void get_predefined_seat_number() {
+        seatSelectionPage.predefinedSeatSelection(seatNumber);
+        seatSelectionPage.checkReservedSeatNumber(seatNumber);
     }
 
-    @When("we are clincking Book! button")
+//    @When("we are selecting our seat number: random")
+//    public void get_random_seat_number() {
+//        seatSelectionPage.randomSeatSelection();
+//    }
+
+    @When("we are clicking Book! button")
     public void click_book_button() {
-
+        successfulRegistrationPage = seatSelectionPage.goToSuccessfulRegistrationPage();
     }
 
     @Then("we are receiving successful registration page")
     public void get_successfull_registration_page() {
+        successfulRegistrationPage.isSuccessfulRegistrationPageOpened();
 
     }
 

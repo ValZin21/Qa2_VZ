@@ -21,7 +21,6 @@ public class HomePage {
 
     public void isTHomePageOpened() {
         String pageTitle = baseFunc.pageTitleGet();
-//        System.out.println(pageTitle);
         Assertions.assertEquals("RyanBaltic - Title here", pageTitle, "Home page is not opened");
     }
 
@@ -34,7 +33,7 @@ public class HomePage {
     }
 
     public UserReservationDataPage goToUserReservationDataPage () {
-        baseFunc.getElement(GOGOGO_BUTTON).click();
+        baseFunc.buttonClick(GOGOGO_BUTTON);
         return new UserReservationDataPage(baseFunc);
     }
 }
