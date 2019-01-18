@@ -1,13 +1,15 @@
 package HomeTask7;
 
+import HomeTask7.model.ReservationResponse;
 import HomeTask7.pages.*;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class TicketReservatioStepDefs {
@@ -22,6 +24,10 @@ public class TicketReservatioStepDefs {
     private UserReservationDataPage userReservationDataPage;
     private SeatSelectionPage seatSelectionPage;
     private SuccessfulRegistrationPage successfulRegistrationPage;
+
+    private ReservationRequester reservationRequester = new ReservationRequester();
+    private ReservationResponse reservationResponse = new ReservationResponse();
+    private List<ReservationResponse> respons = new ArrayList<ReservationResponse>();
 
     @Given("Deparutre airport: (.*)")
     public void set_departure_airport (String departureAirport) {
@@ -124,16 +130,16 @@ public class TicketReservatioStepDefs {
     @Then("we are receiving successful registration page")
     public void get_successfull_registration_page() {
         successfulRegistrationPage.isSuccessfulRegistrationPageOpened();
-
     }
 
     @When("we are requesting reservation list")
-    public void get_resrvation_list() {
-
+    public void get_reservation_list() throws IOException {
+        reservationResponse = reservationRequester.getReservationList();
     }
 
     @Then("we can see our reservation in the list")
-    public void get_reservation_list() {
+    public void check_reservation_list() {
+        Assertions.assertTrue(reservationResponse.getReservations().size() > 0, "No reservations list!");
 
     }
 

@@ -65,6 +65,7 @@ public class UserReservationDataPage {
 
     public void reservationPriceCheck() {  //Thin about hardcoded 3070 EUR
         baseFunc.isElementVisible(RESERVATION_PRICE_TEXT);
+        System.out.println(baseFunc.textGet(RESERVATION_PRICE_TEXT));
         Assertions.assertTrue(baseFunc.textGet(RESERVATION_PRICE_TEXT).contains("3070 EUR"), "Reservation price is wrong!");
     }
 
