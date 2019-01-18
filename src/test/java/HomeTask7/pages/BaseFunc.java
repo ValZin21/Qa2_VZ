@@ -1,6 +1,5 @@
 package HomeTask7.pages;
 
-import apiSteps.model.Sys;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

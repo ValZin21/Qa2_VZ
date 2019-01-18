@@ -1,7 +1,5 @@
 package HomeTask7.model;
 
-import java.util.List;
-
 public class Reservation {
     int id;
     String name;

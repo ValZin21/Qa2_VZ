@@ -8,8 +8,6 @@ import cucumber.api.java.en.When;
 import org.junit.jupiter.api.Assertions;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class TicketReservatioStepDefs {

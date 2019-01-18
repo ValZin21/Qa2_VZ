@@ -1,12 +1,7 @@
 package HomeTask7.pages;
 
-import apiSteps.model.Sys;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
-
-import java.util.List;
 
 public class HomePage {
     BaseFunc baseFunc;

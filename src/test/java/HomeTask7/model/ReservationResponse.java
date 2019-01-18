@@ -16,14 +16,4 @@ public class ReservationResponse {
         this.reservations = reservations;
     }
 
-//    @JsonProperty("-")
-//    private Reservation reservation;
-//
-//    public Reservation getReservation() {
-//        return reservation;
-//    }
-//
-//    public void setReservation(Reservation reservation) {
-//        this.reservation = reservation;
-//    }
 }
