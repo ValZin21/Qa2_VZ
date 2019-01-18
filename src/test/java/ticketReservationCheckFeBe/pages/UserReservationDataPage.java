@@ -1,4 +1,4 @@
-package HomeTask7.pages;
+package ticketReservationCheckFeBe.pages;
 
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
@@ -63,7 +63,7 @@ public class UserReservationDataPage {
         baseFunc.buttonClick(GET_PRICE_BUTTON);
     }
 
-    public void reservationPriceCheck() {  
+    public void reservationPriceCheck() {
         baseFunc.isElementVisible(RESERVATION_PRICE_TEXT);
         System.out.println(baseFunc.textGet(RESERVATION_PRICE_TEXT));
         Assertions.assertTrue(baseFunc.textGet(RESERVATION_PRICE_TEXT).contains("3070 EUR"), "Reservation price is wrong!");

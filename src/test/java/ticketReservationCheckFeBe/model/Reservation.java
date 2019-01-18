@@ -1,4 +1,4 @@
-package HomeTask7.model;
+package ticketReservationCheckFeBe.model;
 
 public class Reservation {
     int id;

@@ -1,4 +1,4 @@
-package HomeTask7.pages;
+package ticketReservationCheckFeBe.pages;
 
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;

@@ -1,7 +1,7 @@
-package HomeTask7;
+package ticketReservationCheckFeBe;
 
-import HomeTask7.model.ReservationResponse;
-import HomeTask7.pages.*;
+import ticketReservationCheckFeBe.model.ReservationResponse;
+import ticketReservationCheckFeBe.pages.*;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;

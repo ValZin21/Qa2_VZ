@@ -1,6 +1,6 @@
-package HomeTask7;
+package ticketReservationCheckFeBe;
 
-import HomeTask7.model.ReservationResponse;
+import ticketReservationCheckFeBe.model.ReservationResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,7 +17,7 @@ public class ReservationRequester {
 
         responseToParse = "{\"reservation\":" + responseToParse + "}";
 
-        ObjectMapper objectMapper = new ObjectMapper(); // template to map JSON with model (сирилизация, обратный процесс - десирилизация)
+        ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(responseToParse, ReservationResponse.class);
     }
 
