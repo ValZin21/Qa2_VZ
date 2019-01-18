@@ -13,11 +13,12 @@ import java.util.List;
 public class ReservationRequester {
 
     private final String GET_RESERVATION_LIST = "http://qaguru.lv:8090/tickets/getReservations.php";
+    RestTemplate restTemplate = new RestTemplate();
 //    private ReservationResponse reservationResponse;
 
     public ReservationResponse getReservationList() throws IOException  {
 //        this.reservationResponse = reservationResponse;
-        RestTemplate restTemplate = new RestTemplate();
+
         String responseToParse = restTemplate.getForEntity(GET_RESERVATION_LIST, String.class).getBody(); // getting the GET response (in STRING due to API bug)
 
 
@@ -34,5 +35,9 @@ public class ReservationRequester {
 //         return null;
 
 //        return Arrays.asList(objectMapper.readValue(responseToParse, ReservationResponse.class));  // return JSON model from GET response (String)
+    }
+
+    public void deleteReservation(String id) {
+        restTemplate.delete("http://qaguru.lv:8090/tickets/delete.php?id=" + id);
     }
 }

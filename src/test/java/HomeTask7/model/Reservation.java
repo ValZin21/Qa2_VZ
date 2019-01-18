@@ -3,23 +3,23 @@ package HomeTask7.model;
 import java.util.List;
 
 public class Reservation {
-    Integer id;
+    int id;
     String name;
     String surname;
     String  afrom;
     String  ato;
-    Integer bugs;
+    int bugs;
     String discount;
-    Integer children;
+    int children;
     String flight;
-    Integer adults;
-    Integer seat;
+    int adults;
+    int seat;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -55,11 +55,11 @@ public class Reservation {
         this.ato = ato;
     }
 
-    public Integer getBugs() {
+    public int getBugs() {
         return bugs;
     }
 
-    public void setBugs(Integer bugs) {
+    public void setBugs(int bugs) {
         this.bugs = bugs;
     }
 
@@ -71,11 +71,11 @@ public class Reservation {
         this.discount = discount;
     }
 
-    public Integer getChildren() {
+    public int getChildren() {
         return children;
     }
 
-    public void setChildren(Integer children) {
+    public void setChildren(int children) {
         this.children = children;
     }
 
@@ -87,19 +87,19 @@ public class Reservation {
         this.flight = flight;
     }
 
-    public Integer getAdults() {
+    public int getAdults() {
         return adults;
     }
 
-    public void setAdults(Integer adults) {
+    public void setAdults(int adults) {
         this.adults = adults;
     }
 
-    public Integer getSeat() {
+    public int getSeat() {
         return seat;
     }
 
-    public void setSeat(Integer seat) {
+    public void setSeat(int seat) {
         this.seat = seat;
     }
 }

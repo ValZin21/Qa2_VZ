@@ -27,15 +27,15 @@ public class TicketReservatioStepDefs {
 
     private ReservationRequester reservationRequester = new ReservationRequester();
     private ReservationResponse reservationResponse = new ReservationResponse();
-    private List<ReservationResponse> respons = new ArrayList<ReservationResponse>();
+    private int idToDelete;
 
     @Given("Deparutre airport: (.*)")
-    public void set_departure_airport (String departureAirport) {
+    public void set_departure_airport(String departureAirport) {
         this.departureAirport = departureAirport;
     }
 
     @Given("Destination airport: (.*)")
-    public void set_destination_airport (String destinationAirport) {
+    public void set_destination_airport(String destinationAirport) {
         this.destinationAirport = destinationAirport;
     }
 
@@ -52,12 +52,12 @@ public class TicketReservatioStepDefs {
     }
 
     @Given("seatNumber is: (.*)")
-    public void set_seat_number (int seatNumber) {
+    public void set_seat_number(int seatNumber) {
         this.seatNumber = seatNumber;
     }
 
     @Given("we are on the home page")
-    public void set_home_page () {
+    public void set_home_page() {
         baseFunc.goToPage(HOME_PAGE);
         homePage = new HomePage(baseFunc);
         homePage.isTHomePageOpened();
@@ -135,29 +135,40 @@ public class TicketReservatioStepDefs {
     @When("we are requesting reservation list")
     public void get_reservation_list() throws IOException {
         reservationResponse = reservationRequester.getReservationList();
+        Assertions.assertTrue(reservationResponse.getReservations().size() > 0, "No reservations list!");
     }
 
     @Then("we can see our reservation in the list")
     public void check_reservation_list() {
-        Assertions.assertTrue(reservationResponse.getReservations().size() > 0, "No reservations list!");
+
 
     }
 
     @When("we are deleting our reservation tikcet")
     public void delete_reservation() {
-
+        System.out.println("reservation count: " + reservationResponse.getReservations().size());
+        for (int i = 0; i < reservationResponse.getReservations().size(); i++) {
+            if (reservationResponse.getReservations().get(i).getSurname().equals(userData.getSurname()) &&
+                    reservationResponse.getReservations().get(i).getName().equals(userData.getName()) &&
+                    reservationResponse.getReservations().get(i).getDiscount().equals(userData.getDiscountCode()) &&
+                    reservationResponse.getReservations().get(i).getAfrom().equals(departureAirport) &&
+                    reservationResponse.getReservations().get(i).getAto().equals(destinationAirport)
+            ) {
+                reservationRequester.deleteReservation(String.valueOf(reservationResponse.getReservations().get(i).getId()));
+            }
+        }
     }
 
     @When("requesting the reservation list again")
-    public void get_reservation_list_again() {
-
+    public void get_reservation_list_again() throws IOException {
+        reservationResponse = reservationRequester.getReservationList();
+        Assertions.assertTrue(reservationResponse.getReservations().size() > 0, "No reservations list!");
     }
 
     @Then("our reservation disappears from the list")
     public void get_resrvation_list_without_deleted_reservation() {
 
     }
-
 
 
 }
