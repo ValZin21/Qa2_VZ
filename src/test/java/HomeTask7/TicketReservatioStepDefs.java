@@ -140,13 +140,26 @@ public class TicketReservatioStepDefs {
 
     @Then("we can see our reservation in the list")
     public void check_reservation_list() {
+        boolean isReservationPresent = false;
 
+        for (int i = 0; i < reservationResponse.getReservations().size(); i++) {
+            if (reservationResponse.getReservations().get(i).getSurname().equals(userData.getSurname()) &&
+                    reservationResponse.getReservations().get(i).getName().equals(userData.getName()) &&
+                    reservationResponse.getReservations().get(i).getDiscount().equals(userData.getDiscountCode()) &&
+                    reservationResponse.getReservations().get(i).getAfrom().equals(departureAirport) &&
+                    reservationResponse.getReservations().get(i).getAto().equals(destinationAirport)
+            ) {
+                isReservationPresent = true;
+                break;
+            }
+        }
 
+        Assertions.assertTrue(isReservationPresent, "Reservation wasn't added!");
     }
 
     @When("we are deleting our reservation tikcet")
     public void delete_reservation() {
-        System.out.println("reservation count: " + reservationResponse.getReservations().size());
+
         for (int i = 0; i < reservationResponse.getReservations().size(); i++) {
             if (reservationResponse.getReservations().get(i).getSurname().equals(userData.getSurname()) &&
                     reservationResponse.getReservations().get(i).getName().equals(userData.getName()) &&
@@ -167,6 +180,21 @@ public class TicketReservatioStepDefs {
 
     @Then("our reservation disappears from the list")
     public void get_resrvation_list_without_deleted_reservation() {
+        boolean isReservationDeleted = false;
+
+        for (int i = 0; i < reservationResponse.getReservations().size(); i++) {
+            if (reservationResponse.getReservations().get(i).getSurname().equals(userData.getSurname()) &&
+                    reservationResponse.getReservations().get(i).getName().equals(userData.getName()) &&
+                    reservationResponse.getReservations().get(i).getDiscount().equals(userData.getDiscountCode()) &&
+                    reservationResponse.getReservations().get(i).getAfrom().equals(departureAirport) &&
+                    reservationResponse.getReservations().get(i).getAto().equals(destinationAirport)
+            ) {
+                isReservationDeleted = true;
+                break;
+            }
+        }
+
+        Assertions.assertFalse(isReservationDeleted, "Reservation wasn't deleted!");
 
     }
 
