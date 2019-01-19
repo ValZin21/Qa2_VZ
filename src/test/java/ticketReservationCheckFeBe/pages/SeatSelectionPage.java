@@ -50,7 +50,6 @@ public class SeatSelectionPage {
 
     private Integer getSeatNumberFromString (String textString) {
         textString = textString.substring(14, textString.length());
-        System.out.println("result is: " + textString);
         Integer commentsCountNumber = Integer.valueOf(textString);
         return commentsCountNumber;
     }

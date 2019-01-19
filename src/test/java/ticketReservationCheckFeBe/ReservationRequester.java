@@ -9,6 +9,8 @@ import java.io.IOException;
 public class ReservationRequester {
 
     private final String GET_RESERVATION_LIST = "http://qaguru.lv:8090/tickets/getReservations.php";
+    private final String DELETE_RESERVATION = "http://qaguru.lv:8090/tickets/delete.php?id=";
+
     RestTemplate restTemplate = new RestTemplate();
 
     public ReservationResponse getReservationList() throws IOException  {
@@ -22,6 +24,6 @@ public class ReservationRequester {
     }
 
     public void deleteReservation(String id) {
-        restTemplate.delete("http://qaguru.lv:8090/tickets/delete.php?id=" + id);
+        restTemplate.delete(DELETE_RESERVATION + id);
     }
 }

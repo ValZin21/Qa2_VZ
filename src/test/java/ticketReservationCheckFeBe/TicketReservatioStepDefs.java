@@ -25,7 +25,6 @@ public class TicketReservatioStepDefs {
 
     private ReservationRequester reservationRequester = new ReservationRequester();
     private ReservationResponse reservationResponse = new ReservationResponse();
-    private int idToDelete;
 
     @Given("Deparutre airport: (.*)")
     public void set_departure_airport(String departureAirport) {
